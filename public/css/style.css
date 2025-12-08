@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* ================== HEADER ================== */
+header {
+    width: 100%;
+    background-color: #04293B;
+    color: white;
+    padding: 15px 50px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+nav {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* MENU DESKTOP */
+.menu {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: white;
+    font-size: 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo1 {
+    width: 100px;
+}
+
+.logo2 {
+    width: 150px;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: white;
+}
+
+@media (max-width: 768px) {
+
+    header {
+        padding: 15px 20px;
+    }
+
+    nav {
+        padding: 0;
+    }
+
+    .logo1 {
+        width: 80px;
+    }
+
+    .logo2 {
+        width: 120px;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .menu {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #04293B;
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        width: 180px;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .menu.show {
+        display: flex;
+    }
+
+    .nav-link {
+        font-size: 14px;
+        margin: 0;
+    }
+}
+
+/* ================== END HEADER ================== */
+
+/* ================== HERO SECTION ================== */
+.hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../images/hero-bg.jpeg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    color: white;
+    text-align: center;
+    padding: 100px 100px 150px 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero img {
+    width: 400px;
+}
+
+.hero-1 {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.hero-2 {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+}
+
+.hero h1 {
+    font-size: 50px;
+}
+
+.hero p {
+    font-size: 20px;
+}
+
+.hero h3 {
+    font-size: 30px;
+    font-style: italic;
+    margin-bottom: 50px;
+}
+
+/* ================== END HERO SECTION ================== */
+
+/* ================== BUTTONS ================== */
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: yellow;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.btn-transparent {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    border: #ffffff 1px solid;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* ================== END BUTTONS ================== */
+
+/* ================== MAIN INFO ================== */
+.main-info {
+    background-color: #04293B;
+    padding: 50px 100px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    margin-top: -90px;
+}
+
+.info-card h2 {
+    font-size: 70px;
+    color: #04293B;
+    margin: 15px 0;
+}
+
+.info-card h3 {
+    font-size: 25px;
+    color: #04293B;
+    margin: 15px 0;
+}
+
+.icon {
+    width: 80px;
+    height: 80px;
+}
+
+@media (max-width: 768px) {
+    .main-info {
+        background-color: #04293B;
+        padding: 20px 50px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .info-card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        margin-top: 0px;
+    }
+
+    .info-card h2 {
+        font-size: 50px;
+        color: #04293B;
+        margin: 15px 0;
+    }
+
+    .info-card h3 {
+        font-size: 20px;
+        color: #04293B;
+        margin: 15px 0;
+    }
+
+    .icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ================== END MAIN INFO ================== */
+
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 32px;
+    margin-top: 48px;
+}
