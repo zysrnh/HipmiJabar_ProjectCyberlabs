@@ -12,6 +12,63 @@ body {
     color: #333;
 }
 
+/* ================== GLOBAL ACCENT ================== */
+.yellow-accent {
+    width: 100px;
+    height: 10px;
+    background: #FFD400;
+    border-radius: 999px;
+    margin: 0 auto 35px;
+}
+
+.green-accent {
+    width: 100px;
+    height: 10px;
+    background: #FFD400;
+    border-radius: 999px;
+    margin: 0 auto 12px;
+}
+
+/* ================== END GLOBAL ACCENT ================== */
+
+/* ================== GLOBAL BUTTONS ================== */
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: yellow;
+    border: yellow 1px solid;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.btn-transparent {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    color: #ffffff;
+    text-decoration: none;
+    border: #ffffff 1px solid;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn-transparent:hover {
+    transform: scale(1.05);
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+}
+
+/* ================== END BUTTONS ================== */
+
 /* ================== HEADER ================== */
 header {
     width: 100%;
@@ -163,38 +220,10 @@ nav {
 
 /* ================== END HERO SECTION ================== */
 
-/* ================== BUTTONS ================== */
-.btn {
-    display: inline-block;
-    padding: 12px 30px;
-    background: yellow;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: transform 0.3s;
-}
-
-.btn-transparent {
-    display: inline-block;
-    padding: 12px 30px;
-    background: transparent;
-    color: #ffffff;
-    text-decoration: none;
-    border: #ffffff 1px solid;
-    border-radius: 5px;
-    transition: transform 0.3s;
-}
-
-.btn:hover {
-    transform: scale(1.05);
-}
-
-/* ================== END BUTTONS ================== */
-
 /* ================== MAIN INFO ================== */
 .main-info {
     background-color: #04293B;
-    padding: 50px 100px;
+    padding: 100px;
     display: flex;
     justify-content: center;
     gap: 30px;
@@ -208,7 +237,7 @@ nav {
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     flex: 1;
-    margin-top: -90px;
+    margin-top: -150px;
 }
 
 .info-card h2 {
@@ -268,6 +297,182 @@ nav {
 
 /* ================== END MAIN INFO ================== */
 
+/* ================== VISI ================== */
+.visi {
+    display: flex;
+    gap: 50px;
+    padding: 100px;
+    align-items: center;
+    background-color: #f9f9f9;
+}
+
+.visi-content {
+    flex: 1;
+}
+
+.visi-content h2 {
+    font-size: 40px;
+    color: #04293B;
+    margin-bottom: 20px;
+}
+
+.visi-content h3 {
+    font-size: 20px;
+    color: #04293B;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.visi-content p {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.visi-content ul {
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+.visi-content li {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.visi-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.visi-image img {
+    width: 500px;
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .visi {
+        flex-direction: column;
+        padding: 40px 20px;
+        gap: 30px;
+    }
+
+    .visi-content h2 {
+        font-size: 30px;
+    }
+
+    .visi-content h3 {
+        font-size: 18px;
+    }
+
+    .visi-content p,
+    .visi-content li {
+        font-size: 14px;
+    }
+}
+
+/* ================== END VISI ================== */
+
+/* ================== MISI ================== */
+.misi {
+    padding: 100px 0px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    background-color: #04293B;
+}
+
+.misi>h2 {
+    font-size: 40px;
+    color: #ffffff;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.misi-content {
+    display: flex;
+    gap: 0;
+    align-items: center;
+}
+
+.misi-content-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0;
+    align-items: center;
+}
+
+.misi-text {
+    width: 50%;
+    flex: 1;
+}
+
+.misi-text h2 {
+    font-size: 30px;
+    color: #ffffff;
+    margin: 0px 100px;
+    line-height: 1.5;
+}
+
+.misi-text p {
+    font-size: 16px;
+    color: #ffffff;
+    margin: 0px 100px;
+    line-height: 2;
+}
+
+.misi-image {
+    width: 50%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.misi-image img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .misi {
+        padding: 40px 20px;
+    }
+
+    .misi>h2 {
+        font-size: 30px;
+    }
+
+    .misi-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .misi-text {
+        width: 50%;
+        flex: 1;
+    }
+
+    .misi-text h2 {
+        font-size: 30px;
+        color: #ffffff;
+    }
+
+    .misi-text p {
+        font-size: 16px;
+        color: #ffffff;
+    }
+}
+
+/* ================== END MISI ================== */
+
+/* ================== PENGUMUMAN ================== */
+
+/* ================== END PENGUMUMAN ================== */
+
+/* ================== FOOTER ================== */
 footer {
     background: #333;
     color: white;
@@ -275,3 +480,5 @@ footer {
     padding: 32px;
     margin-top: 48px;
 }
+
+/* ================== END FOOTER ================== */
