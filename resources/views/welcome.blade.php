@@ -9,7 +9,13 @@
             <h1>HIPMI Jawa Barat</h1>
             <p>Sebagai Jembatan Informasi</p>
             <h3>Hayu, kita maju babarengan!</h3>
-            <a href="#" class="btn">Jadi Anggota</a>
+            <div class="hero-buttons">
+                <a href="#" class="btn">Jadi Anggota</a>
+                <a href="#" class="fa fa-instagram social-icons"></a>
+                <a href="#" class="fa fa-facebook social-icons"></a>
+                <a href="#" class="fa fa-linkedin social-icons"></a>
+                <a href="#" class="fa fa-youtube social-icons"></a>
+            </div>
         </div>
         <div class="hero-2">
             <img src="{{  asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">

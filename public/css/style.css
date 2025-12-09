@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
 * {
     margin: 0;
@@ -67,6 +68,61 @@ body {
     gap: 20px;
 }
 
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.social-icons {
+    font-size: 30px;
+    color: #04293B;
+    text-decoration: none;
+    transition: 0.3s;
+
+    width: 55px;
+    height: 55px;
+    background: #ffffff;
+    border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-icons:hover {
+    color: #FFD400;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .btn-transparent {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .buttons {
+        gap: 10px;
+    }
+
+    .hero-buttons {
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .social-icons {
+        font-size: 16px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
 /* ================== END BUTTONS ================== */
 
 /* ================== HEADER ================== */
@@ -89,7 +145,6 @@ nav {
     align-items: center;
 }
 
-/* MENU DESKTOP */
 .menu {
     display: flex;
     gap: 25px;
@@ -122,6 +177,10 @@ nav {
     color: white;
 }
 
+.buttons-mobile {
+    display: none;
+}
+
 @media (max-width: 768px) {
 
     header {
@@ -146,7 +205,7 @@ nav {
 
     .menu {
         position: absolute;
-        top: 60px;
+        top: 100px;
         right: 20px;
         background-color: #04293B;
         display: none;
@@ -164,6 +223,17 @@ nav {
     .nav-link {
         font-size: 14px;
         margin: 0;
+    }
+
+    .buttons {
+        display: none;
+    }
+
+    .buttons-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
     }
 }
 
@@ -218,6 +288,38 @@ nav {
     margin-bottom: 50px;
 }
 
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        padding: 100px 20px 50px 20px;
+        text-align: center;
+    }
+
+    .hero-1,
+    .hero-2 {
+        width: 100%;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .hero img {
+        width: 250px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .hero h3 {
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+}
+
 /* ================== END HERO SECTION ================== */
 
 /* ================== MAIN INFO ================== */
@@ -260,7 +362,7 @@ nav {
 @media (max-width: 768px) {
     .main-info {
         background-color: #04293B;
-        padding: 20px 50px;
+        padding: 50px;
         display: flex;
         justify-content: center;
         gap: 30px;
@@ -356,7 +458,7 @@ nav {
 @media (max-width: 768px) {
     .visi {
         flex-direction: column;
-        padding: 40px 20px;
+        padding: 50px;
         gap: 30px;
     }
 
@@ -438,7 +540,7 @@ nav {
 
 @media (max-width: 768px) {
     .misi {
-        padding: 40px 20px;
+        padding: 50px;
     }
 
     .misi>h2 {
@@ -446,23 +548,52 @@ nav {
     }
 
     .misi-content {
-        flex-direction: column;
-        gap: 30px;
+        flex-direction: column-reverse;
+    }
+
+    .misi-content-reverse {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
     }
 
     .misi-text {
         width: 50%;
         flex: 1;
+        margin-bottom: 30px;
     }
 
     .misi-text h2 {
-        font-size: 30px;
+        font-size: 25px;
         color: #ffffff;
+        margin: 0px;
+
     }
 
     .misi-text p {
-        font-size: 16px;
+        font-size: 12px;
         color: #ffffff;
+        margin: 0px;
+
+    }
+
+    .misi-text {
+        width: 100%;
+        flex: 1;
+    }
+
+    .misi-image {
+        width: 100%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .misi-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 15px;
     }
 }
 

@@ -26,6 +26,10 @@
                     <a href="#" class="nav-link">E-Katalog</a>
                     <a href="#" class="nav-link">Berita</a>
                     <a href="#" class="nav-link">UMKM</a>
+                    <div class="buttons-mobile">
+                        <a href="" class="btn-transparent">Jadi Anggota</a>
+                        <a href="" class="btn">Login</a>
+                    </div>
                 </div>
 
                 <div class="buttons">
