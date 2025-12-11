@@ -115,6 +115,12 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     flex: 1;
     margin-top: -200px;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    cursor: pointer;
 }
 
 .info-card h2 {
@@ -179,7 +185,7 @@
 .visi {
     display: flex;
     gap: 50px;
-    padding:  100px;
+    padding: 100px;
     align-items: center;
     background-color: #f9f9f9;
 }
@@ -264,7 +270,7 @@
 }
 
 .misi>h2 {
-    font-size: 40px;
+    font-size: 30px;
     color: #ffffff;
     margin-bottom: 50px;
     text-align: center;
@@ -386,11 +392,123 @@
 }
 
 .pengumuman>h2 {
-    font-size: 40px;
+    font-size: 30px;
     color: #04293B;
     margin-bottom: 50px;
     text-align: center;
 }
+
+.pengumuman-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: center;
+}
+
+.pengumuman-lastest {
+    flex: 1;
+}
+
+.pengumuman-banner-card {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.pengumuman-banner-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pengumuman-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+}
+
+.pengumuman-banner-content {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    color: white;
+    z-index: 2;
+    text-align: left;
+
+}
+
+.pengumuman-badge {
+    background: #FFD500;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    display: inline-block;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.pengumuman-banner-content h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+    max-width: 600px;
+}
+
+.pengumuman-date {
+    margin: 8px 0 20px;
+    font-size: 15px;
+    opacity: 0.85;
+}
+
+.pengumuman-btn-more {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.pengumuman-others {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    flex-wrap: wrap;
+
+}
+
+.pengumuman-others-banner {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    border-radius: 10px;
+}
+
+.pengumuman-others-content {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.pengumuman-others-content h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.pengumuman-others-btn-more {
+    color: #04293B;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 15px;
+}
+
 
 @media (max-width: 768px) {
     .pengumuman {
@@ -399,6 +517,446 @@
     }
 
     .pengumuman>h2 {
-        font-size: 30px;    
+        font-size: 30px;
+    }
+
+    .pengumuman-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+
+    .pengumuman-banner-content {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .pengumuman-others-banner {
+        height: 200px;
+    }
+
+    .pengumuman-others-content h2 {
+        font-size: 15px;
+        margin: 0;
+    }
+
+    .pengumuman-date {
+        font-size: 12px;
+    }
+
+    .pengumuman-btn-more,
+    .pengumuman-others-btn-more {
+        font-size: 12px;
+    }
+}
+
+/* ================== END PENGUMUMAN SECTION ================== */
+
+/* ================== STRATEGIC PLAN SECTION ================== */
+.strategic-plan {
+    padding: 100px 0px 100px 0px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    gap: 70px;
+}
+
+.strategic-plan-content {
+    display: flex;
+    gap: 0;
+    align-items: center;
+}
+
+.strategic-plan-content-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0;
+    align-items: center;
+}
+
+.strategic-plan-image-reverse {
+    width: 50%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.strategic-plan-image-reverse img {
+    width: 100%;
+    height: 700px;
+    object-fit: cover;
+    border-radius: 20px 0px 0px 20px;
+}
+
+.strategic-plan-image {
+    width: 50%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.strategic-plan-image img {
+    width: 100%;
+    height: 700px;
+    object-fit: cover;
+    border-radius: 0px 20px 20px 0px;
+}
+
+.strategic-plan-wrapper {
+    width: 50%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 50px 100px;
+}
+
+.strategic-plan-wrapper h1 {
+    font-size: 25px;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.strategic-plan-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.strategic-plan-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    color: #04293B;
+    text-decoration: none;
+    transition: transform 0.3s;
+}
+
+.strategic-plan-card h2 {
+    font-size: 20px;
+}
+
+.strategic-plan-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .strategic-plan {
+        padding: 50px 20px 50px 20px;
+        gap: 50px;
+    }
+
+    .strategic-plan-content {
+        flex-direction: column;
+    }
+
+    .strategic-plan-content-reverse {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .strategic-plan-image,
+    .strategic-plan-image-reverse {
+        width: 100%;
+        flex: 1;
+        margin-bottom: 30px;
+        padding: 0px 20px;
+    }
+
+    .strategic-plan-image img,
+    .strategic-plan-image-reverse img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .strategic-plan-wrapper {
+        width: 100%;
+        flex: 1;
+        padding: 20px;
+    }
+
+    .strategic-plan-wrapper h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .strategic-plan-cards {
+        grid-template-columns: repeat(2fr, 1);
+        gap: 20px;
+    }
+
+    .strategic-plan-card {
+        flex-direction: column;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .strategic-plan-card h2 {
+        font-size: 16px;
+    }
+}
+
+/* ================== END STRATEGIC PLAN SECTION ================== */
+
+/* ================== ACARA SECTION ================== */
+.events {
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    background-color: #04293B;
+    text-align: center;
+}
+
+.events>h2 {
+    font-size: 30px;
+    color: #ffffff;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.events-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: center;
+}
+
+.events-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: center;
+}
+
+.events-lastest {
+    flex: 1;
+}
+
+.events-banner-card-lastest {
+    position: relative;
+    width: 100%;
+    height: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.events-banner-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.events-banner-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.events-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+}
+
+.events-banner-content {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    color: white;
+    z-index: 2;
+    text-align: left;
+
+}
+
+.events-badge {
+    background: #FFD500;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    display: inline-block;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.events-banner-content h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+    max-width: 600px;
+}
+
+.events-date {
+    margin: 8px 0 20px;
+    font-size: 15px;
+    opacity: 0.85;
+}
+
+.events-btn-more {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.events-others {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .events {
+        padding: 50px;
+        justify-content: center;
+    }
+
+    .events>h2 {
+        font-size: 30px;
+    }
+
+    .events-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+
+    .events-banner-content {
+        left: 20px;
+        bottom: 20px;
+    }
+
+    .events-banner-card {
+        height: 300px;
+    }
+
+    .events-banner-card-lastest {
+        max-height: 300px;
+    }
+
+}
+
+/* ================== END ACARA SECTION ================== */
+
+/* ================== EKATALOG SECTION ================== */
+.ekatalog-home {
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.ekatalog-home>h2 {
+    font-size: 30px;
+    color: #04293B;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.e-katalog-content-home {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.e-katalog-content-home a {
+    text-decoration: none;
+    color: #04293B;
+}
+
+.btn-ekatalog-home {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #04293B;
+    border: #04293B 1px solid;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.btn-ekatalog-home:hover {
+    transform: scale(1.05);
+}
+
+.katalog-card-home {
+    padding: 50px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+
+@media (max-width: 768px) {
+    .ekatalog-home {
+        padding: 50px 30px;
+        justify-content: center;
+    }
+
+    .e-katalog-content-home {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .btn-ekatalog-home {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+}
+
+/* ================== DAFTARKAN BISNIS ANDA SECTION ================== */
+.daftarkan-bisnis-anda {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url("../images/bg.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 100px;
+    background-color: #f9f9f9;
+    text-align: center;
+    gap: 100px;
+}
+
+.daftarkan-bisnis-anda img {
+    width: 300px;
+}
+
+.daftarkan-bisnis-anda h1 {
+    font-size: 40px;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .daftarkan-bisnis-anda {
+        padding: 50px;
+        flex-direction: column;
     }
 }

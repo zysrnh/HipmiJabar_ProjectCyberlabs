@@ -19,7 +19,7 @@ body {
     height: 10px;
     background: #FFD400;
     border-radius: 999px;
-    margin: 0 auto 35px;
+    margin-bottom: 25px;
 }
 
 .green-accent {
@@ -27,7 +27,7 @@ body {
     height: 10px;
     background: #009944;
     border-radius: 999px;
-    margin: 0 auto 35px;
+    margin-bottom: 25px;
 }
 
 /* ================== END GLOBAL ACCENT ================== */
@@ -55,10 +55,7 @@ body {
     transition: transform 0.3s;
 }
 
-.btn:hover {
-    transform: scale(1.05);
-}
-
+.btn:hover,
 .btn-transparent:hover {
     transform: scale(1.05);
 }
