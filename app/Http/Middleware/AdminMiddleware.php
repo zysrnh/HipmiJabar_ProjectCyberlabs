@@ -11,8 +11,20 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
+        
         if (!Auth::guard('admin')->check()) {
-            return redirect()->route('admin.login');
+            
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'message' => 'Sesi Anda telah berakhir. Silakan login kembali.',
+                    'redirect' => route('admin.login')
+                ], 401);
+            }
+            
+         
+            return redirect()->route('admin.login')
+                ->with('warning', 'Sesi Anda telah berakhir. Silakan login kembali.')
+                ->withInput(); 
         }
 
         return $next($request);

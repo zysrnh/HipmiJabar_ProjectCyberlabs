@@ -16,8 +16,16 @@ class AdminLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string'],
+            'login' => ['required', 'string'], 
             'password' => ['required', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'login.required' => 'Email atau username harus diisi.',
+            'password.required' => 'Password harus diisi.',
         ];
     }
 
@@ -27,24 +35,24 @@ class AdminLoginRequest extends FormRequest
 
         if (!Auth::guard('admin')->attempt($credentials, $this->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'username' => __('Kredensial yang Anda masukkan tidak sesuai.'),
+                'login' => 'Email/Username atau password salah.', 
             ]);
         }
     }
 
     protected function getCredentials(): array
     {
-        $username = $this->input('username');
+        $login = $this->input('login'); 
 
-        if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
             return [
-                'email' => $username,
+                'email' => $login,
                 'password' => $this->input('password'),
             ];
         }
 
         return [
-            'username' => $username,
+            'username' => $login,
             'password' => $this->input('password'),
         ];
     }
