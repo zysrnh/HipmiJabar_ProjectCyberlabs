@@ -3,13 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ProfileController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Route login (tanpa middleware)
+    
     Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [AdminAuthController::class, 'login'])->name('login.post');
     
-    // Route yang butuh login
+    
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('info-admin', [AdminDashboardController::class, 'infoAdmin'])->name('info-admin');
     Route::get('create-admin', [AdminDashboardController::class, 'createAdmin'])->name('create-admin');
@@ -18,6 +19,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('update-admin/{admin}', [AdminDashboardController::class, 'updateAdmin'])->name('update-admin');
     Route::delete('delete-admin/{admin}', [AdminDashboardController::class, 'deleteAdmin'])->name('delete-admin');
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+  Route::get('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [App\Http\Controllers\Admin\ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::post('/profile/photo', [App\Http\Controllers\Admin\ProfileController::class, 'updatePhoto'])->name('profile.photo');
+    Route::delete('/profile/photo', [App\Http\Controllers\Admin\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 });
 
 Route::view('/', 'pages.home')->name('home');

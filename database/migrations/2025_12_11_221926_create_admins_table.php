@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->unique();
             $table->string('email')->unique();
+            $table->string('photo')->nullable();
             $table->string('password');
             $table->enum('category', ['bpc', 'bpd']);
             $table->rememberToken();

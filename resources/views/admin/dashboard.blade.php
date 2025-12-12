@@ -1,843 +1,345 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - HIPMI Jawa Barat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{{-- resources/views/admin/dashboard.blade.php --}}
+@extends('admin.layouts.admin-layout')
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #f5f7fa;
-            display: flex;
-            min-height: 100vh;
-        }
+@section('title', 'Dashboard')
+@section('page-title', 'Dashboard')
 
-        .sidebar {
-            width: 280px;
-            background: #0a2540;
-            display: flex;
+@php
+    $activeMenu = 'dashboard';
+@endphp
+
+@push('styles')
+<style>
+    .welcome-card {
+        background: linear-gradient(135deg, #0a2540 0%, #1a3a5c 100%);
+        padding: 2.5rem;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .welcome-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #ffd700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0a2540;
+        font-weight: 700;
+        font-size: 2rem;
+        flex-shrink: 0;
+        border: 4px solid rgba(255, 215, 0, 0.3);
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .welcome-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .welcome-text {
+        flex: 1;
+    }
+
+    .welcome-card h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .welcome-card p {
+        font-size: 1.125rem;
+        color: rgba(255,255,255,0.8);
+        margin-bottom: 1rem;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-bpc {
+        background: #ffd700;
+        color: #0a2540;
+    }
+
+    .badge-bpd {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.75rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+
+    .stat-label {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0a2540;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-meta {
+        font-size: 0.8125rem;
+        color: #10b981;
+        font-weight: 500;
+    }
+
+    .admin-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0a2540;
+    }
+
+    .view-all-btn {
+        color: #0a2540;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .view-all-btn:hover {
+        color: #ffd700;
+    }
+
+    .admin-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .admin-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s;
+    }
+
+    .admin-item:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        transform: translateX(4px);
+    }
+
+    .admin-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #ffd700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0a2540;
+        font-weight: 700;
+        font-size: 1.125rem;
+        flex-shrink: 0;
+        overflow: hidden;
+        border: 2px solid #e5e7eb;
+    }
+
+    .admin-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .admin-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .admin-name {
+        font-weight: 600;
+        color: #0a2540;
+        margin-bottom: 0.25rem;
+        font-size: 0.9375rem;
+    }
+
+    .admin-email {
+        font-size: 0.8125rem;
+        color: #6b7280;
+    }
+
+    .admin-badge {
+        padding: 0.375rem 0.875rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 768px) {
+        .welcome-content {
             flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-            transition: transform 0.3s ease;
+            text-align: center;
         }
 
-        .sidebar-header {
-            padding: 2rem 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 50px;
-            height: 50px;
-            background: #ffd700;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .brand-text {
-            color: white;
-        }
-
-        .brand-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-        }
-
-        .brand-subtitle {
-            font-size: 0.75rem;
-            color: #ffd700;
-            font-weight: 600;
-        }
-
-        .sidebar-menu {
-            flex: 1;
-            padding: 1.5rem 0;
-            overflow-y: auto;
-        }
-
-        .menu-section {
-            margin-bottom: 2rem;
-        }
-
-        .menu-label {
-            padding: 0 1.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: rgba(255,255,255,0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.75rem;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.875rem 1.5rem;
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-            font-size: 0.9375rem;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .menu-item:hover {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left-color: #ffd700;
-        }
-
-        .menu-item.active {
-            background: rgba(255,215,0,0.1);
-            color: white;
-            border-left-color: #ffd700;
-            font-weight: 600;
-        }
-
-        .menu-item svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-        }
-
-        /* Dropdown Styles */
-        .menu-dropdown {
-            position: relative;
-        }
-
-        .menu-item.has-dropdown {
-            justify-content: space-between;
-        }
-
-        .dropdown-icon {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-item.has-dropdown.active .dropdown-icon {
-            transform: rotate(180deg);
-        }
-
-        .submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .submenu.active {
-            max-height: 300px;
-        }
-
-        .submenu-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1.5rem 0.75rem 3.5rem;
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            transition: all 0.2s;
-            font-size: 0.875rem;
-            border-left: 3px solid transparent;
-        }
-
-        .submenu-item:hover {
-            background: rgba(255,255,255,0.05);
-            color: white;
-            border-left-color: #ffd700;
-        }
-
-        .submenu-item.active {
-            background: rgba(255,215,0,0.1);
-            color: white;
-            border-left-color: #ffd700;
-            font-weight: 600;
-        }
-
-        .submenu-item svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .sidebar-footer {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-        }
-
-        .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0a2540;
-            font-weight: 700;
-            font-size: 1.125rem;
-            flex-shrink: 0;
-        }
-
-        .user-details {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: white;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-role {
-            font-size: 0.75rem;
-            color: #ffd700;
-            font-weight: 600;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            display: flex;
-            flex-direction: column;
-            transition: margin-left 0.3s ease;
-        }
-
-        .topbar {
-            background: white;
-            padding: 1.25rem 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .topbar-left h2 {
-            font-size: 1.75rem;
-            color: #0a2540;
-            margin-bottom: 0.25rem;
-            font-weight: 700;
-        }
-
-        .topbar-subtitle {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-
-        .topbar-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .icon-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            background: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: #e5e7eb;
-        }
-
-        .icon-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: #374151;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .logout-btn {
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.625rem 1.5rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .logout-btn:hover {
-            background: #b91c1c;
-        }
-
-        .content {
-            padding: 2rem;
-            flex: 1;
+        .welcome-avatar {
+            width: 70px;
+            height: 70px;
+            font-size: 1.5rem;
         }
 
         .welcome-card {
-            background: #0a2540;
-            padding: 2.5rem;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
         }
 
         .welcome-card h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+            font-size: 1.5rem;
         }
 
         .welcome-card p {
-            font-size: 1.125rem;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .category-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-top: 1rem;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-bpc {
-            background: #ffd700;
-            color: #0a2540;
-        }
-
-        .badge-bpd {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.75rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e5e7eb;
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transform: translateY(-2px);
-        }
-
-        .stat-label {
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #0a2540;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-meta {
-            font-size: 0.8125rem;
-            color: #10b981;
-            font-weight: 500;
-        }
-
-        .admin-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid #e5e7eb;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f3f4f6;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0a2540;
-        }
-
-        .view-all-btn {
-            color: #0a2540;
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-
-        .view-all-btn:hover {
-            color: #ffd700;
-        }
-
-        .admin-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .admin-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.25rem;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            transition: all 0.2s;
-        }
-
-        .admin-item:hover {
-            background: #f3f4f6;
-            border-color: #d1d5db;
-        }
-
-        .admin-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #0a2540;
-            font-weight: 700;
-            font-size: 1.125rem;
-        }
-
-        .admin-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .admin-name {
-            font-weight: 600;
-            color: #0a2540;
-            margin-bottom: 0.25rem;
             font-size: 0.9375rem;
         }
 
-        .admin-email {
-            font-size: 0.8125rem;
-            color: #6b7280;
+        .stats-grid {
+            grid-template-columns: 1fr;
         }
+    }
+</style>
+@endpush
 
-        .admin-badge {
-            padding: 0.375rem 0.875rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-        }
-
-        .mobile-overlay {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.mobile-active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .mobile-menu-toggle {
-                display: flex;
-                position: fixed;
-                bottom: 2rem;
-                right: 2rem;
-                width: 56px;
-                height: 56px;
-                background: #0a2540;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                z-index: 101;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                align-items: center;
-                justify-content: center;
-            }
-
-            .mobile-menu-toggle svg {
-                width: 24px;
-                height: 24px;
-                stroke: white;
-                fill: none;
-                stroke-width: 2;
-            }
-
-            .mobile-overlay.active {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 99;
-            }
-
-            .topbar {
-                padding: 1rem;
-            }
-
-            .topbar-left h2 {
-                font-size: 1.25rem;
-            }
-
-            .topbar-subtitle {
-                font-size: 0.75rem;
-            }
-
-            .content {
-                padding: 1rem;
-            }
-
-            .welcome-card {
-                padding: 1.5rem;
-            }
-
-            .welcome-card h1 {
-                font-size: 1.5rem;
-            }
-
-            .welcome-card p {
-                font-size: 0.9375rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .logout-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.8125rem;
-            }
-
-            .icon-btn {
-                width: 38px;
-                height: 38px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand">
-                <div class="brand-logo">
-                    <svg viewBox="0 0 100 100" width="35" height="35">
-                        <circle cx="50" cy="35" r="15" fill="#0a2540"/>
-                        <path d="M 30 55 Q 50 45 70 55 L 70 70 Q 50 80 30 70 Z" fill="#0a2540"/>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <div class="brand-title">HIPMI</div>
-                    <div class="brand-subtitle">JAWA BARAT</div>
-                </div>
-            </div>
+@section('content')
+<div class="welcome-card">
+    <div class="welcome-content">
+        <div class="welcome-avatar">
+            @if(auth()->guard('admin')->user()->photo)
+                <img src="{{ auth()->guard('admin')->user()->photo_url }}" alt="{{ auth()->guard('admin')->user()->name }}">
+            @else
+                {{ strtoupper(substr(auth()->guard('admin')->user()->name, 0, 2)) }}
+            @endif
         </div>
-
-        <div class="sidebar-menu">
-            <div class="menu-section">
-                <div class="menu-label">Menu Utama</div>
-                
-                <!-- Dashboard Dropdown -->
-                <div class="menu-dropdown">
-                    <div class="menu-item has-dropdown active" onclick="toggleDropdown(this)">
-                        <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="7" height="7" rx="1"/>
-                                <rect x="14" y="3" width="7" height="7" rx="1"/>
-                                <rect x="3" y="14" width="7" height="7" rx="1"/>
-                                <rect x="14" y="14" width="7" height="7" rx="1"/>
-                            </svg>
-                            <span>Dashboard</span>
-                        </div>
-                        <svg class="dropdown-icon" viewBox="0 0 24 24">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                    <div class="submenu active">
-                        <a href="{{ route('admin.dashboard') }}" class="submenu-item active">
-                            <svg viewBox="0 0 24 24">
-                                <polyline points="9 11 12 14 22 4"/>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                            </svg>
-                            <span>Overview</span>
-                        </a>
-                        <a href="{{ route('admin.info-admin') }}" class="submenu-item">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <line x1="19" y1="8" x2="19" y2="14"/>
-                                <line x1="22" y1="11" x2="16" y2="11"/>
-                            </svg>
-                            <span>Info Admin</span>
-                        </a>
-                    </div>
-                </div>
-
-                <a href="#" class="menu-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                    </svg>
-                    <span>Editor</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Anggota</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M12 1v6m0 6v6m-9-9h6m6 0h6"/>
-                        <path d="M19.07 4.93l-3.53 3.53m-7.08 7.08l-3.53 3.53m15.14 0l-3.53-3.53m-7.08-7.08L4.93 4.93"/>
-                    </svg>
-                    <span>Pengaturan</span>
-                </a>
-            </div>
-
-            <div class="menu-section">
-                <div class="menu-label">Halaman Website</div>
-                <a href="{{ route('home') }}" class="menu-item" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                    <span>Beranda</span>
-                </a>
-                <a href="{{ route('organisasi') }}" class="menu-item" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Organisasi</span>
-                </a>
-                <a href="{{ route('e-katalog') }}" class="menu-item" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                    </svg>
-                    <span>E-Katalog</span>
-                </a>
-                <a href="{{ route('berita') }}" class="menu-item" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-                        <polyline points="13 2 13 9 20 9"/>
-                    </svg>
-                    <span>Berita</span>
-                </a>
-                <a href="{{ route('umkm') }}" class="menu-item" target="_blank">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                        <line x1="12" y1="22.08" x2="12" y2="12"/>
-                    </svg>
-                    <span>UMKM</span>
-                </a>
-            </div>
-        </div>
-
-        <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">{{ strtoupper(substr($admin->name, 0, 2)) }}</div>
-                <div class="user-details">
-                    <div class="user-name">{{ $admin->name }}</div>
-                    <div class="user-role">{{ strtoupper($admin->category) }}</div>
-                </div>
-            </div>
+        <div class="welcome-text">
+            <h1>Selamat Datang, {{ auth()->guard('admin')->user()->name }}</h1>
+            <p>Dashboard Admin HIPMI Jawa Barat</p>
+            <span class="category-badge badge-{{ auth()->guard('admin')->user()->category }}">
+                {{ strtoupper(auth()->guard('admin')->user()->category) }}
+            </span>
         </div>
     </div>
+</div>
 
-    <div class="main-content">
-        <div class="topbar">
-            <div class="topbar-left">
-                <h2>Dashboard</h2>
-                <div class="topbar-subtitle">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</div>
-            </div>
-            <div class="topbar-actions">
-                <button class="icon-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                </button>
-                <button class="icon-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                    </svg>
-                </button>
-                <form action="{{ route('admin.logout') }}" method="post" style="margin: 0;">
-                    @csrf
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="content">
-            <div class="welcome-card">
-                <h1>Selamat Datang, {{ $admin->name }}</h1>
-                <p>Dashboard Admin HIPMI Jawa Barat</p>
-                <span class="category-badge badge-{{ $admin->category }}">
-                    {{ strtoupper($admin->category) }}
-                </span>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total Admin</div>
-                    <div class="stat-value">{{ $totalAdmins }}</div>
-                    <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Anggota</div>
-                    <div class="stat-value">0</div>
-                    <div class="stat-meta">Belum ada data</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Event</div>
-                    <div class="stat-value">0</div>
-                    <div class="stat-meta">Belum ada data</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Total Berita</div>
-                    <div class="stat-value">0</div>
-                    <div class="stat-meta">Belum ada data</div>
-                </div>
-            </div>
-
-            <div class="admin-section">
-                <div class="section-header">
-                    <h3 class="section-title">Daftar Admin Terdaftar</h3>
-                    <a href="{{ route('admin.info-admin') }}" class="view-all-btn">Lihat Semua</a>
-                </div>
-                <div class="admin-list">
-                    @foreach($recentAdmins as $adminItem)
-                    <div class="admin-item">
-                        <div class="admin-avatar">{{ strtoupper(substr($adminItem->name, 0, 2)) }}</div>
-                        <div class="admin-info">
-                            <div class="admin-name">{{ $adminItem->name }}</div>
-                            <div class="admin-email">{{ $adminItem->email }}</div>
-                        </div>
-                        <span class="admin-badge badge-{{ $adminItem->category }}">{{ strtoupper($adminItem->category) }}</span>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Admin</div>
+        <div class="stat-value">{{ $totalAdmins }}</div>
+        <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
     </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Anggota</div>
+        <div class="stat-value">0</div>
+        <div class="stat-meta">Belum ada data</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Event</div>
+        <div class="stat-value">0</div>
+        <div class="stat-meta">Belum ada data</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Berita</div>
+        <div class="stat-value">0</div>
+        <div class="stat-meta">Belum ada data</div>
+    </div>
+</div>
 
-    <button class="mobile-menu-toggle" id="mobileMenuToggle">
-        <svg viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-    </button>
-
-    <div class="mobile-overlay" id="mobileOverlay"></div>
-
-    <script>
-        const sidebar = document.getElementById('sidebar');
-        const mobileToggle = document.getElementById('mobileMenuToggle');
-        const mobileOverlay = document.getElementById('mobileOverlay');
-
-        mobileToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('mobile-active');
-            mobileOverlay.classList.toggle('active');
-        });
-
-        mobileOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('mobile-active');
-            mobileOverlay.classList.remove('active');
-        });
-
-        function toggleDropdown(element) {
-            element.classList.toggle('active');
-            const submenu = element.nextElementSibling;
-            submenu.classList.toggle('active');
-        }
-    </script>
-</body>
-</html>
+<div class="admin-section">
+    <div class="section-header">
+        <h3 class="section-title">Daftar Admin Terdaftar</h3>
+        <a href="{{ route('admin.info-admin') }}" class="view-all-btn">Lihat Semua</a>
+    </div>
+    <div class="admin-list">
+        @foreach($recentAdmins as $adminItem)
+        <div class="admin-item">
+            <div class="admin-avatar">
+                @if($adminItem->photo)
+                    <img src="{{ $adminItem->photo_url }}" alt="{{ $adminItem->name }}">
+                @else
+                    {{ strtoupper(substr($adminItem->name, 0, 2)) }}
+                @endif
+            </div>
+            <div class="admin-info">
+                <div class="admin-name">{{ $adminItem->name }}</div>
+                <div class="admin-email">{{ $adminItem->email }}</div>
+            </div>
+            <span class="admin-badge badge-{{ $adminItem->category }}">{{ strtoupper($adminItem->category) }}</span>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endsection
