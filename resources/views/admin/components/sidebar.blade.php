@@ -125,13 +125,39 @@
                 </div>
             </div>
 
-            <a href="{{ route('e-katalog') }}" class="menu-item" target="_blank">
-                <svg viewBox="0 0 24 24">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                </svg>
-                <span>E-Katalog</span>
-            </a>
+            {{-- E-Katalog Dropdown --}}
+            <div class="menu-dropdown">
+                <div class="menu-item has-dropdown {{ $activeMenu === 'katalog' ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        <span>E-Katalog</span>
+                    </div>
+                    <svg class="dropdown-icon" viewBox="0 0 24 24">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+                <div class="submenu {{ $activeMenu === 'katalog' ? 'active' : '' }}">
+                    <a href="{{ route('e-katalog') }}" class="submenu-item" target="_blank">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <span>Lihat Halaman</span>
+                    </a>
+                    <a href="{{ route('admin.katalog.index') }}" class="submenu-item {{ $activeMenu === 'katalog' ? 'active' : '' }}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        <span>Kelola Data</span>
+                    </a>
+                </div>
+            </div>
+
             <a href="{{ route('berita') }}" class="menu-item" target="_blank">
                 <svg viewBox="0 0 24 24">
                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>

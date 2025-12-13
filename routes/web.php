@@ -1,11 +1,12 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\OrganisasiController;
+use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
+use App\Http\Controllers\KatalogController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
 
@@ -27,13 +28,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
     Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 
-
     Route::resource('organisasi', OrganisasiController::class);
+    
+    // Admin E-Katalog Routes - pakai 'katalog' untuk admin
+    Route::resource('katalog', AdminKatalogController::class);
 });
 
+// Public Routes
 Route::view('/', 'pages.home')->name('home');
-Route::view('/e-katalog', 'pages.ekatalog')->name('e-katalog');
-Route::view('/e-katalog/detail', 'pages.details.ekatalog-detail')->name('e-katalog.detail');
+
+// E-Katalog Public Routes - pakai 'e-katalog' untuk public
+Route::get('/e-katalog', [KatalogController::class, 'index'])->name('e-katalog');
+Route::get('/e-katalog/{katalog}', [KatalogController::class, 'show'])->name('e-katalog.detail');
+
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 Route::view('/berita', 'pages.berita')->name('berita');
 Route::view('/umkm', 'pages.umkm')->name('umkm');
