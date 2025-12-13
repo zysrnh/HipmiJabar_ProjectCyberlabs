@@ -18,23 +18,23 @@
             </div>
         </div>
         <div class="hero-2">
-            <img src="{{  asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">
+            <img src="{{ asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">
         </div>
     </section>
 
     <section class="main-info">
         <div class="info-card">
-            <img src="{{ asset('images/icons/users.png')  }}" alt="Anggota" class="icon">
+            <img src="{{ asset('images/icons/users.png') }}" alt="Anggota" class="icon">
             <h2><span class="counter" data-target="23">0</span></h2>
             <h3>Anggota</h3>
         </div>
         <div class="info-card">
-            <img src="{{ asset('images/icons/building.png')  }}" alt="Perusahaan" class="icon">
-            <h2><span class="counter" data-target="23">0</span></h2>
+            <img src="{{ asset('images/icons/building.png') }}" alt="Perusahaan" class="icon">
+            <h2><span class="counter" data-target="{{ $totalKatalog }}">0</span></h2>
             <h3>Perusahaan</h3>
         </div>
         <div class="info-card">
-            <img src="{{ asset('images/icons/folder.png')  }}" alt="Klasifikasi Usaha" class="icon">
+            <img src="{{ asset('images/icons/folder.png') }}" alt="Klasifikasi Usaha" class="icon">
             <h2><span class="counter" data-target="1">0</span></h2>
             <h3>Klasifikasi Usaha</h3>
         </div>
@@ -106,6 +106,7 @@
             </div>
         </div>
     </section>
+
     <section class="buku-informasi-home">
         <div class="green-accent" style="align-self: center; !important"></div>
         <h2>Buku Informasi Anggota HIPMI Jabar</h2>
@@ -139,6 +140,7 @@
             </div>
         </div>
     </section>
+
     <section class="strategic-plan">
         <div class="strategic-plan-content">
             <div class="strategic-plan-image">
@@ -208,7 +210,9 @@
                     <!-- Dummy -->
                 </div>
             </div>
+        </div>
     </section>
+
     <section class="events">
         <div class="green-accent" style="align-self: center; !important"></div>
         <h2>Informasi Kegiatan BPD</h2>
@@ -281,9 +285,8 @@
                         <a href="#" class="events-btn-more">Lihat Lebih Banyak</a>
                     </div>
                 </div>
-
             </div>
-
+        </div>
     </section>
 
     <section class="ekatalog-home">
@@ -316,11 +319,13 @@
             <a href="{{ route('e-katalog') }}" class="btn-ekatalog-home">Lihat Lebih Banyak</a>
         </div>
     </section>
+
     <section class="daftarkan-bisnis-anda">
         <img src="{{ asset('images/maju-babarengan.png') }}" alt="">
         <h1>DAFTARKAN BISNIS ANDA</h1>
         <a href="#" class="btn">Lihat Lebih Banyak</a>
     </section>
+
     <section class="berita-home">
         <div class="green-accent" style="align-self: center; !important"></div>
         <h2>Berita & Dokumentasi</h2>
@@ -398,6 +403,47 @@
         <div style="margin-top: 50px;">
             <a href="#" class="btn-ekatalog-home">Lihat Lebih Banyak</a>
         </div>
-
     </section>
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('.counter');
+    
+    const animateCounter = (counter) => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        const duration = 2000; // 2 detik
+        const increment = target / (duration / 16); // 60fps
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                counter.textContent = Math.floor(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
+            }
+        };
+        
+        updateCounter();
+    };
+    
+    // Intersection Observer untuk animasi saat scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+});
+</script>
+@endpush
