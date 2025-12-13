@@ -11,7 +11,7 @@ class KatalogController extends Controller
     {
         $query = Katalog::where('is_active', true);
 
-        // Search functionality
+
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -27,7 +27,7 @@ class KatalogController extends Controller
 
     public function show(Katalog $katalog)
     {
-        // Only show active katalogs
+        
         if (!$katalog->is_active) {
             abort(404);
         }

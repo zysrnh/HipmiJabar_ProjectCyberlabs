@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Ambil 8 katalog terbaru untuk carousel
+        
         $katalogs = Katalog::where('is_active', true)
                           ->latest()
                           ->limit(8)
