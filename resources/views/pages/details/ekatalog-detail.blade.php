@@ -45,12 +45,11 @@
                 </div>
             </div>
         </div>
-        
+
         @if($katalog->map_embed_url)
             <div class="detail-catalog-contact">
-                <iframe class="map-embed"
-                    src="{{ $katalog->map_embed_url }}"
-                    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                <iframe class="map-embed" src="{{ $katalog->map_embed_url }}" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
         @endif

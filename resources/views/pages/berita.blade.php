@@ -18,7 +18,7 @@
     <section class="berita">
         <div class="berita-left">
             <div class="berita-item">
-                <a href="#" class="berita-item-image">
+                <a href="{{ route('berita-detail') }}" class="berita-item-image">
                     <img src="{{ asset('images/missions/mission-1.png') }}" alt="Berita">
                 </a>
                 <div class="berita-item-content">
