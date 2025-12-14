@@ -3,21 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Katalog;
+use App\Models\Misi;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    /**
+     * Display the home page
+     */
     public function index()
     {
-        // Ambil 8 katalog terbaru untuk ditampilkan
+        // Ambil data katalog aktif (maksimal 10)
         $katalogs = Katalog::where('is_active', true)
-                          ->latest()
-                          ->limit(8)
-                          ->get();
-        
-        // Hitung total semua katalog aktif
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Hitung total katalog aktif
         $totalKatalog = Katalog::where('is_active', true)->count();
-        
-        return view('pages.home', compact('katalogs', 'totalKatalog'));
+
+        // Ambil data misi yang aktif dan diurutkan
+        $misi = Misi::active()->ordered()->get();
+
+        // Return view dengan data
+        return view('pages.home', compact('katalogs', 'totalKatalog', 'misi'));
     }
 }

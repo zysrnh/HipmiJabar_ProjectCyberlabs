@@ -86,13 +86,41 @@
 
         <div class="menu-section">
             <div class="menu-label">Halaman Website</div>
-            <a href="{{ route('home') }}" class="menu-item" target="_blank">
-                <svg viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-                <span>Beranda</span>
-            </a>
+            
+            {{-- Beranda Dropdown (dengan Misi di dalamnya) --}}
+            <div class="menu-dropdown">
+                <div class="menu-item has-dropdown {{ in_array($activeMenu, ['beranda', 'misi']) ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Beranda</span>
+                    </div>
+                    <svg class="dropdown-icon" viewBox="0 0 24 24">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+                <div class="submenu {{ in_array($activeMenu, ['beranda', 'misi']) ? 'active' : '' }}">
+                    <a href="{{ route('home') }}" class="submenu-item" target="_blank">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="2" y1="12" x2="22" y2="12"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                        <span>Lihat Halaman</span>
+                    </a>
+                    <a href="{{ route('admin.misi.index') }}" class="submenu-item {{ $activeMenu === 'misi' ? 'active' : '' }}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="9" y1="15" x2="15" y2="15"/>
+                            <line x1="9" y1="11" x2="15" y2="11"/>
+                        </svg>
+                        <span>Kelola Misi</span>
+                    </a>
+                </div>
+            </div>
 
             {{-- Organisasi Dropdown --}}
             <div class="menu-dropdown">

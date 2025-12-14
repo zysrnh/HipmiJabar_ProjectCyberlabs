@@ -57,55 +57,45 @@
         </div>
     </section>
 
-    <section class="misi">
-        <div class="yellow-accent" style="align-self: center; !important"></div>
-        <h2>Misi Kami</h2>
-        <div class="misi-content">
-            <div class="misi-text">
-                <h2>Peningkatan standar kualitas berbisnis anggota.</h2>
-                <p>1. Pelatihan Bisnis Berkala <br>2. Kolaborasi dengan lembaga pelatihan kredibel</p>
-            </div>
-            <div class="misi-image">
-                <img src="{{ asset('images/missions/mission-1.png') }}" alt="Misi Image">
-            </div>
+   {{-- Ganti section misi yang lama dengan kode ini --}}
+
+<section class="misi" id="misi">
+    <div class="yellow-accent" style="align-self: center; !important"></div>
+    <h2>Misi Kami</h2>
+    
+    @if($misi->count() > 0)
+        @foreach($misi as $index => $item)
+            @if($index % 2 === 0)
+                {{-- Misi Content (gambar di kanan) --}}
+                <div class="misi-content">
+                    <div class="misi-text">
+                        <h2>{{ $item->title }}</h2>
+                        <p>{!! nl2br(e($item->description)) !!}</p>
+                    </div>
+                    <div class="misi-image">
+                        <img src="{{ $item->image_url }}" alt="{{ $item->title }}">
+                    </div>
+                </div>
+            @else
+                {{-- Misi Content Reverse (gambar di kiri) --}}
+                <div class="misi-content-reverse">
+                    <div class="misi-text">
+                        <h2>{{ $item->title }}</h2>
+                        <p>{!! nl2br(e($item->description)) !!}</p>
+                    </div>
+                    <div class="misi-image">
+                        <img src="{{ $item->image_url }}" alt="{{ $item->title }}">
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    @else
+        {{-- Tampilkan pesan jika belum ada data --}}
+        <div style="text-align: center; padding: 3rem 0; color: #6b7280;">
+            <p>Belum ada data misi yang tersedia.</p>
         </div>
-        <div class="misi-content-reverse">
-            <div class="misi-text">
-                <h2>Penguatan Kaderisasi anggota.</h2>
-                <p>Memperkuat program kaderisasi berkelanjutan dan berkualitas</p>
-            </div>
-            <div class="misi-image">
-                <img src="{{ asset('images/missions/mission-2.png') }}" alt="Misi Image">
-            </div>
-        </div>
-        <div class="misi-content">
-            <div class="misi-text">
-                <h2>Pengelolaan organisasi yang profesional dan akuntabel.</h2>
-                <p>Penerapan sistem manajemen organisasi sesuai standar</p>
-            </div>
-            <div class="misi-image">
-                <img src="{{ asset('images/missions/mission-3.png') }}" alt="Misi Image">
-            </div>
-        </div>
-        <div class="misi-content-reverse">
-            <div class="misi-text">
-                <h2>Pengembangan struktur ekonomi BPC yang mandiri, produktif, dan kolaboratif.</h2>
-                <p>1. Mendorong kemandirian keuangan BPC <br>2. Kolaborasi antar BPC dalam kegiatan ekonomi bersama</p>
-            </div>
-            <div class="misi-image">
-                <img src="{{ asset('images/missions/mission-4.png') }}" alt="Misi Image">
-            </div>
-        </div>
-        <div class="misi-content">
-            <div class="misi-text">
-                <h2>Mendorong kemandirian keuangan BPC kolaborasi antar BPC dalam kegiatan ekonomi bersama.</h2>
-                <p>Membangun jaringan kolaborasi HIPMI, BUMN, SWASTA dan Pemerintah daerah</p>
-            </div>
-            <div class="misi-image">
-                <img src="{{ asset('images/missions/mission-5.png') }}" alt="Misi Image">
-            </div>
-        </div>
-    </section>
+    @endif
+</section>
 
     <section class="buku-informasi-home">
         <div class="green-accent" style="align-self: center; !important"></div>

@@ -6,10 +6,13 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\OrganisasiController;
 use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
+use App\Http\Controllers\Admin\MisiController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 
-// Admin Routes
+// =====================================================
+// ADMIN ROUTES
+// =====================================================
 Route::prefix('admin')->name('admin.')->group(function () {
     
     // Route yang TIDAK perlu login (guest routes)
@@ -20,29 +23,43 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Route yang HARUS login (protected with AdminMiddleware)
     Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
+        // Dashboard
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Info Admin (BPD only)
         Route::get('info-admin', [AdminDashboardController::class, 'infoAdmin'])->name('info-admin');
         Route::get('create-admin', [AdminDashboardController::class, 'createAdmin'])->name('create-admin');
         Route::post('store-admin', [AdminDashboardController::class, 'storeAdmin'])->name('store-admin');
         Route::get('edit-admin/{admin}', [AdminDashboardController::class, 'editAdmin'])->name('edit-admin');
         Route::put('update-admin/{admin}', [AdminDashboardController::class, 'updateAdmin'])->name('update-admin');
         Route::delete('delete-admin/{admin}', [AdminDashboardController::class, 'deleteAdmin'])->name('delete-admin');
+        
+        // Logout
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
         
+        // Profile
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
         Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
         Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
         Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 
+        // Organisasi CRUD
         Route::resource('organisasi', OrganisasiController::class);
         
-        // Admin E-Katalog Routes
+        // E-Katalog CRUD
         Route::resource('katalog', AdminKatalogController::class);
+        
+        // Misi CRUD
+        Route::resource('misi', MisiController::class);
     });
 });
 
-// Public Routes
+// =====================================================
+// PUBLIC ROUTES
+// =====================================================
+
+// Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // E-Katalog Public Routes

@@ -5,7 +5,7 @@
     @section('page-title', 'Dashboard')
 
     @php
-        $activeMenu = 'dashboard';
+    $activeMenu = 'dashboard';
     @endphp
 
     @push('styles')
@@ -75,7 +75,7 @@
 
         .welcome-card p {
             font-size: 1.125rem;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 1rem;
         }
 
@@ -109,13 +109,13 @@
             background: white;
             padding: 1.75rem;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e5e7eb;
             transition: all 0.3s;
         }
 
         .stat-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
         }
 
@@ -143,7 +143,7 @@
             background: white;
             padding: 2rem;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid #e5e7eb;
             margin-bottom: 2rem;
         }
@@ -229,11 +229,11 @@
             border-radius: 12px;
             border: 1px solid #e5e7eb;
             transition: all 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .katalog-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
             border-color: #ffd700;
         }
@@ -301,11 +301,11 @@
             border-radius: 12px;
             border: 1px solid #e5e7eb;
             transition: all 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .organisasi-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
             border-color: #3b82f6;
         }
@@ -457,9 +457,9 @@
         <div class="welcome-content">
             <div class="welcome-avatar">
                 @if(auth()->guard('admin')->user()->photo)
-                    <img src="{{ auth()->guard('admin')->user()->photo_url }}" alt="{{ auth()->guard('admin')->user()->name }}">
+                <img src="{{ auth()->guard('admin')->user()->photo_url }}" alt="{{ auth()->guard('admin')->user()->name }}">
                 @else
-                    {{ strtoupper(substr(auth()->guard('admin')->user()->name, 0, 2)) }}
+                {{ strtoupper(substr(auth()->guard('admin')->user()->name, 0, 2)) }}
                 @endif
             </div>
             <div class="welcome-text">
@@ -474,27 +474,27 @@
 
     {{-- Statistics Cards --}}
     {{-- Statistics Cards --}}
-<div class="stats-grid">
-    {{-- Total Admin - Hanya untuk BPD --}}
-    @if(auth()->guard('admin')->user()->category === 'bpd')
-    <div class="stat-card">
-        <div class="stat-label">Total Admin</div>
-        <div class="stat-value">{{ $totalAdmins }}</div>
-        <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
-    </div>
-    @endif
+    <div class="stats-grid">
+        {{-- Total Admin - Hanya untuk BPD --}}
+        @if(auth()->guard('admin')->user()->category === 'bpd')
+        <div class="stat-card">
+            <div class="stat-label">Total Admin</div>
+            <div class="stat-value">{{ $totalAdmins }}</div>
+            <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
+        </div>
+        @endif
         <div class="stat-card">
             <div class="stat-label">Total E-Katalog</div>
             <div class="stat-value">{{ $totalKatalog }}</div>
             <div class="stat-meta">
                 @if($totalKatalogInactive > 0)
-                    {{ $totalKatalogInactive }} tidak aktif
+                {{ $totalKatalogInactive }} tidak aktif
                 @else
-                    Semua aktif
+                Semua aktif
                 @endif
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-label">Total Anggota Organisasi</div>
             <div class="stat-value">{{ $totalOrganisasi }}</div>
@@ -502,21 +502,21 @@
                 Ketua Bidang: {{ $organisasiByKategori['ketua_bidang'] }}
             </div>
         </div>
-        
+
         <div class="stat-card">
             <div class="stat-label">Struktur Organisasi</div>
             <div class="stat-value">{{ $totalOrganisasi }}</div>
             <div class="stat-meta">
-                Ketum: {{ $organisasiByKategori['ketua_umum'] }} | 
+                Ketum: {{ $organisasiByKategori['ketua_umum'] }} |
                 Waketum: {{ $organisasiByKategori['wakil_ketua_umum'] }}
             </div>
         </div>
     </div>
-{{-- Admin List Section - Hanya untuk BPD --}}
-@if(auth()->guard('admin')->user()->category === 'bpd')
-<div class="admin-section">
-    <div class="section-header">
-        <h3 class="section-title">Daftar Admin Terdaftar</h3>
+    {{-- Admin List Section - Hanya untuk BPD --}}
+    @if(auth()->guard('admin')->user()->category === 'bpd')
+    <div class="admin-section">
+        <div class="section-header">
+            <h3 class="section-title">Daftar Admin Terdaftar</h3>
             <a href="{{ route('admin.info-admin') }}" class="view-all-btn">Lihat Semua</a>
         </div>
         <div class="admin-list">
@@ -524,9 +524,9 @@
             <div class="admin-item">
                 <div class="admin-avatar">
                     @if($adminItem->photo)
-                        <img src="{{ $adminItem->photo_url }}" alt="{{ $adminItem->name }}">
+                    <img src="{{ $adminItem->photo_url }}" alt="{{ $adminItem->name }}">
                     @else
-                        {{ strtoupper(substr($adminItem->name, 0, 2)) }}
+                    {{ strtoupper(substr($adminItem->name, 0, 2)) }}
                     @endif
                 </div>
                 <div class="admin-info">
@@ -541,11 +541,11 @@
                 <p>Belum ada admin terdaftar</p>
             </div>
             @endforelse
-          </div>
-</div>
-@endif
+        </div>
+    </div>
+    @endif
     {{-- Katalog Section --}}
-    <div class="admin-section"> 
+    <div class="admin-section">
         <div class="section-header">
             <h3 class="section-title">E-Katalog Terbaru</h3>
             <a href="{{ route('admin.katalog.index') }}" class="view-all-btn">Lihat Semua</a>
