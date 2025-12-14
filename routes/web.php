@@ -71,3 +71,4 @@ Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 Route::view('/berita', 'pages.berita')->name('berita');
 Route::view('/berita/detail', 'pages.details.berita-detail')->name('berita-detail');
 Route::view('/umkm', 'pages.umkm')->name('umkm');
+Route::view('/jadi-anggota', 'pages.jadi-anggota')->name('jadi-anggota');

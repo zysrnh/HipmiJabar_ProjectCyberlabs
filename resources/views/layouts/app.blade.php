@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/ekatalog.css') }}">
     <link rel="stylesheet" href="{{ asset('css/organisasi.css') }}">
     <link rel="stylesheet" href="{{ asset('css/berita.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jadi-anggota.css') }}">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet"

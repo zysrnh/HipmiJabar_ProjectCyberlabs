@@ -24,10 +24,12 @@
                     <a href="{{ route('home') }}" class="nav-link {{ Request::routeIs('home') ? 'active' : '' }}">
                         Beranda
                     </a>
-                    <a href="{{ route('organisasi') }}" class="nav-link {{ Request::routeIs('organisasi') ? 'active' : '' }}">
+                    <a href="{{ route('organisasi') }}"
+                        class="nav-link {{ Request::routeIs('organisasi') ? 'active' : '' }}">
                         Organisasi
                     </a>
-                    <a href="{{ route('e-katalog') }}" class="nav-link {{ Request::routeIs('e-katalog') ? 'active' : '' }}">
+                    <a href="{{ route('e-katalog') }}"
+                        class="nav-link {{ Request::routeIs('e-katalog') ? 'active' : '' }}">
                         E-Katalog
                     </a>
                     <a href="{{ route('berita') }}" class="nav-link {{ Request::routeIs('berita') ? 'active' : '' }}">
@@ -37,7 +39,7 @@
                         UMKM
                     </a>
                     <div class="buttons-mobile">
-                        <a href="#" class="btn-transparent">Jadi Anggota</a>
+                        <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
                         @auth('admin')
                         @else
                             <a href="{{ route('admin.login') }}" class="btn">Login</a>
@@ -46,7 +48,7 @@
                 </div>
 
                 <div class="buttons">
-                    <a href="#" class="btn-transparent">Jadi Anggota</a>
+                    <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
                     @auth('admin')
                         <a href="{{ route('admin.dashboard') }}" class="btn">Dashboard</a>
                     @else

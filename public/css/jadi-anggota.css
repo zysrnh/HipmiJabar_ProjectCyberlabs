@@ -1,0 +1,43 @@
+.ja-page-banner {
+    color: #04293B;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ja-page-banner h1 {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.ja-page-banner p {
+    font-size: 20px;
+}
+
+.rules {
+    display: flex;
+    flex-direction: column;
+    padding: 50px 0px 50px 0px;
+    gap: 20px;
+}
+
+.rules h3 {
+    font-size: 30px;
+}
+
+@media (max-width: 1024px) {
+    .ja-page-banner {
+        padding: 50px;
+        text-align: left;
+    }
+
+    .ja-page-banner h1 {
+        font-size: 30px;
+    }
+
+    .ja-page-banner p {
+        font-size: 16px;
+    }
+
+}
