@@ -4,548 +4,589 @@
 @section('page-title', 'Detail Pendaftar Anggota')
 
 @push('styles')
-<style>
-    .detail-container {
-        max-width: 1200px;
-    }
+    <style>
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 
-    .detail-header {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
 
-    .detail-header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
-    }
+        .btn-download i {
+            font-size: 14px;
+        }
 
-    .detail-info h2 {
-        font-size: 1.5rem;
-        color: #0a2540;
-        margin-bottom: 0.5rem;
-    }
+        .btn-download:hover {
+            background: #1e40af;
+        }
 
-    .detail-meta {
-        display: flex;
-        gap: 1.5rem;
-        color: #6b7280;
-        font-size: 0.875rem;
-    }
+        .detail-container {
+            width: 100%;
+        }
 
-    .detail-actions {
-        display: flex;
-        gap: 0.75rem;
-    }
+        .detail-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-    .btn {
-        padding: 0.625rem 1.25rem;
-        border-radius: 8px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+        .detail-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
 
-    .btn svg {
-        width: 18px;
-        height: 18px;
-        stroke-width: 2;
-    }
+        .detail-info h2 {
+            font-size: 1.5rem;
+            color: #0a2540;
+            margin-bottom: 0.5rem;
+        }
 
-    .btn-approve {
-        background: #10b981;
-        color: white;
-    }
+        .detail-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
 
-    .btn-approve:hover {
-        background: #059669;
-    }
+        .detail-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
 
-    .btn-reject {
-        background: #ef4444;
-        color: white;
-    }
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
 
-    .btn-reject:hover {
-        background: #dc2626;
-    }
+        .btn:hover {
+            transform: scale(1.1);
+        }
 
-    .btn-back {
-        background: #f3f4f6;
-        color: #374151;
-    }
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2;
+        }
 
-    .btn-back:hover {
-        background: #e5e7eb;
-    }
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
 
-    .detail-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-    }
+        .btn-approve:hover {
+            background: #059669;
+        }
 
-    .detail-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+        .btn-reject {
+            background: #ef4444;
+            color: white;
+        }
 
-    .card-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #0a2540;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid #f3f4f6;
-    }
+        .btn-reject:hover {
+            background: #dc2626;
+        }
 
-    .field-group {
-        margin-bottom: 1.25rem;
-    }
+        .btn-back {
+            background: #f3f4f6;
+            color: #374151;
+        }
 
-    .field-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.025em;
-        margin-bottom: 0.375rem;
-    }
+        .btn-back:hover {
+            background: #e5e7eb;
+        }
 
-    .field-value {
-        font-size: 0.875rem;
-        color: #0a2540;
-        font-weight: 500;
-    }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
 
-    .image-preview {
-        width: 100%;
-        border-radius: 8px;
-        border: 1px solid #e5e7eb;
-        margin-top: 0.5rem;
-    }
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-    .file-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #2563eb;
-        text-decoration: none;
-        font-weight: 500;
-    }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #0a2540;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
 
-    .file-link:hover {
-        text-decoration: underline;
-    }
+        .field-group {
+            margin-bottom: 1.25rem;
+        }
 
-    .status-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        grid-column: 1 / -1;
-    }
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 0.375rem;
+        }
 
-    .status-badge-large {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 9999px;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
+        .field-value {
+            font-size: 0.875rem;
+            color: #0a2540;
+            font-weight: 500;
+        }
 
-    .status-badge-large.pending {
-        background: #fef3c7;
-        color: #d97706;
-    }
+        .image-preview {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-top: 0.5rem;
+        }
 
-    .status-badge-large.approved {
-        background: #d1fae5;
-        color: #059669;
-    }
+        .file-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-    .status-badge-large.rejected {
-        background: #fee2e2;
-        color: #dc2626;
-    }
+        .file-link:hover {
+            text-decoration: underline;
+        }
 
-    .rejection-reason {
-        background: #fee2e2;
-        border: 1px solid #fca5a5;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-top: 1rem;
-    }
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+            margin-bottom: 20px;
+        }
 
-    .rejection-reason-title {
-        font-weight: 600;
-        color: #991b1b;
-        margin-bottom: 0.5rem;
-    }
+        .status-badge-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
 
-    .rejection-reason-text {
-        color: #dc2626;
-        font-size: 0.875rem;
-    }
+        .status-badge-large.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
 
-    /* Modal */
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-        align-items: center;
-        justify-content: center;
-    }
+        .status-badge-large.approved {
+            background: #d1fae5;
+            color: #059669;
+        }
 
-    .modal.active {
-        display: flex;
-    }
+        .status-badge-large.rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
 
-    .modal-content {
-        background: white;
-        border-radius: 12px;
-        padding: 2rem;
-        max-width: 500px;
-        width: 90%;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    }
+        .rejection-reason {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
 
-    .modal-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #0a2540;
-        margin-bottom: 1rem;
-    }
+        .rejection-reason-title {
+            font-weight: 600;
+            color: #991b1b;
+            margin-bottom: 0.5rem;
+        }
 
-    .form-group {
-        margin-bottom: 1rem;
-    }
+        .rejection-reason-text {
+            color: #dc2626;
+            font-size: 0.875rem;
+        }
 
-    .form-label {
-        display: block;
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.5rem;
-    }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .form-control {
-        width: 100%;
-        padding: 0.625rem 0.875rem;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 0.875rem;
-    }
+        .modal.active {
+            display: flex;
+        }
 
-    .form-control:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
 
-    .modal-actions {
-        display: flex;
-        gap: 0.75rem;
-        justify-content: flex-end;
-        margin-top: 1.5rem;
-    }
-</style>
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0a2540;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+    </style>
 @endpush
 
 @section('content')
-<div class="detail-container">
-    {{-- Header --}}
-    <div class="detail-header">
-        <div class="detail-header-content">
-            <div class="detail-info">
-                <h2>{{ $anggota->nama_usaha }}</h2>
-                <div class="detail-meta">
-                    <span>📧 {{ $anggota->email }}</span>
-                    <span>📱 {{ $anggota->nomor_telepon }}</span>
-                    <span>📅 Daftar: {{ $anggota->created_at->format('d M Y') }}</span>
+    <div class="detail-container">
+        {{-- Header --}}
+        <div class="detail-header">
+            <div class="detail-header-content">
+                <div class="detail-info">
+                    <h2>{{ $anggota->nama_usaha }}</h2>
+                    <div class="detail-meta">
+                        <span><b>Email :</b> {{ $anggota->email }}</span>
+                        <span><b>Phone :</b> {{ $anggota->nomor_telepon }}</span>
+                        <span><b>Daftar :</b> {{ $anggota->created_at->format('d M Y') }}</span>
+                    </div>
+                </div>
+                <div class="detail-actions">
+                    <a href="{{ route('admin.anggota.index') }}" class="btn btn-back">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        Kembali
+                    </a>
+
+                    @if($anggota->status === 'pending')
+                        <button onclick="showApproveModal()" class="btn btn-approve">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Setujui
+                        </button>
+                        <button onclick="showRejectModal()" class="btn btn-reject">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Tolak
+                        </button>
+                    @endif
                 </div>
             </div>
-            <div class="detail-actions">
-                <a href="{{ route('admin.anggota.index') }}" class="btn btn-back">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M19 12H5M12 19l-7-7 7-7"/>
-                    </svg>
-                    Kembali
-                </a>
-                
+        </div>
+
+        {{-- Status Card --}}
+        <div class="status-card">
+            <div class="card-title">Status Pendaftaran</div>
+            <span class="status-badge-large {{ $anggota->status }}">
                 @if($anggota->status === 'pending')
-                <button onclick="showApproveModal()" class="btn btn-approve">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    Setujui
-                </button>
-                <button onclick="showRejectModal()" class="btn btn-reject">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                    Tolak
-                </button>
+                    ⏳ Menunggu Verifikasi
+                @elseif($anggota->status === 'approved')
+                    ✅ Disetujui
+                @else
+                    ❌ Ditolak
                 @endif
-            </div>
-        </div>
-    </div>
+            </span>
 
-    {{-- Status Card --}}
-    <div class="status-card">
-        <div class="card-title">Status Pendaftaran</div>
-        <span class="status-badge-large {{ $anggota->status }}">
-            @if($anggota->status === 'pending')
-                ⏳ Menunggu Verifikasi
-            @elseif($anggota->status === 'approved')
-                ✅ Disetujui
-            @else
-                ❌ Ditolak
-            @endif
-        </span>
-
-        @if($anggota->status === 'approved')
-            <div style="margin-top: 1rem; color: #059669;">
-                Disetujui oleh <strong>{{ $anggota->approvedBy->name }}</strong> 
-                pada {{ $anggota->approved_at->format('d M Y H:i') }}
-            </div>
-        @endif
-
-        @if($anggota->status === 'rejected' && $anggota->rejection_reason)
-            <div class="rejection-reason">
-                <div class="rejection-reason-title">Alasan Penolakan:</div>
-                <div class="rejection-reason-text">{{ $anggota->rejection_reason }}</div>
-                @if($anggota->approvedBy)
-                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #991b1b;">
-                    Ditolak oleh {{ $anggota->approvedBy->name }} pada {{ $anggota->updated_at->format('d M Y H:i') }}
+            @if($anggota->status === 'approved')
+                <div style="margin-top: 1rem; color: #059669;">
+                    Disetujui oleh <strong>{{ $anggota->approvedBy->name }}</strong>
+                    pada {{ $anggota->approved_at->format('d M Y H:i') }}
                 </div>
-                @endif
-            </div>
-        @endif
-    </div>
+            @endif
 
-    {{-- Detail Grid --}}
-    <div class="detail-grid">
-        {{-- Data Pribadi --}}
-        <div class="detail-card">
-            <h3 class="card-title">Data Pribadi</h3>
-            
-            <div class="field-group">
-                <div class="field-label">Jenis Kelamin</div>
-                <div class="field-value">{{ ucfirst($anggota->jenis_kelamin) }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Tempat, Tanggal Lahir</div>
-                <div class="field-value">{{ $anggota->tempat_lahir }}, {{ $anggota->tanggal_lahir->format('d M Y') }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Agama</div>
-                <div class="field-value">{{ $anggota->agama }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Domisili</div>
-                <div class="field-value">{{ $anggota->domisili }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Alamat Lengkap</div>
-                <div class="field-value">{{ $anggota->alamat_domisili }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Kode Pos</div>
-                <div class="field-value">{{ $anggota->kode_pos }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Nomor KTP</div>
-                <div class="field-value">{{ $anggota->nomor_ktp }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Foto KTP</div>
-                <img src="{{ $anggota->foto_ktp_url }}" alt="Foto KTP" class="image-preview">
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Foto Diri</div>
-                <img src="{{ $anggota->foto_diri_url }}" alt="Foto Diri" class="image-preview">
-            </div>
+            @if($anggota->status === 'rejected' && $anggota->rejection_reason)
+                <div class="rejection-reason">
+                    <div class="rejection-reason-title">Alasan Penolakan:</div>
+                    <div class="rejection-reason-text">{{ $anggota->rejection_reason }}</div>
+                    @if($anggota->approvedBy)
+                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #991b1b;">
+                            Ditolak oleh {{ $anggota->approvedBy->name }} pada {{ $anggota->updated_at->format('d M Y H:i') }}
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
-        {{-- Profile Perusahaan --}}
-        <div class="detail-card">
-            <h3 class="card-title">Profile Perusahaan</h3>
-            
-            <div class="field-group">
-                <div class="field-label">Nama Perusahaan</div>
-                <div class="field-value">{{ $anggota->nama_usaha_perusahaan }}</div>
+        {{-- Detail Grid --}}
+        <div class="detail-grid">
+            {{-- Data Pribadi --}}
+            <div class="detail-card">
+                <h3 class="card-title">Data Pribadi</h3>
+
+                <div class="field-group">
+                    <div class="field-label">Nama Lengkap</div>
+                    <div class="field-value">{{ ucfirst($anggota->nama_usaha) }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Jenis Kelamin</div>
+                    <div class="field-value">{{ ucfirst($anggota->jenis_kelamin) }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Tempat, Tanggal Lahir</div>
+                    <div class="field-value">{{ $anggota->tempat_lahir }}, {{ $anggota->tanggal_lahir->format('d M Y') }}
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Agama</div>
+                    <div class="field-value">{{ $anggota->agama }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Domisili</div>
+                    <div class="field-value">{{ $anggota->domisili }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Alamat Lengkap</div>
+                    <div class="field-value">{{ $anggota->alamat_domisili }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Kode Pos</div>
+                    <div class="field-value">{{ $anggota->kode_pos }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Nomor KTP</div>
+                    <div class="field-value">{{ $anggota->nomor_ktp }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Foto KTP</div>
+                    <img src="{{ $anggota->foto_ktp_url }}" alt="Foto KTP" class="image-preview">
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Foto Diri</div>
+                    <img src="{{ $anggota->foto_diri_url }}" alt="Foto Diri" class="image-preview">
+                </div>
             </div>
-            
-            <div class="field-group">
-                <div class="field-label">Legalitas Usaha</div>
-                <div class="field-value">{{ $anggota->legalitas_usaha }}</div>
+
+            {{-- Profile Perusahaan --}}
+            <div class="detail-card">
+                <h3 class="card-title">Profile Perusahaan</h3>
+
+                <div class="field-group">
+                    <div class="field-label">Nama Perusahaan</div>
+                    <div class="field-value">{{ $anggota->nama_usaha_perusahaan }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Legalitas Usaha</div>
+                    <div class="field-value">{{ $anggota->legalitas_usaha }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Jabatan</div>
+                    <div class="field-value">{{ $anggota->jabatan_usaha }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Alamat Kantor</div>
+                    <div class="field-value">{{ $anggota->alamat_kantor }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Bidang Usaha</div>
+                    <div class="field-value">{{ $anggota->bidang_usaha }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Brand</div>
+                    <div class="field-value">{{ $anggota->brand_usaha }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Jumlah Karyawan</div>
+                    <div class="field-value">{{ $anggota->jumlah_karyawan }} orang</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Usia Perusahaan</div>
+                    <div class="field-value">{{ $anggota->usia_perusahaan }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Omset Per Tahun</div>
+                    <div class="field-value">{{ $anggota->omset_perusahaan }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">NPWP Perusahaan</div>
+                    <div class="field-value">{{ $anggota->npwp_perusahaan }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">No. Nota Pendirian</div>
+                    <div class="field-value">{{ $anggota->no_nota_pendirian }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Profile Perusahaan</div>
+                    <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        Lihat PDF
+                    </a>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Logo Perusahaan</div>
+
+                    <img src="{{ $anggota->logo_perusahaan_url }}" alt="Logo" class="image-preview">
+
+                    <a href="{{ $anggota->logo_perusahaan_url }}" download class="btn-download">
+                        <i class="fa fa-download"></i> Download Logo
+                    </a>
+                </div>
             </div>
-            
-            <div class="field-group">
-                <div class="field-label">Jabatan</div>
-                <div class="field-value">{{ $anggota->jabatan_usaha }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Alamat Kantor</div>
-                <div class="field-value">{{ $anggota->alamat_kantor }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Bidang Usaha</div>
-                <div class="field-value">{{ $anggota->bidang_usaha }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Brand</div>
-                <div class="field-value">{{ $anggota->brand_usaha }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Jumlah Karyawan</div>
-                <div class="field-value">{{ $anggota->jumlah_karyawan }} orang</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Usia Perusahaan</div>
-                <div class="field-value">{{ $anggota->usia_perusahaan }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Omset Per Tahun</div>
-                <div class="field-value">{{ $anggota->omset_perusahaan }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">NPWP Perusahaan</div>
-                <div class="field-value">{{ $anggota->npwp_perusahaan }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">No. Nota Pendirian</div>
-                <div class="field-value">{{ $anggota->no_nota_pendirian }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Profile Perusahaan</div>
-                <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                    </svg>
-                    Lihat PDF
-                </a>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Logo Perusahaan</div>
-                <img src="{{ $anggota->logo_perusahaan_url }}" alt="Logo" class="image-preview">
+
+            {{-- Organisasi --}}
+            <div class="detail-card">
+                <h3 class="card-title">Informasi Organisasi</h3>
+
+                <div class="field-group">
+                    <div class="field-label">SFC HIPMI</div>
+                    <div class="field-value">{{ $anggota->sfc_hipmi }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Referensi Anggota HIPMI</div>
+                    <div class="field-value">{{ $anggota->referensi_hipmi }}</div>
+                </div>
+
+                <div class="field-group">
+                    <div class="field-label">Organisasi Lain</div>
+                    <div class="field-value">{{ $anggota->organisasi_lain }}</div>
+                </div>
             </div>
         </div>
+    </div>
 
-        {{-- Organisasi --}}
-        <div class="detail-card">
-            <h3 class="card-title">Informasi Organisasi</h3>
-            
-            <div class="field-group">
-                <div class="field-label">SFC HIPMI</div>
-                <div class="field-value">{{ $anggota->sfc_hipmi }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Referensi Anggota HIPMI</div>
-                <div class="field-value">{{ $anggota->referensi_hipmi }}</div>
-            </div>
-            
-            <div class="field-group">
-                <div class="field-label">Organisasi Lain</div>
-                <div class="field-value">{{ $anggota->organisasi_lain }}</div>
-            </div>
+    {{-- Approve Modal --}}
+    <div class="modal" id="approveModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Konfirmasi Persetujuan</h3>
+            <p>Apakah Anda yakin ingin menyetujui pendaftaran <strong>{{ $anggota->nama_usaha }}</strong>?</p>
+            <form action="{{ route('admin.anggota.approve', $anggota) }}" method="POST">
+                @csrf
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-back" onclick="closeModal('approveModal')">Batal</button>
+                    <button type="submit" class="btn btn-approve">Ya, Setujui</button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
 
-{{-- Approve Modal --}}
-<div class="modal" id="approveModal">
-    <div class="modal-content">
-        <h3 class="modal-title">Konfirmasi Persetujuan</h3>
-        <p>Apakah Anda yakin ingin menyetujui pendaftaran <strong>{{ $anggota->nama_usaha }}</strong>?</p>
-        <form action="{{ route('admin.anggota.approve', $anggota) }}" method="POST">
-            @csrf
-            <div class="modal-actions">
-                <button type="button" class="btn btn-back" onclick="closeModal('approveModal')">Batal</button>
-                <button type="submit" class="btn btn-approve">Ya, Setujui</button>
-            </div>
-        </form>
+    {{-- Reject Modal --}}
+    <div class="modal" id="rejectModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Tolak Pendaftaran</h3>
+            <form action="{{ route('admin.anggota.reject', $anggota) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label">Alasan Penolakan <span style="color: #ef4444;">*</span></label>
+                    <textarea name="rejection_reason" class="form-control" rows="4"
+                        placeholder="Jelaskan alasan penolakan..." required></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-back" onclick="closeModal('rejectModal')">Batal</button>
+                    <button type="submit" class="btn btn-reject">Tolak</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-{{-- Reject Modal --}}
-<div class="modal" id="rejectModal">
-    <div class="modal-content">
-        <h3 class="modal-title">Tolak Pendaftaran</h3>
-        <form action="{{ route('admin.anggota.reject', $anggota) }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label class="form-label">Alasan Penolakan <span style="color: #ef4444;">*</span></label>
-                <textarea name="rejection_reason" class="form-control" rows="4" placeholder="Jelaskan alasan penolakan..." required></textarea>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-back" onclick="closeModal('rejectModal')">Batal</button>
-                <button type="submit" class="btn btn-reject">Tolak</button>
-            </div>
-        </form>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
-<script>
-    function showApproveModal() {
-        document.getElementById('approveModal').classList.add('active');
-    }
+    <script>
+        function showApproveModal() {
+            document.getElementById('approveModal').classList.add('active');
+        }
 
-    function showRejectModal() {
-        document.getElementById('rejectModal').classList.add('active');
-    }
+        function showRejectModal() {
+            document.getElementById('rejectModal').classList.add('active');
+        }
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('active');
-    }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
 
-    // Close modal on outside click
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.remove('active');
-            }
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
         });
-    });
-</script>
+    </script>
 @endpush

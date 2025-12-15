@@ -81,7 +81,7 @@ Route::get('/e-katalog/{katalog}', [KatalogController::class, 'show'])->name('e-
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 Route::view('/berita', 'pages.berita')->name('berita');
 Route::view('/berita/detail', 'pages.details.berita-detail')->name('berita-detail');
-Route::view('/umkm', 'pages.umkm')->name('umkm');
+Route::view('/umkm', 'pages.registrasi-umkm')->name('umkm');
 
 // Jadi Anggota - Form & Submit
 Route::get('/jadi-anggota', function () {

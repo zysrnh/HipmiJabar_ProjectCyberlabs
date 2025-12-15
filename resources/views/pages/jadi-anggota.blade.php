@@ -95,7 +95,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nama_usaha">Nama Usaha / Brand<span class="required">*</span></label>
+                        <label for="nama_usaha">Nama Lengkap<span class="required">*</span></label>
                         <input type="text" id="nama_usaha" name="nama_usaha" class="form-control" value="{{ old('nama_usaha') }}" required>
                     </div>
                     <div class="form-group">
