@@ -120,5 +120,19 @@ class Anggota extends Model
             'approved_by' => $adminId,
             'approved_at' => null,
         ]);
+
     }
+    // Tambahkan method ini di class Anggota
+public function getPhotoUrlAttribute()
+{
+    if ($this->foto_diri) {
+        return Storage::url($this->foto_diri);
+    }
+    
+    // Gunakan placeholder berdasarkan jenis kelamin
+    return $this->jenis_kelamin === 'Perempuan' 
+        ? asset('images/placeholder/female_ph.jpeg') 
+        : asset('images/placeholder/male_ph.jpeg');
+}
+
 }

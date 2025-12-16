@@ -408,30 +408,25 @@
                 @if($anggota->status === 'pending')
                     ⏳ Menunggu Verifikasi
                 @elseif($anggota->status === 'approved')
-                    ✅ Disetujui
+                    Disetujui
                 @else
-                    ❌ Ditolak
+                    Ditolak
                 @endif
             </span>
 
             @if($anggota->status === 'approved')
-                <div style="margin-top: 1rem; color: #059669;">
-                    Disetujui oleh <strong>{{ $anggota->approvedBy->name }}</strong>
-                    pada {{ $anggota->approved_at->format('d M Y H:i') }}
-                </div>
-            @endif
+    <div style="margin-top: 1rem; color: #059669;">
+        Disetujui oleh <strong>{{ $anggota->approvedBy->name ?? 'Admin' }}</strong>
+        pada {{ $anggota->approved_at ? $anggota->approved_at->format('d M Y H:i') : '-' }}
+    </div>
+@endif
 
-            @if($anggota->status === 'rejected' && $anggota->rejection_reason)
-                <div class="rejection-reason">
-                    <div class="rejection-reason-title">Alasan Penolakan:</div>
-                    <div class="rejection-reason-text">{{ $anggota->rejection_reason }}</div>
-                    @if($anggota->approvedBy)
-                        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #991b1b;">
-                            Ditolak oleh {{ $anggota->approvedBy->name }} pada {{ $anggota->updated_at->format('d M Y H:i') }}
-                        </div>
-                    @endif
-                </div>
-            @endif
+@if($anggota->status === 'rejected' && $anggota->rejection_reason)
+    <div style="margin-top: 1rem; color: #dc2626;">
+        <strong>Alasan Penolakan:</strong><br>
+        {{ $anggota->rejection_reason }}
+    </div>
+@endif
         </div>
 
         {{-- Detail Grid --}}

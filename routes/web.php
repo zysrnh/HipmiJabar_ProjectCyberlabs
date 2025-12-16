@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AnggotaManagementController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\BukuAnggotaController;
 
 // =====================================================
 // ADMIN ROUTES
@@ -96,4 +97,5 @@ Route::post('/jadi-anggota', [AnggotaController::class, 'store'])->name('jadi-an
 Route::view('/detail-buku', 'pages.details.buku-detail')->name('detail-buku');
 Route::view('/informasi-kegiatan', 'pages.informasi-kegiatan')->name('informasi-kegiatan');
 Route::view('/detail-kegiatan', 'pages.details.kegiatan-detail')->name('detail-kegiatan');
-Route::view('/buku-informasi-anggota', 'pages.buku-anggota')->name('buku-anggota');
+Route::get('/buku-informasi-anggota', [BukuAnggotaController::class, 'index'])->name('buku-anggota');
+Route::get('/buku-informasi-anggota/{anggota}', [BukuAnggotaController::class, 'show'])->name('detail-buku');

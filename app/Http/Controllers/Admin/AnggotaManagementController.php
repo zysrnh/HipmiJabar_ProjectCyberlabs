@@ -178,39 +178,38 @@ class AnggotaManagementController extends Controller
     }
 
     public function approve(Anggota $anggota)
-    {
-        $admin = auth()->guard('admin')->user();
-        
-        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
-            abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
-        }
-        
-        $anggota->update(['status' => 'approved']);
-        
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Anggota berhasil disetujui!');
+{
+    $admin = auth()->guard('admin')->user();
+    
+    if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+        abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
     }
+    
+    // Gunakan method approve() dari Model
+    $anggota->approve($admin->id);
+    
+    return redirect()->route('admin.anggota.index')
+        ->with('success', 'Anggota berhasil disetujui!');
+}
 
-    public function reject(Request $request, Anggota $anggota)
-    {
-        $admin = auth()->guard('admin')->user();
-        
-        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
-            abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
-        }
-        
-        $request->validate([
-            'alasan_penolakan' => 'required|string|max:500'
-        ]);
-        
-        $anggota->update([
-            'status' => 'rejected',
-            'alasan_penolakan' => $request->alasan_penolakan
-        ]);
-        
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Anggota berhasil ditolak!');
+public function reject(Request $request, Anggota $anggota)
+{
+    $admin = auth()->guard('admin')->user();
+    
+    if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+        abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
     }
+    
+    $request->validate([
+        'alasan_penolakan' => 'required|string|max:500'
+    ]);
+    
+    // Gunakan method reject() dari Model
+    $anggota->reject($request->alasan_penolakan, $admin->id);
+    
+    return redirect()->route('admin.anggota.index')
+        ->with('success', 'Anggota berhasil ditolak!');
+}
 
     public function destroy(Anggota $anggota)
     {

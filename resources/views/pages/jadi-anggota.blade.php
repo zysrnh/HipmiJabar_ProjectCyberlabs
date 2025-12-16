@@ -152,33 +152,27 @@
                     <label for="domisili">Domisili<span class="required">*</span></label>
                     <select id="domisili" name="domisili" class="form-control" required>
                         <option value="">Pilih Kabupaten/Kota</option>
-                        <option value="Kab. Bandung" {{ old('domisili') == 'Kab. Bandung' ? 'selected' : '' }}>Kab. Bandung</option>
-                        <option value="Kab. Bandung Barat" {{ old('domisili') == 'Kab. Bandung Barat' ? 'selected' : '' }}>Kab. Bandung Barat</option>
-                        <option value="Kab. Bekasi" {{ old('domisili') == 'Kab. Bekasi' ? 'selected' : '' }}>Kab. Bekasi</option>
-                        <option value="Kab. Bogor" {{ old('domisili') == 'Kab. Bogor' ? 'selected' : '' }}>Kab. Bogor</option>
-                        <option value="Kab. Ciamis" {{ old('domisili') == 'Kab. Ciamis' ? 'selected' : '' }}>Kab. Ciamis</option>
-                        <option value="Kab. Cianjur" {{ old('domisili') == 'Kab. Cianjur' ? 'selected' : '' }}>Kab. Cianjur</option>
-                        <option value="Kab. Cirebon" {{ old('domisili') == 'Kab. Cirebon' ? 'selected' : '' }}>Kab. Cirebon</option>
-                        <option value="Kab. Garut" {{ old('domisili') == 'Kab. Garut' ? 'selected' : '' }}>Kab. Garut</option>
-                        <option value="Kab. Indramayu" {{ old('domisili') == 'Kab. Indramayu' ? 'selected' : '' }}>Kab. Indramayu</option>
-                        <option value="Kab. Karawang" {{ old('domisili') == 'Kab. Karawang' ? 'selected' : '' }}>Kab. Karawang</option>
-                        <option value="Kab. Kuningan" {{ old('domisili') == 'Kab. Kuningan' ? 'selected' : '' }}>Kab. Kuningan</option>
-                        <option value="Kab. Majalengka" {{ old('domisili') == 'Kab. Majalengka' ? 'selected' : '' }}>Kab. Majalengka</option>
-                        <option value="Kab. Pangandaran" {{ old('domisili') == 'Kab. Pangandaran' ? 'selected' : '' }}>Kab. Pangandaran</option>
-                        <option value="Kab. Purwakarta" {{ old('domisili') == 'Kab. Purwakarta' ? 'selected' : '' }}>Kab. Purwakarta</option>
-                        <option value="Kab. Subang" {{ old('domisili') == 'Kab. Subang' ? 'selected' : '' }}>Kab. Subang</option>
-                        <option value="Kab. Sukabumi" {{ old('domisili') == 'Kab. Sukabumi' ? 'selected' : '' }}>Kab. Sukabumi</option>
-                        <option value="Kab. Sumedang" {{ old('domisili') == 'Kab. Sumedang' ? 'selected' : '' }}>Kab. Sumedang</option>
-                        <option value="Kab. Tasikmalaya" {{ old('domisili') == 'Kab. Tasikmalaya' ? 'selected' : '' }}>Kab. Tasikmalaya</option>
-                        <option value="Kota Bandung" {{ old('domisili') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
-                        <option value="Kota Banjar" {{ old('domisili') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
-                        <option value="Kota Bekasi" {{ old('domisili') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
-                        <option value="Kota Bogor" {{ old('domisili') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
-                        <option value="Kota Cimahi" {{ old('domisili') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
-                        <option value="Kota Cirebon" {{ old('domisili') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
-                        <option value="Kota Depok" {{ old('domisili') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
-                        <option value="Kota Sukabumi" {{ old('domisili') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
-                        <option value="Kota Tasikmalaya" {{ old('domisili') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
+                        <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Bandung</option>
+                        <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Bandung Barat</option>
+                        <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Bekasi</option>
+                        <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Bogor</option>
+                        <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Ciamis</option>
+                        <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Cianjur</option>
+                        <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Cirebon</option>
+                        <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Garut</option>
+                        <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Indramayu</option>
+                        <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Karawang</option>
+                        <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kuningan</option>
+                        <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Majalengka</option>
+                        <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Pangandaran</option>
+                        <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Purwakarta</option>
+                        <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Subang</option>
+                        <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Sukabumi</option>
+                        <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Sumedang</option>
+                        <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Tasikmalaya</option>
+                        <option value="Banjar" {{ old('domisili') == 'Banjar' ? 'selected' : '' }}>Banjar</option>
+                        <option value="Cimahi" {{ old('domisili') == 'Cimahi' ? 'selected' : '' }}>Cimahi</option>
+                        <option value="Depok" {{ old('domisili') == 'Depok' ? 'selected' : '' }}>Depok</option>
                     </select>
                 </div>
 
@@ -288,7 +282,7 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Nama Legalitas Usaha<span class="required">*</span></label>
+                        <label>Usia Perusahaan<span class="required">*</span></label>
                         <div class="radio-group-vertical">
                             <label class="radio-label">
                                 <input type="radio" name="usia_perusahaan" value="< 1 Tahun" {{ old('usia_perusahaan') == '< 1 Tahun' ? 'checked' : '' }} required>
@@ -408,35 +402,35 @@
 
                 <div class="form-actions-two">
                     <button type="button" class="btn-secondary btn-prev" data-prev="2">Sebelumnya</button>
-                    <button type="button" class="btn-submit btn-next" data-next="4" id="btnNextOrganisasi" disabled>Berikutnya</button>
+                    <button type="button" class="btn-submit btn-next" data-next="4" id="btnNextOrganisasi">Berikutnya</button>
                 </div>
             </div>
 
-      <!-- Step 4: Daftar -->
-<div class="form-step" data-step="4">
-    <h2 class="form-title">Daftar</h2>
+            <!-- Step 4: Daftar -->
+            <div class="form-step" data-step="4">
+                <h2 class="form-title">Daftar</h2>
 
-    <div class="form-group full-width">
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
-            <label class="radio-label" style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin: 0;">
-                <input type="checkbox" name="pernyataan" value="1" 
-                       {{ old('pernyataan') ? 'checked' : '' }} 
-                       required
-                       style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
-                <span style="font-size: 15px; line-height: 1.6;">
-                    Dengan ini saya menyatakan bahwa data yang saya isi adalah <strong>benar dan valid</strong>, 
-                    serta bersedia mengikuti seluruh tahapan seleksi keanggotaan HIPMI Jawa Barat.
-                    <span class="required" style="color: #dc3545;">*</span>
-                </span>
-            </label>
-        </div>
-    </div>
+                <div class="form-group full-width">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
+                        <label class="radio-label" style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin: 0;">
+                            <input type="checkbox" name="pernyataan" value="1" 
+                                   {{ old('pernyataan') ? 'checked' : '' }} 
+                                   required
+                                   style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                            <span style="font-size: 15px; line-height: 1.6;">
+                                Dengan ini saya menyatakan bahwa data yang saya isi adalah <strong>benar dan valid</strong>, 
+                                serta bersedia mengikuti seluruh tahapan seleksi keanggotaan HIPMI Jawa Barat.
+                                <span class="required" style="color: #dc3545;">*</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
 
-    <div class="form-actions-two">
-        <button type="button" class="btn-secondary btn-prev" data-prev="3">Sebelumnya</button>
-        <button type="submit" class="btn-submit">Daftar</button>
-    </div>
-</div>
+                <div class="form-actions-two">
+                    <button type="button" class="btn-secondary btn-prev" data-prev="3">Sebelumnya</button>
+                    <button type="submit" class="btn-submit">Daftar</button>
+                </div>
+            </div>
         </form>
     </div>
 </section>
@@ -545,48 +539,6 @@
                 const prevStep = this.getAttribute('data-prev');
                 goToStep(parseInt(prevStep));
             });
-        });
-
-        // Validation for Step 3 (Organisasi) - Real-time button enable/disable
-        const sfcInput = document.getElementById('sfc_hipmi');
-        const referensiRadios = document.querySelectorAll('input[name="referensi_hipmi"]');
-        const organisasiRadios = document.querySelectorAll('input[name="organisasi_lain"]');
-        const btnNextOrganisasi = document.getElementById('btnNextOrganisasi');
-
-        function checkOrganisasiForm() {
-            const sfcFilled = sfcInput.value.trim() !== '';
-            const referensiChecked = Array.from(referensiRadios).some(function(radio) {
-                return radio.checked;
-            });
-            const organisasiChecked = Array.from(organisasiRadios).some(function(radio) {
-                return radio.checked;
-            });
-
-            // Visual feedback untuk field yang kosong
-            if (!sfcFilled) {
-                sfcInput.classList.add('field-invalid');
-            } else {
-                sfcInput.classList.remove('field-invalid');
-            }
-
-            // Enable/disable button
-            if (sfcFilled && referensiChecked && organisasiChecked) {
-                btnNextOrganisasi.disabled = false;
-            } else {
-                btnNextOrganisasi.disabled = true;
-            }
-        }
-
-        // Add event listeners for validation
-        if (sfcInput) {
-            sfcInput.addEventListener('input', checkOrganisasiForm);
-            sfcInput.addEventListener('blur', checkOrganisasiForm);
-        }
-        referensiRadios.forEach(function(radio) {
-            radio.addEventListener('change', checkOrganisasiForm);
-        });
-        organisasiRadios.forEach(function(radio) {
-            radio.addEventListener('change', checkOrganisasiForm);
         });
 
         // Custom Alert Function with better styling
@@ -747,6 +699,7 @@
             const requiredInputs = currentStepElement.querySelectorAll('input[required], select[required], textarea[required]');
             const emptyFields = [];
             const processedRadioGroups = [];
+            const processedCheckboxGroups = [];
 
             requiredInputs.forEach(function(input) {
                 const label = currentStepElement.querySelector('label[for="' + input.id + '"]');
@@ -780,6 +733,40 @@
                             radioContainer.style.borderRadius = '8px';
                             radioContainer.style.padding = '10px';
                         }
+                    } else {
+                        // Remove visual feedback if checked
+                        const radioContainer = input.closest('.form-group');
+                        if (radioContainer) {
+                            radioContainer.style.border = '';
+                            radioContainer.style.borderRadius = '';
+                            radioContainer.style.padding = '';
+                        }
+                    }
+                } else if (input.type === 'checkbox') {
+                    const checkboxName = input.name;
+
+                    // Skip if we've already processed this checkbox
+                    if (processedCheckboxGroups.indexOf(checkboxName) !== -1) {
+                        return;
+                    }
+
+                    processedCheckboxGroups.push(checkboxName);
+
+                    if (!input.checked) {
+                        emptyFields.push(fieldName);
+                        const checkboxContainer = input.closest('.form-group');
+                        if (checkboxContainer) {
+                            checkboxContainer.style.border = '2px solid #ff4444';
+                            checkboxContainer.style.borderRadius = '8px';
+                            checkboxContainer.style.padding = '10px';
+                        }
+                    } else {
+                        const checkboxContainer = input.closest('.form-group');
+                        if (checkboxContainer) {
+                            checkboxContainer.style.border = '';
+                            checkboxContainer.style.borderRadius = '';
+                            checkboxContainer.style.padding = '';
+                        }
                     }
                 } else if (input.type === 'file') {
                     if (!input.files || input.files.length === 0) {
@@ -788,8 +775,15 @@
                     } else {
                         input.classList.remove('field-invalid');
                     }
+                } else if (input.tagName === 'SELECT') {
+                    if (!input.value || input.value === '') {
+                        emptyFields.push(fieldName);
+                        input.classList.add('field-invalid');
+                    } else {
+                        input.classList.remove('field-invalid');
+                    }
                 } else {
-                    if (!input.value.trim()) {
+                    if (!input.value || !input.value.trim()) {
                         emptyFields.push(fieldName);
                         input.classList.add('field-invalid');
                     } else {

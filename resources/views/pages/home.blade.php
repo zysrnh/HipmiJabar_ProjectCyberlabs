@@ -95,41 +95,196 @@
             </div>
         @endif
     </section>
-
-    <section class="buku-informasi-home">
-        <div class="green-accent" style="align-self: center; !important"></div>
-        <h2>Buku Informasi Anggota HIPMI Jabar</h2>
-        <div class="buku-informasi-home-content">
-            <div class="owl-carousel anggota-carousel">
-                @forelse($anggotaList as $anggota)
-                    <a href="{{ route('detail-buku', $anggota->id) }}">
-                        <div class="buku-card">
-                            <img src="{{ $anggota->foto_diri_url ?? asset('images/default-avatar.png') }}" 
-                                 alt="{{ $anggota->nama_usaha }}">
-                            <div class="container">
-                                <h4><b>{{ $anggota->nama_usaha }}</b></h4>
-                                <p>{{ Str::limit($anggota->nama_usaha_perusahaan, 30, '...') }}</p>
-                            </div>
+<section class="buku-informasi-home">
+    <div class="green-accent" style="align-self: center;"></div>
+    <h2>Buku Informasi Anggota HIPMI Jabar</h2>
+    <div class="buku-informasi-home-content">
+        <div class="owl-carousel anggota-carousel">
+            @forelse($anggotaList as $anggota)
+                <a href="{{ route('detail-buku', $anggota->id) }}">
+                    <div class="buku-card">
+                        <img src="{{ $anggota->photo_url }}" alt="{{ $anggota->nama_usaha }}" loading="lazy">
+                        <div class="container">
+                            <h4><b>{{ $anggota->nama_usaha }}</b></h4>
+                            <p>{{ Str::limit($anggota->nama_usaha_perusahaan ?? 'Perusahaan Tidak Disebutkan', 30, '...') }}</p>
                         </div>
-                    </a>
-                @empty
-                    <a href="{{ route('buku-anggota') }}">
-                        <div class="buku-card">
-                            <img src="{{ asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">
-                            <div class="container">
-                                <h4><b>Belum Ada Anggota</b></h4>
-                                <p>Klik untuk lihat daftar</p>
-                            </div>
+                    </div>
+                </a>
+            @empty
+                <a href="{{ route('buku-anggota') }}">
+                    <div class="buku-card">
+                        <img src="{{ asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">
+                        <div class="container">
+                            <h4><b>Belum Ada Anggota</b></h4>
+                            <p>Klik untuk lihat daftar</p>
                         </div>
-                    </a>
-                @endforelse
-            </div>
-
-            <div style="text-align:center; margin-top:25px;">
-                <a href="{{ route('buku-anggota') }}" class="btn-ekatalog-home">Lihat Lebih Banyak</a>
-            </div>
+                    </div>
+                </a>
+            @endforelse
         </div>
-    </section>
+
+        <div style="text-align:center; margin-top:25px;">
+            <a href="{{ route('buku-anggota') }}" class="btn-ekatalog-home">Lihat Lebih Banyak</a>
+        </div>
+    </div>
+</section>
+
+<style>
+/* ================== BUKU INFORMASI HOME SECTION ================== */
+.buku-informasi-home {
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.buku-informasi-home > h2 {
+    font-size: 30px;
+    color: #04293B;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.buku-informasi-home-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.anggota-carousel a {
+    color: #04293B;
+    text-decoration: none;
+}
+
+/* Buku Card Styling */
+.buku-card {
+    padding: 30px;
+    text-align: center;
+    border: 1px solid #04293B;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.buku-card:hover {
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(4, 41, 59, 0.2);
+}
+
+.buku-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: 20px;
+    border: #04293B 1px solid;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
+
+.buku-card h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #04293B;
+    font-weight: 600;
+}
+
+.buku-card p {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.buku-card .container {
+    padding: 0 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Button */
+.btn-ekatalog-home {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #04293B;
+    border: #04293B 1px solid;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-ekatalog-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(4, 41, 59, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .buku-informasi-home {
+        padding: 50px 30px;
+        justify-content: center;
+    }
+
+    .buku-informasi-home > h2 {
+        font-size: 25px;
+        margin-bottom: 30px;
+    }
+
+    .buku-card {
+        padding: 20px;
+    }
+
+    .buku-card img {
+        height: 180px;
+    }
+
+    .buku-card h4 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .buku-card p {
+        font-size: 13px;
+    }
+
+    .btn-ekatalog-home {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .buku-informasi-home {
+        padding: 40px 20px;
+    }
+
+    .buku-informasi-home > h2 {
+        font-size: 22px;
+    }
+
+    .buku-card img {
+        height: 150px;
+    }
+
+    .buku-card h4 {
+        font-size: 15px;
+    }
+
+    .buku-card p {
+        font-size: 12px;
+    }
+}
+</style>
 
     <section class="strategic-plan">
         <div class="strategic-plan-content">
