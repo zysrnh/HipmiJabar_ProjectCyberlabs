@@ -371,7 +371,7 @@
             margin: 0 auto 1rem;
             stroke: #d1d5db;
         }
-
+a
         /* Responsive Design */
         @media (max-width: 768px) {
             .page-header {
