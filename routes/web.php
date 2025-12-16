@@ -8,10 +8,12 @@ use App\Http\Controllers\Admin\OrganisasiController;
 use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
 use App\Http\Controllers\Admin\MisiController;
 use App\Http\Controllers\Admin\AnggotaManagementController;
+use App\Http\Controllers\Admin\BeritaController as AdminBeritaController; // TAMBAH INI
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BukuAnggotaController;
+use App\Http\Controllers\BeritaController; // TAMBAH INI
 
 // =====================================================
 // ADMIN ROUTES
@@ -47,14 +49,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
         Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
 
-        // Organisasi CRUD
+        // Organisasi CRUD (BPD only)
         Route::resource('organisasi', OrganisasiController::class);
 
-        // E-Katalog CRUD
+        // E-Katalog CRUD (BPD only)
         Route::resource('katalog', AdminKatalogController::class);
 
-        // Misi CRUD
+        // Misi CRUD (BPD only)
         Route::resource('misi', MisiController::class);
+
+        // Berita CRUD (BPD only) - TAMBAH INI
+        Route::resource('berita', AdminBeritaController::class);
 
         // Anggota Management
         Route::prefix('anggota')->name('anggota.')->group(function () {
@@ -83,10 +88,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/e-katalog', [KatalogController::class, 'index'])->name('e-katalog');
 Route::get('/e-katalog/{katalog}', [KatalogController::class, 'show'])->name('e-katalog.detail');
 
+// Berita Public Routes - UBAH INI
+Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
+Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita-detail');
+
 // Other Public Pages
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
-Route::view('/berita', 'pages.berita')->name(name: 'berita');
-Route::view('/berita/detail', 'pages.details.berita-detail')->name('berita-detail');
 Route::view('/umkm', 'pages.registrasi-umkm')->name('umkm');
 
 // Jadi Anggota - Form & Submit
