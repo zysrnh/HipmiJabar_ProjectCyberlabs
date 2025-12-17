@@ -8,12 +8,13 @@ use App\Http\Controllers\Admin\OrganisasiController;
 use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
 use App\Http\Controllers\Admin\MisiController;
 use App\Http\Controllers\Admin\AnggotaManagementController;
-use App\Http\Controllers\Admin\BeritaController as AdminBeritaController; // TAMBAH INI
+use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BukuAnggotaController;
-use App\Http\Controllers\BeritaController; // TAMBAH INI
+use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\UmkmController; // TAMBAH INI
 
 // =====================================================
 // ADMIN ROUTES
@@ -58,7 +59,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Misi CRUD (BPD only)
         Route::resource('misi', MisiController::class);
 
-        // Berita CRUD (BPD only) - GANTI DENGAN ROUTE MANUAL
+        // Berita CRUD (BPD only)
         Route::get('berita', [AdminBeritaController::class, 'index'])->name('berita.index');
         Route::get('berita/create', [AdminBeritaController::class, 'create'])->name('berita.create');
         Route::post('berita', [AdminBeritaController::class, 'store'])->name('berita.store');
@@ -68,14 +69,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Anggota Management
         Route::prefix('anggota')->name('anggota.')->group(function () {
-            // Routes untuk Verifikasi (Menu Dashboard - hanya BPC yang bisa approve/reject)
             Route::get('/', [AnggotaManagementController::class, 'index'])->name('index');
             Route::get('/{anggota}', [AnggotaManagementController::class, 'show'])->name('show');
             Route::post('/{anggota}/approve', [AnggotaManagementController::class, 'approve'])->name('approve');
             Route::post('/{anggota}/reject', [AnggotaManagementController::class, 'reject'])->name('reject');
             Route::delete('/{anggota}', [AnggotaManagementController::class, 'destroy'])->name('destroy');
-            
-            // Routes baru untuk List Anggota (Read-Only - BPC & BPD bisa akses)
             Route::get('/list/all', [AnggotaManagementController::class, 'listAll'])->name('list');
             Route::get('/list/{anggota}/detail', [AnggotaManagementController::class, 'showReadOnly'])->name('show-readonly');
         });
@@ -93,19 +91,24 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/e-katalog', [KatalogController::class, 'index'])->name('e-katalog');
 Route::get('/e-katalog/{katalog}', [KatalogController::class, 'show'])->name('e-katalog.detail');
 
-// Berita Public Routes - PENTING: Taruh SETELAH semua route admin
+// Berita Public Routes
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita-detail');
 
 // Other Public Pages
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
-Route::view('/umkm', 'pages.registrasi-umkm')->name('umkm');
 
-// Jadi Anggota - Form & Submit
+// UMKM Registration - GANTI DENGAN INI
+Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
+Route::post('/umkm', [UmkmController::class, 'store'])->name('umkm.store');
+
+// Jadi Anggota
 Route::get('/jadi-anggota', function () {
     return view('pages.jadi-anggota');
 })->name('jadi-anggota');
 Route::post('/jadi-anggota', [AnggotaController::class, 'store'])->name('jadi-anggota.store');
+
+// Other Routes
 Route::view('/detail-buku', 'pages.details.buku-detail')->name('detail-buku');
 Route::view('/informasi-kegiatan', 'pages.informasi-kegiatan')->name('informasi-kegiatan');
 Route::view('/detail-kegiatan', 'pages.details.kegiatan-detail')->name('detail-kegiatan');
