@@ -37,24 +37,17 @@ class BeritaController extends Controller
             })
             ->paginate(5);
 
-        // Berita populer (5 terbaru)
+        // Berita populer (5 terbaru yang ditandai sebagai populer)
         $beritaPopuler = Berita::active()
             ->populer()
             ->latestPublish()
             ->take(5)
             ->get();
 
-        // Berita terbaru (5 terbaru, exclude yang sudah tampil)
-        $excludeIds = collect([$beritaUtama?->id])
-            ->merge($beritas->pluck('id'))
-            ->merge($beritaPopuler->pluck('id'))
-            ->filter()
-            ->unique()
-            ->values();
-
+        // Berita terbaru (5 terbaru dari SEMUA berita, tidak exclude apapun)
+        // Ini memastikan berita terbaru yang baru ditambahkan akan langsung muncul
         $beritaTerbaru = Berita::active()
             ->latestPublish()
-            ->whereNotIn('id', $excludeIds)
             ->take(5)
             ->get();
 
