@@ -112,22 +112,53 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tempat_lahir">Tempat lahir<span class="required">*</span></label>
-                        <select id="tempat_lahir" name="tempat_lahir" class="form-control" required>
-                            <option value="">Pilih Kota/Kabupaten</option>
-                            <option value="Bandung" {{ old('tempat_lahir') == 'Bandung' ? 'selected' : '' }}>Bandung</option>
-                            <option value="Bekasi" {{ old('tempat_lahir') == 'Bekasi' ? 'selected' : '' }}>Bekasi</option>
-                            <option value="Bogor" {{ old('tempat_lahir') == 'Bogor' ? 'selected' : '' }}>Bogor</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="tanggal_lahir">Tanggal Lahir<span class="required">*</span></label>
-                        <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
-                    </div>
-                </div>
+<div class="form-row">
+    <div class="form-group">
+        <label for="tempat_lahir">Tempat lahir<span class="required">*</span></label>
+        <select id="tempat_lahir" name="tempat_lahir" class="form-control" required>
+            <option value="">Pilih Kota/Kabupaten</option>
+            
+            {{-- KABUPATEN (18) --}}
+            <optgroup label="Kabupaten">
+                <option value="Bandung" {{ old('tempat_lahir') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
+                <option value="Bandung Barat" {{ old('tempat_lahir') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
+                <option value="Bekasi" {{ old('tempat_lahir') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
+                <option value="Bogor" {{ old('tempat_lahir') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
+                <option value="Ciamis" {{ old('tempat_lahir') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
+                <option value="Cianjur" {{ old('tempat_lahir') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
+                <option value="Cirebon" {{ old('tempat_lahir') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
+                <option value="Garut" {{ old('tempat_lahir') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
+                <option value="Indramayu" {{ old('tempat_lahir') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
+                <option value="Karawang" {{ old('tempat_lahir') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
+                <option value="Kuningan" {{ old('tempat_lahir') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
+                <option value="Majalengka" {{ old('tempat_lahir') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
+                <option value="Pangandaran" {{ old('tempat_lahir') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
+                <option value="Purwakarta" {{ old('tempat_lahir') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
+                <option value="Subang" {{ old('tempat_lahir') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
+                <option value="Sukabumi" {{ old('tempat_lahir') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
+                <option value="Sumedang" {{ old('tempat_lahir') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
+                <option value="Tasikmalaya" {{ old('tempat_lahir') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
+            </optgroup>
+            
+            {{-- KOTA (9) --}}
+            <optgroup label="Kota">
+                <option value="Kota Bandung" {{ old('tempat_lahir') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
+                <option value="Kota Banjar" {{ old('tempat_lahir') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
+                <option value="Kota Bekasi" {{ old('tempat_lahir') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
+                <option value="Kota Bogor" {{ old('tempat_lahir') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
+                <option value="Kota Cimahi" {{ old('tempat_lahir') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
+                <option value="Kota Cirebon" {{ old('tempat_lahir') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
+                <option value="Kota Depok" {{ old('tempat_lahir') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
+                <option value="Kota Sukabumi" {{ old('tempat_lahir') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
+                <option value="Kota Tasikmalaya" {{ old('tempat_lahir') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
+            </optgroup>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="tanggal_lahir">Tanggal Lahir<span class="required">*</span></label>
+        <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
+    </div>
+</div>
 
                 <div class="form-row">
                     <div class="form-group">
@@ -152,27 +183,41 @@
                     <label for="domisili">Domisili<span class="required">*</span></label>
                     <select id="domisili" name="domisili" class="form-control" required>
                         <option value="">Pilih Kabupaten/Kota</option>
-                        <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Bandung</option>
-                        <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Bandung Barat</option>
-                        <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Bekasi</option>
-                        <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Bogor</option>
-                        <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Ciamis</option>
-                        <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Cianjur</option>
-                        <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Cirebon</option>
-                        <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Garut</option>
-                        <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Indramayu</option>
-                        <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Karawang</option>
-                        <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kuningan</option>
-                        <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Majalengka</option>
-                        <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Pangandaran</option>
-                        <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Purwakarta</option>
-                        <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Subang</option>
-                        <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Sukabumi</option>
-                        <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Sumedang</option>
-                        <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Tasikmalaya</option>
-                        <option value="Banjar" {{ old('domisili') == 'Banjar' ? 'selected' : '' }}>Banjar</option>
-                        <option value="Cimahi" {{ old('domisili') == 'Cimahi' ? 'selected' : '' }}>Cimahi</option>
-                        <option value="Depok" {{ old('domisili') == 'Depok' ? 'selected' : '' }}>Depok</option>
+
+                        {{-- KABUPATEN (18) --}}
+                        <optgroup label="Kabupaten">
+                            <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
+                            <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
+                            <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
+                            <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
+                            <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
+                            <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
+                            <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
+                            <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
+                            <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
+                            <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
+                            <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
+                            <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
+                            <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
+                            <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
+                            <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
+                            <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
+                            <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
+                            <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
+                        </optgroup>
+
+                        {{-- KOTA (9) --}}
+                        <optgroup label="Kota">
+                            <option value="Kota Bandung" {{ old('domisili') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
+                            <option value="Kota Banjar" {{ old('domisili') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
+                            <option value="Kota Bekasi" {{ old('domisili') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
+                            <option value="Kota Bogor" {{ old('domisili') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
+                            <option value="Kota Cimahi" {{ old('domisili') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
+                            <option value="Kota Cirebon" {{ old('domisili') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
+                            <option value="Kota Depok" {{ old('domisili') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
+                            <option value="Kota Sukabumi" {{ old('domisili') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
+                            <option value="Kota Tasikmalaya" {{ old('domisili') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -286,7 +331,8 @@
                         <div class="radio-group-vertical">
                             <label class="radio-label">
                                 <input type="radio" name="usia_perusahaan" value="< 1 Tahun" {{ old('usia_perusahaan') == '< 1 Tahun' ? 'checked' : '' }} required>
-                                <span>< 1 Tahun</span>
+                                <span>
+                                    < 1 Tahun</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="usia_perusahaan" value="1 - 2 Tahun" {{ old('usia_perusahaan') == '1 - 2 Tahun' ? 'checked' : '' }} required>
@@ -307,7 +353,8 @@
                         <div class="radio-group-vertical">
                             <label class="radio-label">
                                 <input type="radio" name="omset_perusahaan" value="< Rp. 1.000.000.000" {{ old('omset_perusahaan') == '< Rp. 1.000.000.000' ? 'checked' : '' }} required>
-                                <span>< Rp. 1.000.000.000</span>
+                                <span>
+                                    < Rp. 1.000.000.000</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="omset_perusahaan" value="Rp. 1.000.000.000 - Rp. 4.000.000.000" {{ old('omset_perusahaan') == 'Rp. 1.000.000.000 - Rp. 4.000.000.000' ? 'checked' : '' }} required>
@@ -413,12 +460,12 @@
                 <div class="form-group full-width">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
                         <label class="radio-label" style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; margin: 0;">
-                            <input type="checkbox" name="pernyataan" value="1" 
-                                   {{ old('pernyataan') ? 'checked' : '' }} 
-                                   required
-                                   style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
+                            <input type="checkbox" name="pernyataan" value="1"
+                                {{ old('pernyataan') ? 'checked' : '' }}
+                                required
+                                style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;">
                             <span style="font-size: 15px; line-height: 1.6;">
-                                Dengan ini saya menyatakan bahwa data yang saya isi adalah <strong>benar dan valid</strong>, 
+                                Dengan ini saya menyatakan bahwa data yang saya isi adalah <strong>benar dan valid</strong>,
                                 serta bersedia mengikuti seluruh tahapan seleksi keanggotaan HIPMI Jawa Barat.
                                 <span class="required" style="color: #dc3545;">*</span>
                             </span>
@@ -436,84 +483,85 @@
 </section>
 
 <style>
-/* Alert Styles */
-.alert {
-    display: flex;
-    align-items: flex-start;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+    /* Alert Styles */
+    .alert {
+        display: flex;
+        align-items: flex-start;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        animation: slideDown 0.3s ease-out;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
-}
 
-.alert svg {
-    flex-shrink: 0;
-    margin-right: 12px;
-    margin-top: 2px;
-}
+    .alert svg {
+        flex-shrink: 0;
+        margin-right: 12px;
+        margin-top: 2px;
+    }
 
-.alert-success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-}
+    .alert-success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
 
-.alert-success svg {
-    stroke: #28a745;
-}
+    .alert-success svg {
+        stroke: #28a745;
+    }
 
-.alert-error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
+    .alert-error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
 
-.alert-error svg {
-    stroke: #dc3545;
-}
+    .alert-error svg {
+        stroke: #dc3545;
+    }
 
-.alert strong {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 8px;
-}
+    .alert strong {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+    }
 
-.alert ul {
-    margin: 0;
-    padding-left: 20px;
-}
+    .alert ul {
+        margin: 0;
+        padding-left: 20px;
+    }
 
-.alert ul li {
-    margin-bottom: 4px;
-}
+    .alert ul li {
+        margin-bottom: 4px;
+    }
 
-.alert ul li:last-child {
-    margin-bottom: 0;
-}
+    .alert ul li:last-child {
+        margin-bottom: 0;
+    }
 
-/* Field validation styles */
-.field-invalid {
-    border: 2px solid #ff4444 !important;
-    background-color: #fff5f5 !important;
-}
+    /* Field validation styles */
+    .field-invalid {
+        border: 2px solid #ff4444 !important;
+        background-color: #fff5f5 !important;
+    }
 
-.field-invalid:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1) !important;
-}
+    .field-invalid:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1) !important;
+    }
 </style>
 
 <script>
