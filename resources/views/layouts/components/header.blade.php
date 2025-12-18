@@ -39,20 +39,39 @@
                         UMKM
                     </a>
                     <div class="buttons-mobile">
-                        <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
-                        @auth('admin')
+                        @auth('anggota')
+                            <a href="{{ route('profile-anggota') }}" class="btn-transparent">Profile Anggota</a>
                         @else
-                            <a href="{{ route('admin.login') }}" class="btn">Login</a>
+                            <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
+                        @endauth
+                        
+                        @auth('admin')
+                            <a href="{{ route('admin.dashboard') }}" class="btn">Dashboard</a>
+                        @else
+                            @auth('anggota')
+                                {{-- Anggota sudah login, tidak perlu tombol login admin --}}
+                            @else
+                                <a href="{{ route('admin.login') }}" class="btn">Login</a>
+                            @endauth
                         @endauth
                     </div>
                 </div>
 
                 <div class="buttons">
-                    <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
+                    @auth('anggota')
+                        <a href="{{ route('profile-anggota') }}" class="btn-transparent">Profile Anggota</a>
+                    @else
+                        <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
+                    @endauth
+                    
                     @auth('admin')
                         <a href="{{ route('admin.dashboard') }}" class="btn">Dashboard</a>
                     @else
-                        <a href="{{ route('admin.login') }}" class="btn">Login</a>
+                        @auth('anggota')
+                            {{-- Anggota sudah login, tidak perlu tombol login admin --}}
+                        @else
+                            <a href="{{ route('admin.login') }}" class="btn">Login</a>
+                        @endauth
                     @endauth
                 </div>
             </nav>

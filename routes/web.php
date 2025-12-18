@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UmkmManagementController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\AnggotaAuthController;
 use App\Http\Controllers\BukuAnggotaController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\UmkmController;
@@ -82,12 +83,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // UMKM Management
         Route::prefix('umkm-management')->name('umkm.')->group(function () {
             Route::get('/', [UmkmManagementController::class, 'index'])->name('index');
-            Route::get('/export', [UmkmManagementController::class, 'export'])->name('export'); // ← TAMBAHKAN INI
+            Route::get('/export', [UmkmManagementController::class, 'export'])->name('export');
             Route::get('/{umkm}', [UmkmManagementController::class, 'show'])->name('show');
             Route::post('/{umkm}/approve', [UmkmManagementController::class, 'approve'])->name('approve');
             Route::post('/{umkm}/reject', [UmkmManagementController::class, 'reject'])->name('reject');
             Route::delete('/{umkm}', [UmkmManagementController::class, 'destroy'])->name('destroy');
         });
+    });
+});
+
+// =====================================================
+// ANGGOTA AUTH ROUTES
+// =====================================================
+Route::prefix('anggota')->name('anggota.')->group(function () {
+    // Login routes (guest only)
+    Route::middleware('guest:anggota')->group(function () {
+        Route::get('login', [AnggotaAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [AnggotaAuthController::class, 'login'])->name('login.post');
+    });
+
+    // Protected routes (must be logged in)
+    Route::middleware('auth:anggota')->group(function () {
+        Route::post('logout', [AnggotaAuthController::class, 'logout'])->name('logout');
     });
 });
 
@@ -113,11 +130,29 @@ Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
 Route::post('/umkm', [UmkmController::class, 'store'])->name('umkm.store');
 
-// Jadi Anggota
+// Jadi Anggota (Public - Registration)
 Route::get('/jadi-anggota', function () {
+    // Redirect jika sudah login
+    if (Auth::guard('anggota')->check()) {
+        return redirect()->route('profile-anggota');
+    }
     return view('pages.jadi-anggota');
 })->name('jadi-anggota');
 Route::post('/jadi-anggota', [AnggotaController::class, 'store'])->name('jadi-anggota.store');
+
+// Registration Success Page (Protected)
+Route::get('/registration-success', function () {
+    if (!session()->has('generated_password')) {
+        return redirect()->route('home');
+    }
+    return view('pages.registration-success');
+})->middleware('auth:anggota')->name('registration-success');
+
+// Profile Anggota Routes (Protected)
+Route::middleware('auth:anggota')->group(function () {
+    Route::get('/profile-anggota', [AnggotaController::class, 'profile'])->name('profile-anggota');
+    Route::post('/profile-anggota/change-password', [AnggotaController::class, 'changePassword'])->name('profile-anggota.change-password');
+});
 
 // Other Routes
 Route::view('/detail-buku', 'pages.details.buku-detail')->name('detail-buku');

@@ -6,88 +6,14 @@ use App\Models\Anggota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AnggotaController extends Controller
 {
-    public function index(Request $request)
-    {
-        $admin = auth()->guard('admin')->user();
-        $status = $request->get('status', 'all');
-        $domisili = $request->get('domisili', 'all');
-        
-        // Query base
-        $query = Anggota::query();
-        
-        // Filter berdasarkan kategori admin
-        if ($admin->category === 'bpc') {
-            // BPC hanya bisa lihat anggota di domisilinya
-            $query->where('domisili', $admin->domisili);
-            
-            // Stats untuk BPC
-            $stats = [
-                'total' => Anggota::where('domisili', $admin->domisili)->count(),
-                'pending' => Anggota::where('domisili', $admin->domisili)->where('status', 'pending')->count(),
-                'approved' => Anggota::where('domisili', $admin->domisili)->where('status', 'approved')->count(),
-                'rejected' => Anggota::where('domisili', $admin->domisili)->where('status', 'rejected')->count(),
-            ];
-            
-            $domisiliList = null;
-            
-        } elseif ($admin->category === 'bpd') {
-            // BPD bisa lihat semua anggota
-            if ($domisili !== 'all') {
-                $query->where('domisili', $domisili);
-            }
-            
-            // Stats untuk BPD
-            if ($domisili === 'all') {
-                $stats = [
-                    'total' => Anggota::count(),
-                    'pending' => Anggota::where('status', 'pending')->count(),
-                    'approved' => Anggota::where('status', 'approved')->count(),
-                    'rejected' => Anggota::where('status', 'rejected')->count(),
-                ];
-            } else {
-                $stats = [
-                    'total' => Anggota::where('domisili', $domisili)->count(),
-                    'pending' => Anggota::where('domisili', $domisili)->where('status', 'pending')->count(),
-                    'approved' => Anggota::where('domisili', $domisili)->where('status', 'approved')->count(),
-                    'rejected' => Anggota::where('domisili', $domisili)->where('status', 'rejected')->count(),
-                ];
-            }
-            
-            // List domisili untuk dropdown
-            $domisiliList = \App\Models\Admin::where('category', 'bpc')
-                ->whereNotNull('domisili')
-                ->orderBy('domisili')
-                ->pluck('domisili')
-                ->unique()
-                ->values();
-        }
-        
-        // Filter berdasarkan status
-        if ($status !== 'all') {
-            $query->where('status', $status);
-        }
-        
-        // Get data dengan pagination
-        $anggota = $query->latest()->paginate(15)->appends([
-            'status' => $status,
-            'domisili' => $domisili
-        ]);
-        
-        return view('admin.anggota.index', compact(
-            'anggota',
-            'stats',
-            'status',
-            'domisili',
-            'domisiliList'
-        ));
-    }
-
     public function store(Request $request)
     {
-        // Validasi
         $validator = Validator::make($request->all(), [
             // Data Pribadi
             'nama_usaha' => 'required|string|max:255',
@@ -99,7 +25,7 @@ class AnggotaController extends Controller
             'domisili' => 'required|string|max:255',
             'alamat_domisili' => 'required|string',
             'kode_pos' => 'required|string|max:10',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:anggota,email',
             'nomor_ktp' => 'required|string|size:16',
             'foto_ktp' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'foto_diri' => 'required|image|mimes:jpeg,jpg,png|max:2048',
@@ -128,6 +54,7 @@ class AnggotaController extends Controller
         ], [
             'required' => ':attribute wajib diisi.',
             'email' => 'Format email tidak valid.',
+            'unique' => 'Email sudah terdaftar.',
             'image' => ':attribute harus berupa gambar.',
             'mimes' => ':attribute harus berformat :values.',
             'max' => ':attribute maksimal :max KB.',
@@ -144,20 +71,17 @@ class AnggotaController extends Controller
         }
 
         try {
-            // Upload foto KTP
+            // Upload files
             $fotoKtpPath = $request->file('foto_ktp')->store('anggota/ktp', 'public');
-            
-            // Upload foto diri
             $fotoDiriPath = $request->file('foto_diri')->store('anggota/foto', 'public');
-            
-            // Upload profile perusahaan (PDF)
             $profilePath = $request->file('profile_perusahaan')->store('anggota/profile', 'public');
-            
-            // Upload logo perusahaan
             $logoPath = $request->file('logo_perusahaan')->store('anggota/logo', 'public');
 
+            // Generate random password
+            $randomPassword = Str::random(12);
+
             // Simpan data ke database
-            Anggota::create([
+            $anggota = Anggota::create([
                 // Data Pribadi
                 'nama_usaha' => $request->nama_usaha,
                 'jenis_kelamin' => $request->jenis_kelamin,
@@ -169,6 +93,8 @@ class AnggotaController extends Controller
                 'alamat_domisili' => $request->alamat_domisili,
                 'kode_pos' => $request->kode_pos,
                 'email' => $request->email,
+                'password' => Hash::make($randomPassword),
+                'initial_password' => $randomPassword,
                 'nomor_ktp' => $request->nomor_ktp,
                 'foto_ktp' => $fotoKtpPath,
                 'foto_diri' => $fotoDiriPath,
@@ -198,8 +124,15 @@ class AnggotaController extends Controller
                 'status' => 'pending',
             ]);
 
-            return redirect()->route('jadi-anggota')
-                ->with('success', 'Pendaftaran berhasil! Data Anda akan segera diverifikasi oleh admin.');
+            // Auto login anggota
+            Auth::guard('anggota')->login($anggota);
+
+            // Simpan password dan email di session untuk halaman sukses
+            session()->flash('generated_password', $randomPassword);
+            session()->flash('user_email', $anggota->email);
+
+            // Redirect ke halaman sukses registrasi
+            return redirect()->route('registration-success');
 
         } catch (\Exception $e) {
             // Hapus file yang sudah diupload jika ada error
@@ -212,5 +145,46 @@ class AnggotaController extends Controller
                 ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
                 ->withInput();
         }
+    }
+
+    // Profile anggota
+    public function profile()
+    {
+        $anggota = Auth::guard('anggota')->user();
+        
+        if (!$anggota) {
+            return redirect()->route('anggota.login')
+                ->with('error', 'Anda harus login terlebih dahulu.');
+        }
+
+        return view('pages.profile-anggota', compact('anggota'));
+    }
+
+    // Change password
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ], [
+            'current_password.required' => 'Password lama wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password baru minimal 6 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        $anggota = Auth::guard('anggota')->user();
+
+        // Cek password lama
+        if (!Hash::check($request->current_password, $anggota->password)) {
+            return back()->with('error', 'Password lama tidak sesuai.');
+        }
+
+        // Update password
+        $anggota->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Password berhasil diubah!');
     }
 }

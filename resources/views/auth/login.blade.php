@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Login - HIPMI Jawa Barat')
+@section('title', (Request::is('admin/login') ? 'Login Admin' : 'Login Anggota') . ' - HIPMI Jawa Barat')
 
 @section('content')
 <style>
@@ -73,20 +73,75 @@
   .alert-close:hover {
     opacity: 1;
   }
+
+  .login-type-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .badge-admin {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+
+  .badge-anggota {
+    background: #f3e5f5;
+    color: #6a1b9a;
+  }
+
+  .login-switch {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .login-switch a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .login-switch a:hover {
+    text-decoration: underline;
+  }
 </style>
+
+@php
+  $isAdmin = Request::is('admin/login');
+  $loginType = $isAdmin ? 'admin' : 'anggota';
+  $loginTitle = $isAdmin ? 'Login Admin' : 'Login Anggota';
+  $loginAction = $isAdmin ? route('admin.login.post') : route('anggota.login.post');
+  $inputLabel = $isAdmin ? 'Nama Pengguna atau Alamat Email' : 'Email';
+  $inputType = $isAdmin ? 'text' : 'email';
+  $inputName = $isAdmin ? 'login' : 'email';
+  $badgeClass = $isAdmin ? 'badge-admin' : 'badge-anggota';
+@endphp
 
 <section class="login-page">
   <div class="login-card">
     <div class="login-left">
       <div class="brand">
-        <img href="{{ route('home') }}" class="brand__logo" src="{{ asset('images/hipmi-logo.png') }}" alt="Logo HIMPI">
-        <img href="{{ route('home') }}" class="brand__badge" src="{{ asset('images/maju-babarengan.png') }}"
-          alt="Maju Barengan">
+        <a href="{{ route('home') }}">
+          <img class="brand__logo" src="{{ asset('images/hipmi-logo.png') }}" alt="Logo HIMPI">
+        </a>
+        <a href="{{ route('home') }}">
+          <img class="brand__badge" src="{{ asset('images/maju-babarengan.png') }}" alt="Maju Barengan">
+        </a>
       </div>
 
-      <h1 class="login-title">Login</h1>
+      <span class="login-type-badge {{ $badgeClass }}">
+        {{ $isAdmin ? '👤 Admin' : '👥 Anggota' }}
+      </span>
+      
+      <h1 class="login-title">{{ $loginTitle }}</h1>
 
-      <form class="login-form" action="{{ route('admin.login.post') }}" method="post">
+      <form class="login-form" action="{{ $loginAction }}" method="post">
         @csrf
 
         {{-- Flash Messages --}}
@@ -124,16 +179,27 @@
         @endif
 
         <label class="field">
-          <span class="field__label">Nama Pengguna atau Alamat Email</span>
-          <input class="field__input" type="text" name="login" placeholder="Masukkan Email atau Username"
-            value="{{ old('login') }}" autocomplete="username" required autofocus />
+          <span class="field__label">{{ $inputLabel }}</span>
+          <input class="field__input" 
+                 type="{{ $inputType }}" 
+                 name="{{ $inputName }}" 
+                 placeholder="{{ $isAdmin ? 'Masukkan Email atau Username' : 'Masukkan Email Anda' }}"
+                 value="{{ old($inputName) }}" 
+                 autocomplete="{{ $isAdmin ? 'username' : 'email' }}" 
+                 required 
+                 autofocus />
         </label>
 
         <label class="field">
           <span class="field__label">Password</span>
           <div class="password-wrap">
-            <input class="field__input field__input--password" type="password" name="password"
-              placeholder="Masukkan Password" autocomplete="current-password" required id="password" />
+            <input class="field__input field__input--password" 
+                   type="password" 
+                   name="password"
+                   placeholder="Masukkan Password" 
+                   autocomplete="current-password" 
+                   required 
+                   id="password" />
             <button class="eye-btn" type="button" aria-label="Tampilkan password" onclick="togglePassword()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.6" />
@@ -142,11 +208,34 @@
             </button>
           </div>
         </label>
+
         <div>
           <button class="login-btn" type="submit">Masuk</button>
-          <a href="{{ route('home') }}" class="forgot-password">Lupa Kata Sandi?</a>
+          
+          @if(!$isAdmin)
+            <p style="text-align: center; margin-top: 15px; font-size: 14px; color: #666;">
+              Belum punya akun? <a href="{{ route('jadi-anggota') }}" style="color: #667eea; font-weight: 600;">Daftar Sekarang</a>
+            </p>
+          @else
+            <a href="{{ route('home') }}" class="forgot-password">Lupa Kata Sandi?</a>
+          @endif
         </div>
       </form>
+
+      {{-- Switch Login Type --}}
+      <div class="login-switch">
+        @if($isAdmin)
+          <p style="color: #666; margin: 0;">
+            Bukan admin? 
+            <a href="{{ route('anggota.login') }}">Login sebagai Anggota</a>
+          </p>
+        @else
+          <p style="color: #666; margin: 0;">
+            Anda admin? 
+            <a href="{{ route('admin.login') }}">Login sebagai Admin</a>
+          </p>
+        @endif
+      </div>
     </div>
 
     <div class="login-right">

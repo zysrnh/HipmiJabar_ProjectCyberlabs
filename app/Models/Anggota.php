@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
 
-class Anggota extends Model
+class Anggota extends Authenticatable
 {
     use HasFactory;
 
@@ -23,6 +23,8 @@ class Anggota extends Model
         'alamat_domisili',
         'kode_pos',
         'email',
+        'password',
+        'initial_password', // ← TAMBAHKAN INI
         'nomor_ktp',
         'foto_ktp',
         'foto_diri',
@@ -49,42 +51,54 @@ class Anggota extends Model
         'approved_by',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $casts = [
         'tanggal_lahir' => 'date',
         'approved_at' => 'datetime',
     ];
 
-    // Relationship dengan Admin yang approve
+    // ... sisa method tetap sama
+    
     public function approvedBy()
     {
         return $this->belongsTo(Admin::class, 'approved_by');
     }
 
-    // Accessor untuk URL foto KTP
     public function getFotoKtpUrlAttribute()
     {
         return $this->foto_ktp ? Storage::url($this->foto_ktp) : null;
     }
 
-    // Accessor untuk URL foto diri
     public function getFotoDiriUrlAttribute()
     {
         return $this->foto_diri ? Storage::url($this->foto_diri) : null;
     }
 
-    // Accessor untuk URL profile perusahaan
     public function getProfilePerusahaanUrlAttribute()
     {
         return $this->profile_perusahaan ? Storage::url($this->profile_perusahaan) : null;
     }
 
-    // Accessor untuk URL logo perusahaan
     public function getLogoPerusahaanUrlAttribute()
     {
         return $this->logo_perusahaan ? Storage::url($this->logo_perusahaan) : null;
     }
 
-    // Scope untuk filter berdasarkan status
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->foto_diri) {
+            return Storage::url($this->foto_diri);
+        }
+        
+        return $this->jenis_kelamin === 'Perempuan' 
+            ? asset('images/placeholder/female_ph.jpeg') 
+            : asset('images/placeholder/male_ph.jpeg');
+    }
+
     public function scopePending($query)
     {
         return $query->where('status', 'pending');
@@ -100,7 +114,6 @@ class Anggota extends Model
         return $query->where('status', 'rejected');
     }
 
-    // Method untuk approve anggota
     public function approve($adminId)
     {
         $this->update([
@@ -111,7 +124,6 @@ class Anggota extends Model
         ]);
     }
 
-    // Method untuk reject anggota
     public function reject($reason, $adminId)
     {
         $this->update([
@@ -120,19 +132,5 @@ class Anggota extends Model
             'approved_by' => $adminId,
             'approved_at' => null,
         ]);
-
     }
-    // Tambahkan method ini di class Anggota
-public function getPhotoUrlAttribute()
-{
-    if ($this->foto_diri) {
-        return Storage::url($this->foto_diri);
-    }
-    
-    // Gunakan placeholder berdasarkan jenis kelamin
-    return $this->jenis_kelamin === 'Perempuan' 
-        ? asset('images/placeholder/female_ph.jpeg') 
-        : asset('images/placeholder/male_ph.jpeg');
-}
-
 }

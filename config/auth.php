@@ -17,6 +17,12 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        // Guard baru untuk anggota
+        'anggota' => [
+            'driver' => 'session',
+            'provider' => 'anggotas',
+        ],
     ],
 
     'providers' => [
@@ -29,18 +35,17 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
+
+        // Provider baru untuk anggota
+        'anggotas' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Anggota::class,
+        ],
     ],
 
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'admins' => [
-            'provider' => 'admins',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
