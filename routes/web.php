@@ -126,9 +126,11 @@ Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita-de
 // Other Public Pages
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 
-// UMKM Registration
-Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
-Route::post('/umkm', [UmkmController::class, 'store'])->name('umkm.store');
+// ✨ UMKM Registration - PROTECTED (Harus Login) ✨
+
+    Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
+    Route::post('/umkm', [UmkmController::class, 'store'])->name('umkm.store');
+
 
 // Jadi Anggota (Public - Registration)
 Route::get('/jadi-anggota', function () {
@@ -152,11 +154,18 @@ Route::get('/registration-success', function () {
 Route::middleware('auth:anggota')->group(function () {
     Route::get('/profile-anggota', [AnggotaController::class, 'profile'])->name('profile-anggota');
     Route::post('/profile-anggota/change-password', [AnggotaController::class, 'changePassword'])->name('profile-anggota.change-password');
+    
+    // CRUD Profile Routes
+    Route::post('/profile-anggota/update-profile', [AnggotaController::class, 'updateProfile'])->name('profile-anggota.update-profile');
+    Route::post('/profile-anggota/update-company', [AnggotaController::class, 'updateCompany'])->name('profile-anggota.update-company');
+    Route::post('/profile-anggota/upload-detail-images', [AnggotaController::class, 'uploadDetailImages'])->name('profile-anggota.upload-detail-images');
+    Route::post('/profile-anggota/delete-detail-image', [AnggotaController::class, 'deleteDetailImage'])->name('profile-anggota.delete-detail-image');
 });
 
 // Other Routes
-Route::view('/detail-buku', 'pages.details.buku-detail')->name('detail-buku');
 Route::view('/informasi-kegiatan', 'pages.informasi-kegiatan')->name('informasi-kegiatan');
 Route::view('/detail-kegiatan', 'pages.details.kegiatan-detail')->name('detail-kegiatan');
+
+// Buku Anggota Routes
 Route::get('/buku-informasi-anggota', [BukuAnggotaController::class, 'index'])->name('buku-anggota');
 Route::get('/buku-informasi-anggota/{anggota}', [BukuAnggotaController::class, 'show'])->name('detail-buku');

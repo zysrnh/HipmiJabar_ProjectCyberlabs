@@ -1,8 +1,8 @@
-{{-- resources/views/admin/create-admin.blade.php --}}
+{{-- resources/views/admin/edit-admin.blade.php --}}
 @extends('admin.layouts.admin-layout')
 
-@section('title', 'Tambah Admin')
-@section('page-title', 'Tambah Admin')
+@section('title', 'Edit Admin')
+@section('page-title', 'Edit Admin')
 
 @php
     $activeMenu = 'info-admin';
@@ -342,14 +342,15 @@
         <span class="breadcrumb-separator">›</span>
         <a href="{{ route('admin.info-admin') }}">Info Admin</a>
         <span class="breadcrumb-separator">›</span>
-        <span class="breadcrumb-current">Tambah Admin</span>
+        <span class="breadcrumb-current">Edit Admin</span>
     </div>
-    <h1 class="page-title">Tambah Admin Baru</h1>
-    <p class="page-desc">Lengkapi formulir di bawah untuk menambahkan administrator baru ke sistem HIPMI Jawa Barat</p>
+    <h1 class="page-title">Edit Admin</h1>
+    <p class="page-desc">Perbarui informasi administrator {{ $admin->name }}</p>
 </div>
 
-<form action="{{ route('admin.store-admin') }}" method="POST">
+<form action="{{ route('admin.update-admin', $admin) }}" method="POST">
     @csrf
+    @method('PUT')
     
     <div class="form-container">
         <div class="form-header">
@@ -368,7 +369,7 @@
                             type="text" 
                             name="name" 
                             class="form-input @error('name') error @enderror" 
-                            value="{{ old('name') }}"
+                            value="{{ old('name', $admin->name) }}"
                             placeholder="Masukkan nama lengkap"
                             required
                         >
@@ -383,7 +384,7 @@
                             type="email" 
                             name="email" 
                             class="form-input @error('email') error @enderror" 
-                            value="{{ old('email') }}"
+                            value="{{ old('email', $admin->email) }}"
                             placeholder="contoh@email.com"
                             required
                         >
@@ -404,7 +405,7 @@
                             type="text" 
                             name="username" 
                             class="form-input @error('username') error @enderror" 
-                            value="{{ old('username') }}"
+                            value="{{ old('username', $admin->username) }}"
                             placeholder="Masukkan username"
                             required
                         >
@@ -424,7 +425,7 @@
                                     name="category" 
                                     value="bpc" 
                                     class="category-radio" 
-                                    {{ old('category') == 'bpc' ? 'checked' : '' }}
+                                    {{ old('category', $admin->category) == 'bpc' ? 'checked' : '' }}
                                     onchange="toggleDomisili()"
                                     required
                                 >
@@ -440,7 +441,7 @@
                                     name="category" 
                                     value="bpd" 
                                     class="category-radio"
-                                    {{ old('category') == 'bpd' ? 'checked' : '' }}
+                                    {{ old('category', $admin->category) == 'bpd' ? 'checked' : '' }}
                                     onchange="toggleDomisili()"
                                 >
                                 <label for="category-bpd" class="category-label">
@@ -462,27 +463,27 @@
                             class="form-select @error('domisili') error @enderror"
                         >
                             <option value="">Pilih Domisili</option>
-                            <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Bandung</option>
-                            <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Bandung Barat</option>
-                            <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Bekasi</option>
-                            <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Bogor</option>
-                            <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Ciamis</option>
-                            <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Cianjur</option>
-                            <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Cirebon</option>
-                            <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Garut</option>
-                            <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Indramayu</option>
-                            <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Karawang</option>
-                            <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kuningan</option>
-                            <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Majalengka</option>
-                            <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Pangandaran</option>
-                            <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Purwakarta</option>
-                            <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Subang</option>
-                            <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Sukabumi</option>
-                            <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Sumedang</option>
-                            <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Tasikmalaya</option>
-                            <option value="Banjar" {{ old('domisili') == 'Banjar' ? 'selected' : '' }}>Banjar</option>
-                            <option value="Cimahi" {{ old('domisili') == 'Cimahi' ? 'selected' : '' }}>Cimahi</option>
-                            <option value="Depok" {{ old('domisili') == 'Depok' ? 'selected' : '' }}>Depok</option>
+                            <option value="Bandung" {{ old('domisili', $admin->domisili) == 'Bandung' ? 'selected' : '' }}>Bandung</option>
+                            <option value="Bandung Barat" {{ old('domisili', $admin->domisili) == 'Bandung Barat' ? 'selected' : '' }}>Bandung Barat</option>
+                            <option value="Bekasi" {{ old('domisili', $admin->domisili) == 'Bekasi' ? 'selected' : '' }}>Bekasi</option>
+                            <option value="Bogor" {{ old('domisili', $admin->domisili) == 'Bogor' ? 'selected' : '' }}>Bogor</option>
+                            <option value="Ciamis" {{ old('domisili', $admin->domisili) == 'Ciamis' ? 'selected' : '' }}>Ciamis</option>
+                            <option value="Cianjur" {{ old('domisili', $admin->domisili) == 'Cianjur' ? 'selected' : '' }}>Cianjur</option>
+                            <option value="Cirebon" {{ old('domisili', $admin->domisili) == 'Cirebon' ? 'selected' : '' }}>Cirebon</option>
+                            <option value="Garut" {{ old('domisili', $admin->domisili) == 'Garut' ? 'selected' : '' }}>Garut</option>
+                            <option value="Indramayu" {{ old('domisili', $admin->domisili) == 'Indramayu' ? 'selected' : '' }}>Indramayu</option>
+                            <option value="Karawang" {{ old('domisili', $admin->domisili) == 'Karawang' ? 'selected' : '' }}>Karawang</option>
+                            <option value="Kuningan" {{ old('domisili', $admin->domisili) == 'Kuningan' ? 'selected' : '' }}>Kuningan</option>
+                            <option value="Majalengka" {{ old('domisili', $admin->domisili) == 'Majalengka' ? 'selected' : '' }}>Majalengka</option>
+                            <option value="Pangandaran" {{ old('domisili', $admin->domisili) == 'Pangandaran' ? 'selected' : '' }}>Pangandaran</option>
+                            <option value="Purwakarta" {{ old('domisili', $admin->domisili) == 'Purwakarta' ? 'selected' : '' }}>Purwakarta</option>
+                            <option value="Subang" {{ old('domisili', $admin->domisili) == 'Subang' ? 'selected' : '' }}>Subang</option>
+                            <option value="Sukabumi" {{ old('domisili', $admin->domisili) == 'Sukabumi' ? 'selected' : '' }}>Sukabumi</option>
+                            <option value="Sumedang" {{ old('domisili', $admin->domisili) == 'Sumedang' ? 'selected' : '' }}>Sumedang</option>
+                            <option value="Tasikmalaya" {{ old('domisili', $admin->domisili) == 'Tasikmalaya' ? 'selected' : '' }}>Tasikmalaya</option>
+                            <option value="Banjar" {{ old('domisili', $admin->domisili) == 'Banjar' ? 'selected' : '' }}>Banjar</option>
+                            <option value="Cimahi" {{ old('domisili', $admin->domisili) == 'Cimahi' ? 'selected' : '' }}>Cimahi</option>
+                            <option value="Depok" {{ old('domisili', $admin->domisili) == 'Depok' ? 'selected' : '' }}>Depok</option>
                         </select>
                         <span class="form-help">Pilih domisili untuk admin BPC</span>
                         @error('domisili')
@@ -497,15 +498,14 @@
                 <h4 class="section-title">Keamanan</h4>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label required">Password</label>
+                        <label class="form-label">Password Baru</label>
                         <div class="password-wrapper">
                             <input 
                                 type="password" 
                                 id="password"
                                 name="password" 
                                 class="form-input @error('password') error @enderror"
-                                placeholder="Minimal 8 karakter"
-                                required
+                                placeholder="Kosongkan jika tidak ingin mengubah"
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('password')">
                                 <svg id="eye-password" viewBox="0 0 24 24">
@@ -514,21 +514,21 @@
                                 </svg>
                             </button>
                         </div>
+                        <span class="form-help">Kosongkan jika tidak ingin mengubah password</span>
                         @error('password')
                             <span class="form-error">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label required">Konfirmasi Password</label>
+                        <label class="form-label">Konfirmasi Password Baru</label>
                         <div class="password-wrapper">
                             <input 
                                 type="password" 
                                 id="password_confirmation"
                                 name="password_confirmation" 
                                 class="form-input"
-                                placeholder="Ulangi password"
-                                required
+                                placeholder="Ulangi password baru"
                             >
                             <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
                                 <svg id="eye-password_confirmation" viewBox="0 0 24 24">
@@ -549,7 +549,7 @@
                 <svg viewBox="0 0 24 24">
                     <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                Simpan Admin
+                Simpan Perubahan
             </button>
         </div>
     </div>

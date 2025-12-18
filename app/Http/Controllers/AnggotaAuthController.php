@@ -9,7 +9,9 @@ use App\Models\Anggota;
 
 class AnggotaAuthController extends Controller
 {
-    // Tampilkan halaman login (pakai view yang sama dengan admin)
+    /**
+     * Tampilkan halaman login
+     */
     public function showLoginForm()
     {
         // Jika sudah login, redirect ke profile
@@ -21,9 +23,12 @@ class AnggotaAuthController extends Controller
         return view('auth.login');
     }
 
-    // Proses login
+    /**
+     * Proses login
+     */
     public function login(Request $request)
     {
+        // Validasi input
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -54,12 +59,23 @@ class AnggotaAuthController extends Controller
 
         $request->session()->regenerate();
 
+        // ✨ FITUR BARU: Redirect ke halaman yang dituju sebelumnya (jika ada)
+        if (session('intended')) {
+            $intended = session('intended');
+            session()->forget('intended');
+            return redirect($intended)
+                ->with('success', 'Selamat datang, ' . $anggota->nama_usaha . '!');
+        }
+
+        // Default redirect ke profile
         return redirect()
             ->route('profile-anggota')
             ->with('success', 'Selamat datang, ' . $anggota->nama_usaha . '!');
     }
 
-    // Logout
+    /**
+     * Logout
+     */
     public function logout(Request $request)
     {
         Auth::guard('anggota')->logout();

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminDashboardController extends Controller
 {
-    public function index(): View
+   public function index(): View
     {
         $admin = Auth::guard('admin')->user();
         
@@ -71,6 +71,19 @@ class AdminDashboardController extends Controller
         ];
         $recentOrganisasi = Organisasi::aktif()->ordered()->take(5)->get();
         
+        // Statistik Berita
+        $totalBerita = \App\Models\Berita::count();
+        $totalBeritaAktif = \App\Models\Berita::where('is_active', true)->count();
+        $totalBeritaPopuler = \App\Models\Berita::where('is_populer', true)->count();
+        $recentBerita = \App\Models\Berita::latest()->take(5)->get();
+        
+        // Statistik UMKM
+        $totalUmkm = \App\Models\Umkm::count();
+        $totalUmkmApproved = \App\Models\Umkm::where('status', 'approved')->count();
+        $totalUmkmPending = \App\Models\Umkm::where('status', 'pending')->count();
+        $totalUmkmRejected = \App\Models\Umkm::where('status', 'rejected')->count();
+        $recentUmkm = \App\Models\Umkm::latest()->take(5)->get();
+        
         return view('admin.dashboard', compact(
             'admin',
             'totalAdmins',
@@ -87,7 +100,16 @@ class AdminDashboardController extends Controller
             'recentAnggota',
             'totalOrganisasi',
             'organisasiByKategori',
-            'recentOrganisasi'
+            'recentOrganisasi',
+            'totalBerita',
+            'totalBeritaAktif',
+            'totalBeritaPopuler',
+            'recentBerita',
+            'totalUmkm',
+            'totalUmkmApproved',
+            'totalUmkmPending',
+            'totalUmkmRejected',
+            'recentUmkm'
         ));
     }
     

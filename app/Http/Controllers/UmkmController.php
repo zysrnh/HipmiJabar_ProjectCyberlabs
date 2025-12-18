@@ -4,14 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Umkm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UmkmController extends Controller
 {
     /**
      * Tampilkan form registrasi UMKM
+     * MANUAL CHECK LOGIN - TIDAK PAKAI MIDDLEWARE
      */
     public function create()
     {
+        // ✅ CEK MANUAL apakah user sudah login
+        if (!Auth::guard('anggota')->check()) {
+            return redirect()->route('anggota.login')
+                ->with('error', 'Anda harus login terlebih dahulu untuk mendaftar UMKM.')
+                ->with('intended', route('umkm'));
+        }
+
         return view('pages.registrasi-umkm');
     }
 
@@ -20,6 +30,14 @@ class UmkmController extends Controller
      */
     public function store(Request $request)
     {
+        // ✅ CEK MANUAL apakah user sudah login
+        if (!Auth::guard('anggota')->check()) {
+            return redirect()->route('anggota.login')
+                ->with('error', 'Anda harus login terlebih dahulu untuk mendaftar UMKM.');
+        }
+
+        $anggota = Auth::guard('anggota')->user();
+
         // Validasi input
         $validated = $request->validate([
             // Data Usaha
@@ -46,29 +64,31 @@ class UmkmController extends Controller
             'sumber_pembiayaan' => 'nullable|in:Bank,Fintech,Koperasi,Lainnya',
             'tujuan' => 'required|in:Meningkatkan penjualan online,Mendapatkan akses pembiayaan,Meningkatkan literasi keuangan,Mencari mitra atau jaringan,Lainnya',
             'pelatihan' => 'required|string',
-        ], [
-            // Custom error messages (opsional)
-            'nama_usaha.required' => 'Nama usaha wajib diisi',
-            'bidang_usaha.required' => 'Bidang usaha wajib dipilih',
-            'tahun_berdiri.digits' => 'Tahun berdiri harus 4 digit',
-            'tahun_berdiri.max' => 'Tahun berdiri tidak boleh lebih dari tahun sekarang',
-            'nomor_hp.regex' => 'Nomor HP hanya boleh berisi angka',
-            'nomor_hp.min' => 'Nomor HP minimal 10 digit',
-            'email.email' => 'Format email tidak valid',
-            'platform.required' => 'Pilih minimal 1 platform',
-            'platform.min' => 'Pilih minimal 1 platform',
         ]);
 
         try {
+            // Tambahkan anggota_id dan status default
+            $validated['anggota_id'] = $anggota->id;
+            $validated['status'] = 'pending';
+            
             // Simpan data ke database
-            Umkm::create($validated);
+            $umkm = Umkm::create($validated);
 
-            // Redirect dengan pesan sukses
+            Log::info('UMKM Registration Success', [
+                'umkm_id' => $umkm->id,
+                'anggota_id' => $anggota->id,
+                'nama_usaha' => $validated['nama_usaha']
+            ]);
+
             return redirect()->route('umkm')
                 ->with('success', 'Terima kasih! Pendaftaran UMKM Anda berhasil disimpan. Tim kami akan segera menghubungi Anda.');
                 
         } catch (\Exception $e) {
-            // Jika terjadi error
+            Log::error('UMKM Registration Error', [
+                'error' => $e->getMessage(),
+                'anggota_id' => $anggota->id
+            ]);
+            
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');

@@ -122,6 +122,24 @@
         background: #dc2626;
     }
 
+    .btn-success {
+        background: #10b981;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #059669;
+    }
+
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -366,6 +384,8 @@
         z-index: 9999;
         align-items: center;
         justify-content: center;
+        overflow-y: auto;
+        padding: 20px;
     }
 
     .modal.show {
@@ -376,8 +396,10 @@
         background: white;
         border-radius: 15px;
         padding: 2rem;
-        max-width: 500px;
-        width: 90%;
+        max-width: 700px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         animation: slideUp 0.3s;
     }
@@ -443,19 +465,101 @@
         font-size: 0.875rem;
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
         width: 100%;
         padding: 0.75rem;
         border: 2px solid #e5e7eb;
         border-radius: 8px;
         font-size: 0.9375rem;
         transition: all 0.2s;
+        font-family: 'Montserrat', sans-serif;
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
         outline: none;
         border-color: #2563eb;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .image-upload-area {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .upload-box {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        overflow: hidden;
+        background: #f9fafb;
+    }
+
+    .upload-box:hover {
+        border-color: #2563eb;
+        background: #eff6ff;
+    }
+
+    .upload-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .upload-placeholder {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        padding: 1rem;
+    }
+
+    .upload-placeholder svg {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 0.5rem;
+        stroke: currentColor;
+    }
+
+    .delete-image-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        z-index: 10;
+        transition: all 0.2s;
+    }
+
+    .delete-image-btn:hover {
+        background: #dc2626;
+        transform: scale(1.1);
     }
 
     @media (max-width: 768px) {
@@ -485,6 +589,15 @@
         .detail-grid {
             grid-template-columns: 1fr;
         }
+
+        .modal-content {
+            padding: 1.5rem;
+        }
+
+        .upload-box {
+            width: 150px;
+            height: 150px;
+        }
     }
 </style>
 
@@ -498,6 +611,17 @@
     @if(session('error'))
     <div class="alert alert-error">
         {{ session('error') }}
+    </div>
+    @endif
+
+    @if($errors->any())
+    <div class="alert alert-error">
+        <strong>Terjadi kesalahan:</strong>
+        <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
     @endif
 
@@ -524,7 +648,7 @@
                 </span>
             </div>
             <div class="profile-actions">
-                <button class="btn btn-primary" onclick="openModal()">Ganti Password</button>
+                <button class="btn btn-primary" onclick="openModal('changePasswordModal')">Ganti Password</button>
                 <form action="{{ route('anggota.logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="btn btn-danger">Logout</button>
@@ -558,11 +682,16 @@
             <button class="tab-button active" onclick="switchTab('pribadi')">Data Pribadi</button>
             <button class="tab-button" onclick="switchTab('perusahaan')">Profil Perusahaan</button>
             <button class="tab-button" onclick="switchTab('organisasi')">Informasi Organisasi</button>
+            <button class="tab-button" onclick="switchTab('detail-buku')">Detail Buku Anggota</button>
         </div>
 
         <div class="tabs-content">
             <!-- Tab Data Pribadi -->
             <div class="tab-panel active" id="tab-pribadi">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="margin: 0;">Informasi Pribadi</h3>
+                    <button class="btn btn-primary" onclick="openModal('editProfileModal')">Edit Data Pribadi</button>
+                </div>
                 <div class="detail-grid">
                     <div class="field-group">
                         <div class="field-label">Nama Lengkap</div>
@@ -620,6 +749,10 @@
 
             <!-- Tab Profil Perusahaan -->
             <div class="tab-panel" id="tab-perusahaan">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <h3 style="margin: 0;">Informasi Perusahaan</h3>
+                    <button class="btn btn-primary" onclick="openModal('editCompanyModal')">Edit Data Perusahaan</button>
+                </div>
                 <div class="detail-grid">
                     <div class="field-group">
                         <div class="field-label">Nama Perusahaan</div>
@@ -702,6 +835,88 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Tab Detail Buku Anggota -->
+            <div class="tab-panel" id="tab-detail-buku">
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0 0 0.5rem 0;">Gambar Detail Buku Anggota</h3>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">
+                        Upload maksimal 3 gambar dan deskripsi yang akan ditampilkan di halaman detail buku anggota publik
+                    </p>
+                </div>
+
+                <form action="{{ route('profile-anggota.upload-detail-images') }}" method="POST" enctype="multipart/form-data" id="detailImagesForm">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label>Deskripsi (Opsional)</label>
+                        <textarea name="deskripsi_detail" placeholder="Tulis deskripsi tentang perusahaan atau usaha Anda...">{{ $anggota->deskripsi_detail }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Gambar</label>
+                        <div class="image-upload-area">
+                            <!-- Image 1 -->
+                            <div class="upload-box" onclick="document.getElementById('detail_image_1').click()">
+                               @if($anggota->detail_image_1)
+                                <img src="{{ $anggota->detail_image_1_url }}" alt="Detail 1" id="preview1">
+                                <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_1')">&times;</button>
+                            @else
+                                <div class="upload-placeholder" id="placeholder1">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <div>Gambar 1</div>
+                                </div>
+                            @endif
+                            </div>
+                            <input type="file" id="detail_image_1" name="detail_image_1" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview1', 'placeholder1')">
+
+                            <!-- Image 2 -->
+                            <div class="upload-box" onclick="document.getElementById('detail_image_2').click()">
+                                @if($anggota->detail_image_2)
+                                    <img src="{{ $anggota->detail_image_2_url }}" alt="Detail 2" id="preview2">
+                                    <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_2')">&times;</button>
+                                @else
+                                    <div class="upload-placeholder" id="placeholder2">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                        <div>Gambar 2</div>
+                                    </div>
+                                @endif
+                            </div>
+                            <input type="file" id="detail_image_2" name="detail_image_2" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview2', 'placeholder2')">
+
+                            <!-- Image 3 -->
+                            <div class="upload-box" onclick="document.getElementById('detail_image_3').click()">
+                                @if($anggota->detail_image_3)
+                                    <img src="{{ $anggota->detail_image_3_url }}" alt="Detail 3" id="preview3">
+                                    <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_3')">&times;</button>
+                                @else
+                                    <div class="upload-placeholder" id="placeholder3">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                                            <polyline points="21 15 16 10 5 21"/>
+                                        </svg>
+                                        <div>Gambar 3</div>
+                                    </div>
+                                @endif
+                            </div>
+                            <input type="file" id="detail_image_3" name="detail_image_3" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview3', 'placeholder3')">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
+                        Simpan Gambar & Deskripsi
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -711,7 +926,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3>Ganti Password</h3>
-            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <button class="modal-close" onclick="closeModal('changePasswordModal')">&times;</button>
         </div>
         <form action="{{ route('profile-anggota.change-password') }}" method="POST">
             @csrf
@@ -728,6 +943,146 @@
                 <input type="password" name="new_password_confirmation" required minlength="6">
             </div>
             <button type="submit" class="btn btn-primary" style="width: 100%;">Ganti Password</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Profile -->
+<div id="editProfileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Data Pribadi</h3>
+            <button class="modal-close" onclick="closeModal('editProfileModal')">&times;</button>
+        </div>
+        <form action="{{ route('profile-anggota.update-profile') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" name="nama_usaha" value="{{ $anggota->nama_usaha }}" required>
+            </div>
+            <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <select name="jenis_kelamin" required>
+                    <option value="Laki-laki" {{ $anggota->jenis_kelamin === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ $anggota->jenis_kelamin === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tempat Lahir</label>
+                <input type="text" name="tempat_lahir" value="{{ $anggota->tempat_lahir }}" required>
+            </div>
+            <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input type="date" name="tanggal_lahir" value="{{ $anggota->tanggal_lahir->format('Y-m-d') }}" required>
+            </div>
+            <div class="form-group">
+                <label>Agama</label>
+                <input type="text" name="agama" value="{{ $anggota->agama }}" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" value="{{ $anggota->email }}" required>
+            </div>
+            <div class="form-group">
+                <label>Nomor Telepon</label>
+                <input type="text" name="nomor_telepon" value="{{ $anggota->nomor_telepon }}" required>
+            </div>
+            <div class="form-group">
+                <label>Domisili</label>
+                <input type="text" name="domisili" value="{{ $anggota->domisili }}" required>
+            </div>
+            <div class="form-group">
+                <label>Alamat Lengkap</label>
+                <textarea name="alamat_domisili" required>{{ $anggota->alamat_domisili }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Kode Pos</label>
+                <input type="text" name="kode_pos" value="{{ $anggota->kode_pos }}" required>
+            </div>
+            <div class="form-group">
+                <label>Update Foto Diri (Opsional)</label>
+                <input type="file" name="foto_diri" accept="image/*">
+                <small style="display: block; margin-top: 0.5rem; color: #6b7280;">Kosongkan jika tidak ingin mengubah foto</small>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')" style="flex: 1;">Batal</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Edit Company -->
+<div id="editCompanyModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Data Perusahaan</h3>
+            <button class="modal-close" onclick="closeModal('editCompanyModal')">&times;</button>
+        </div>
+        <form action="{{ route('profile-anggota.update-company') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label>Nama Perusahaan</label>
+                <input type="text" name="nama_usaha_perusahaan" value="{{ $anggota->nama_usaha_perusahaan }}" required>
+            </div>
+            <div class="form-group">
+                <label>Legalitas Usaha</label>
+                <select name="legalitas_usaha" required>
+                    <option value="PT" {{ $anggota->legalitas_usaha === 'PT' ? 'selected' : '' }}>PT</option>
+                    <option value="CV" {{ $anggota->legalitas_usaha === 'CV' ? 'selected' : '' }}>CV</option>
+                    <option value="PT Perorangan" {{ $anggota->legalitas_usaha === 'PT Perorangan' ? 'selected' : '' }}>PT Perorangan</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Jabatan</label>
+                <input type="text" name="jabatan_usaha" value="{{ $anggota->jabatan_usaha }}" required>
+            </div>
+            <div class="form-group">
+                <label>Brand Usaha</label>
+                <input type="text" name="brand_usaha" value="{{ $anggota->brand_usaha }}" required>
+            </div>
+            <div class="form-group">
+                <label>Bidang Usaha</label>
+                <input type="text" name="bidang_usaha" value="{{ $anggota->bidang_usaha }}" required>
+            </div>
+            <div class="form-group">
+                <label>Jumlah Karyawan</label>
+                <input type="number" name="jumlah_karyawan" value="{{ $anggota->jumlah_karyawan }}" required min="0">
+            </div>
+            <div class="form-group">
+                <label>Usia Perusahaan</label>
+                <input type="text" name="usia_perusahaan" value="{{ $anggota->usia_perusahaan }}" required>
+            </div>
+            <div class="form-group">
+                <label>Omset Per Tahun</label>
+                <input type="text" name="omset_perusahaan" value="{{ $anggota->omset_perusahaan }}" required>
+            </div>
+            <div class="form-group">
+                <label>NPWP Perusahaan</label>
+                <input type="text" name="npwp_perusahaan" value="{{ $anggota->npwp_perusahaan }}" required>
+            </div>
+            <div class="form-group">
+                <label>No. Nota Pendirian</label>
+                <input type="text" name="no_nota_pendirian" value="{{ $anggota->no_nota_pendirian }}" required>
+            </div>
+            <div class="form-group">
+                <label>Alamat Kantor</label>
+                <textarea name="alamat_kantor" required>{{ $anggota->alamat_kantor }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Update Logo Perusahaan (Opsional)</label>
+                <input type="file" name="logo_perusahaan" accept="image/*">
+                <small style="display: block; margin-top: 0.5rem; color: #6b7280;">Kosongkan jika tidak ingin mengubah logo</small>
+            </div>
+            <div class="form-group">
+                <label>Update Profile Perusahaan PDF (Opsional)</label>
+                <input type="file" name="profile_perusahaan" accept=".pdf">
+                <small style="display: block; margin-top: 0.5rem; color: #6b7280;">Kosongkan jika tidak ingin mengubah PDF</small>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editCompanyModal')" style="flex: 1;">Batal</button>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Perubahan</button>
+            </div>
         </form>
     </div>
 </div>
@@ -757,19 +1112,75 @@
         document.getElementById('tab-' + tabName).classList.add('active');
     }
 
-    function openModal() {
-        document.getElementById('changePasswordModal').classList.add('show');
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.add('show');
+        document.body.style.overflow = 'hidden';
     }
 
-    function closeModal() {
-        document.getElementById('changePasswordModal').classList.remove('show');
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('show');
+        document.body.style.overflow = 'auto';
     }
 
     window.onclick = function(event) {
-        const modal = document.getElementById('changePasswordModal');
-        if (event.target === modal) {
-            closeModal();
+        if (event.target.classList.contains('modal')) {
+            event.target.classList.remove('show');
+            document.body.style.overflow = 'auto';
         }
+    }
+
+    function previewImage(input, previewId, placeholderId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const uploadBox = input.previousElementSibling;
+                const placeholder = document.getElementById(placeholderId);
+                
+                if (placeholder) {
+                    placeholder.style.display = 'none';
+                }
+                
+                let img = document.getElementById(previewId);
+                if (!img) {
+                    img = document.createElement('img');
+                    img.id = previewId;
+                    img.alt = 'Preview';
+                    uploadBox.appendChild(img);
+                }
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function confirmDeleteImage(imageField) {
+        if (confirm('Apakah Anda yakin ingin menghapus gambar ini?')) {
+            deleteImage(imageField);
+        }
+    }
+
+    function deleteImage(imageField) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route("profile-anggota.delete-detail-image") }}';
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        
+        const imageInput = document.createElement('input');
+        imageInput.type = 'hidden';
+        imageInput.name = 'image_field';
+        imageInput.value = imageField;
+        
+        form.appendChild(csrfToken);
+        form.appendChild(imageInput);
+        document.body.appendChild(form);
+        form.submit();
     }
 </script>
 @endsection

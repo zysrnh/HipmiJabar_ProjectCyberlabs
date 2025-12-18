@@ -199,6 +199,11 @@
         color: white;
     }
 
+    .domisili-text {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
     .action-buttons {
         display: flex;
         gap: 0.5rem;
@@ -215,6 +220,8 @@
         color: #374151;
         transition: all 0.2s;
         font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
+        display: inline-block;
     }
 
     .btn-edit:hover {
@@ -267,6 +274,7 @@
         color: #374151;
         transition: all 0.2s;
         font-family: 'Montserrat', sans-serif;
+        text-decoration: none;
     }
 
     .pagination-btn:hover:not(:disabled) {
@@ -282,6 +290,107 @@
         background: #0a2540;
         color: white;
         border-color: #0a2540;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        max-width: 500px;
+        width: 90%;
+        overflow: hidden;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .modal-text {
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .admin-info-modal {
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .admin-info-modal strong {
+        color: #0a2540;
+    }
+
+    .modal-footer {
+        padding: 1.5rem 2rem;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .btn-cancel-modal {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        transition: all 0.2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .btn-cancel-modal:hover {
+        background: #f3f4f6;
+    }
+
+    .btn-confirm-delete {
+        padding: 0.75rem 1.5rem;
+        background: #dc2626;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .btn-confirm-delete:hover {
+        background: #b91c1c;
     }
 
     @media (max-width: 1024px) {
@@ -329,7 +438,7 @@
         }
 
         .admin-table {
-            min-width: 700px;
+            min-width: 900px;
         }
 
         .admin-table th,
@@ -370,6 +479,7 @@
             padding: 0.4rem 0.75rem;
             font-size: 0.75rem;
             width: 100%;
+            text-align: center;
         }
 
         .pagination {
@@ -412,6 +522,12 @@
     </a>
 </div>
 
+@if(session('success'))
+<div style="background: #d1fae5; color: #059669; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #86efac;">
+    {{ session('success') }}
+</div>
+@endif
+
 <div class="admin-table-container">
     <div class="table-header">
         <h3 class="table-title">Daftar Admin ({{ $admins->total() }})</h3>
@@ -430,6 +546,7 @@
                 <th>Admin</th>
                 <th>Username</th>
                 <th>Kategori</th>
+                <th>Domisili</th>
                 <th>Terdaftar</th>
                 <th>Aksi</th>
             </tr>
@@ -452,11 +569,16 @@
                         {{ strtoupper($adminItem->category) }}
                     </span>
                 </td>
+                <td>
+                    <span class="domisili-text">
+                        {{ $adminItem->domisili ?? '-' }}
+                    </span>
+                </td>
                 <td>{{ $adminItem->created_at->format('d M Y') }}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-edit">Edit</button>
-                        <button class="btn-delete">Hapus</button>
+                        <a href="{{ route('admin.edit-admin', ['admin' => $adminItem->id]) }}" class="btn-edit">Edit</a>
+                        <button class="btn-delete" onclick="openDeleteModal({{ $adminItem->id }}, '{{ $adminItem->name }}')">Hapus</button>
                     </div>
                 </td>
             </tr>
@@ -469,20 +591,71 @@
             Menampilkan {{ $admins->firstItem() }} - {{ $admins->lastItem() }} dari {{ $admins->total() }} admin
         </div>
         <div class="pagination-buttons">
-            <button class="pagination-btn" {{ $admins->onFirstPage() ? 'disabled' : '' }}>
-                Previous
-            </button>
+            @if($admins->onFirstPage())
+                <button class="pagination-btn" disabled>Previous</button>
+            @else
+                <a href="{{ $admins->previousPageUrl() }}" class="pagination-btn">Previous</a>
+            @endif
             
             @foreach($admins->getUrlRange(1, $admins->lastPage()) as $page => $url)
-                <button class="pagination-btn {{ $page == $admins->currentPage() ? 'active' : '' }}">
+                <a href="{{ $url }}" class="pagination-btn {{ $page == $admins->currentPage() ? 'active' : '' }}">
                     {{ $page }}
-                </button>
+                </a>
             @endforeach
             
-            <button class="pagination-btn" {{ !$admins->hasMorePages() ? 'disabled' : '' }}>
-                Next
-            </button>
+            @if($admins->hasMorePages())
+                <a href="{{ $admins->nextPageUrl() }}" class="pagination-btn">Next</a>
+            @else
+                <button class="pagination-btn" disabled>Next</button>
+            @endif
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Konfirmasi Hapus Admin</h3>
+        </div>
+        <div class="modal-body">
+            <p class="modal-text">Apakah Anda yakin ingin menghapus admin ini?</p>
+            <div class="admin-info-modal">
+                <strong id="adminNameModal"></strong>
+            </div>
+            <p class="modal-text" style="margin-top: 1rem; font-size: 0.875rem;">
+                <strong>Perhatian:</strong> Data admin yang dihapus tidak dapat dikembalikan.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel-modal" onclick="closeDeleteModal()">Batal</button>
+            <form id="deleteForm" method="POST" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-confirm-delete">Ya, Hapus Admin</button>
+            </form>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function openDeleteModal(adminId, adminName) {
+    document.getElementById('adminNameModal').textContent = adminName;
+    document.getElementById('deleteForm').action = `/admin/delete-admin/${adminId}`;
+    document.getElementById('deleteModal').classList.add('active');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDeleteModal();
+    }
+});
+</script>
+@endpush

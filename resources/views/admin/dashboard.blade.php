@@ -10,6 +10,10 @@ $activeMenu = 'dashboard';
 
 @push('styles')
 <style>
+    * {
+        font-family: 'Montserrat', sans-serif;
+    }
+
     .welcome-card {
         background: linear-gradient(135deg, #0a2540 0%, #1a3a5c 100%);
         padding: 2.5rem;
@@ -98,54 +102,141 @@ $activeMenu = 'dashboard';
         color: white;
     }
 
+    /* Grid Layout untuk Stats */
     .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.5rem;
         margin-bottom: 2rem;
+    }
+
+    .stats-wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
     }
 
     .stat-card {
         background: white;
-        padding: 1.75rem;
-        border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         border: 1px solid #e5e7eb;
-        transition: all 0.3s;
+        transition: all 0.3s ease;
     }
 
     .stat-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
     }
 
     .stat-label {
-        color: #6b7280;
-        font-size: 0.875rem;
-        margin-bottom: 0.75rem;
-        font-weight: 500;
+        color: #9ca3af;
+        font-size: 0.9375rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .stat-value {
-        font-size: 2.5rem;
-        font-weight: 700;
+        font-size: 3.5rem;
+        font-weight: 800;
         color: #0a2540;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        line-height: 1;
     }
 
     .stat-meta {
-        font-size: 0.8125rem;
+        font-size: 0.9375rem;
         color: #10b981;
-        font-weight: 500;
+        font-weight: 600;
     }
 
-    .admin-section {
+    /* Tab Navigation Styles */
+    .tabs-container {
         background: white;
-        padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         border: 1px solid #e5e7eb;
-        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .tabs-header {
+        display: flex;
+        border-bottom: 2px solid #f3f4f6;
+        background: #f9fafb;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    .tab-button {
+        flex: 1;
+        min-width: 150px;
+        padding: 1rem 1.5rem;
+        background: transparent;
+        border: none;
+        color: #6b7280;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .tab-button:hover {
+        background: #f3f4f6;
+        color: #0a2540;
+    }
+
+    .tab-button.active {
+        color: #0a2540;
+        background: white;
+    }
+
+    .tab-button.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #ffd700;
+    }
+
+    .tab-badge {
+        display: inline-block;
+        background: #e5e7eb;
+        color: #6b7280;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        margin-left: 0.5rem;
+    }
+
+    .tab-button.active .tab-badge {
+        background: #ffd700;
+        color: #0a2540;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 2rem;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .section-header {
@@ -224,17 +315,17 @@ $activeMenu = 'dashboard';
         display: flex;
         gap: 1.5rem;
         padding: 1.5rem;
-        background: white;
+        background: #f9fafb;
         border-radius: 12px;
         border: 1px solid #e5e7eb;
         transition: all 0.3s;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .katalog-item:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
         border-color: #ffd700;
+        background: white;
     }
 
     .katalog-thumbnail {
@@ -243,7 +334,7 @@ $activeMenu = 'dashboard';
         border-radius: 8px;
         overflow: hidden;
         flex-shrink: 0;
-        background: #f3f4f6;
+        background: white;
         border: 1px solid #e5e7eb;
     }
 
@@ -295,17 +386,17 @@ $activeMenu = 'dashboard';
         display: flex;
         gap: 1.5rem;
         padding: 1.5rem;
-        background: white;
+        background: #f9fafb;
         border-radius: 12px;
         border: 1px solid #e5e7eb;
         transition: all 0.3s;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .organisasi-item:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         transform: translateY(-2px);
         border-color: #3b82f6;
+        background: white;
     }
 
     .organisasi-photo {
@@ -314,7 +405,7 @@ $activeMenu = 'dashboard';
         border-radius: 8px;
         overflow: hidden;
         flex-shrink: 0;
-        background: #f3f4f6;
+        background: white;
         border: 2px solid #e5e7eb;
     }
 
@@ -425,6 +516,7 @@ $activeMenu = 'dashboard';
         opacity: 0.5;
     }
 
+    /* Responsive */
     @media (max-width: 1024px) {
         .welcome-content {
             flex-direction: column;
@@ -449,8 +541,8 @@ $activeMenu = 'dashboard';
             font-size: 0.9375rem;
         }
 
-        .stats-grid {
-            grid-template-columns: 1fr;
+        .stats-wrapper {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .admin-item {
@@ -459,6 +551,22 @@ $activeMenu = 'dashboard';
 
         .admin-badge {
             margin-left: auto;
+        }
+
+        .tab-button {
+            min-width: 120px;
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .tab-content {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .stats-wrapper {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -485,243 +593,401 @@ $activeMenu = 'dashboard';
     </div>
 </div>
 
-{{-- Statistics Cards --}}
+{{-- Statistics Cards dengan Grid Layout --}}
 <div class="stats-grid">
     @if($admin->category === 'bpc')
         {{-- Statistik untuk BPC --}}
-        <div class="stat-card">
-            <div class="stat-label">Total Pendaftar</div>
-            <div class="stat-value">{{ $totalAnggota }}</div>
-            <div class="stat-meta">Wilayah {{ $admin->domisili }}</div>
-        </div>
+        <div class="stats-wrapper">
+            <div class="stat-card">
+                <div class="stat-label">Total Pendaftar</div>
+                <div class="stat-value">{{ $totalAnggota }}</div>
+                <div class="stat-meta">Wilayah {{ $admin->domisili }}</div>
+            </div>
 
-        <div class="stat-card">
-            <div class="stat-label">Menunggu Verifikasi</div>
-            <div class="stat-value">{{ $pendingAnggota }}</div>
-            <div class="stat-meta">Perlu ditinjau</div>
-        </div>
+            <div class="stat-card">
+                <div class="stat-label">Menunggu Verifikasi</div>
+                <div class="stat-value">{{ $pendingAnggota }}</div>
+                <div class="stat-meta">Perlu ditinjau</div>
+            </div>
 
-        <div class="stat-card">
-            <div class="stat-label">Disetujui</div>
-            <div class="stat-value">{{ $approvedAnggota }}</div>
-            <div class="stat-meta">Anggota aktif</div>
-        </div>
+            <div class="stat-card">
+                <div class="stat-label">Disetujui</div>
+                <div class="stat-value">{{ $approvedAnggota }}</div>
+                <div class="stat-meta">Anggota aktif</div>
+            </div>
 
-        <div class="stat-card">
-            <div class="stat-label">Ditolak</div>
-            <div class="stat-value">{{ $rejectedAnggota }}</div>
-            <div class="stat-meta">Tidak memenuhi syarat</div>
+            <div class="stat-card">
+                <div class="stat-label">Ditolak</div>
+                <div class="stat-value">{{ $rejectedAnggota }}</div>
+                <div class="stat-meta">Tidak memenuhi syarat</div>
+            </div>
         </div>
     @else
         {{-- Statistik untuk BPD --}}
-        <div class="stat-card">
-            <div class="stat-label">Total Admin</div>
-            <div class="stat-value">{{ $totalAdmins }}</div>
-            <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-label">Total E-Katalog</div>
-            <div class="stat-value">{{ $totalKatalog }}</div>
-            <div class="stat-meta">
-                @if($totalKatalogInactive > 0)
-                {{ $totalKatalogInactive }} tidak aktif
-                @else
-                Semua aktif
-                @endif
+        <div class="stats-wrapper">
+            <div class="stat-card">
+                <div class="stat-label">Total Admin</div>
+                <div class="stat-value">{{ $totalAdmins }}</div>
+                <div class="stat-meta">BPC: {{ $adminsBPC }} | BPD: {{ $adminsBPD }}</div>
             </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-label">Total Anggota Terdaftar</div>
-            <div class="stat-value">{{ $totalAnggotaApproved }}</div>
-            <div class="stat-meta">
-                Pending: {{ $totalAnggotaPending }} | Ditolak: {{ $totalAnggotaRejected }}
+            <div class="stat-card">
+                <div class="stat-label">Total E-Katalog</div>
+                <div class="stat-value">{{ $totalKatalog }}</div>
+                <div class="stat-meta">
+                    @if($totalKatalogInactive > 0)
+                    {{ $totalKatalogInactive }} tidak aktif
+                    @else
+                    Semua aktif
+                    @endif
+                </div>
             </div>
-        </div>
 
-        <div class="stat-card">
-            <div class="stat-label">Struktur Organisasi</div>
-            <div class="stat-value">{{ $totalOrganisasi }}</div>
-            <div class="stat-meta">
-                Ketum: {{ $organisasiByKategori['ketua_umum'] }} |
-                Waketum: {{ $organisasiByKategori['wakil_ketua_umum'] }}
+            <div class="stat-card">
+                <div class="stat-label">Total Anggota</div>
+                <div class="stat-value">{{ $totalAnggotaApproved }}</div>
+                <div class="stat-meta">
+                    Pending: {{ $totalAnggotaPending }} | Ditolak: {{ $totalAnggotaRejected }}
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Struktur Organisasi</div>
+                <div class="stat-value">{{ $totalOrganisasi }}</div>
+                <div class="stat-meta">
+                    Ketum: {{ $organisasiByKategori['ketua_umum'] }} |
+                    Waketum: {{ $organisasiByKategori['wakil_ketua_umum'] }}
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Total Berita</div>
+                <div class="stat-value">{{ $totalBerita }}</div>
+                <div class="stat-meta">
+                    Aktif: {{ $totalBeritaAktif }} | Populer: {{ $totalBeritaPopuler }}
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Total UMKM</div>
+                <div class="stat-value">{{ $totalUmkm }}</div>
+                <div class="stat-meta">
+                    Approved: {{ $totalUmkmApproved }} | Pending: {{ $totalUmkmPending }}
+                </div>
             </div>
         </div>
     @endif
 </div>
 
 @if($admin->category === 'bpc')
-    {{-- Content untuk BPC - Tampilkan Anggota Terbaru dari domisili BPC --}}
-    <div class="admin-section">
-        <div class="section-header">
-            <h3 class="section-title">Pendaftar Terbaru dari {{ $admin->domisili }}</h3>
-            <a href="{{ route('admin.anggota.list') }}" class="view-all-btn">Lihat Semua</a>
-        </div>
-        <div class="admin-list">
-            @forelse($recentAnggota as $anggota)
-            <div class="admin-item">
-                <div class="admin-avatar">
-                    {{ strtoupper(substr($anggota->nama_usaha, 0, 2)) }}
-                </div>
-                <div class="admin-info">
-                    <div class="admin-name">{{ $anggota->nama_usaha }}</div>
-                    <div class="admin-email">{{ $anggota->email }} - {{ $anggota->nama_usaha_perusahaan }}</div>
-                </div>
-                <span class="admin-badge badge-{{ $anggota->status }}">
-                    @if($anggota->status === 'pending')
-                        MENUNGGU
-                    @elseif($anggota->status === 'approved')
-                        DISETUJUI
-                    @else
-                        DITOLAK
-                    @endif
-                </span>
+    {{-- Content untuk BPC - Tampilkan Anggota Terbaru --}}
+    <div class="tabs-container">
+        <div class="tab-content active">
+            <div class="section-header">
+                <h3 class="section-title">Pendaftar Terbaru dari {{ $admin->domisili }}</h3>
+                <a href="{{ route('admin.anggota.list') }}" class="view-all-btn">Lihat Semua</a>
             </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <p>Belum ada pendaftar dari wilayah {{ $admin->domisili }}</p>
+            <div class="admin-list">
+                @forelse($recentAnggota as $anggota)
+                <div class="admin-item">
+                    <div class="admin-avatar">
+                        {{ strtoupper(substr($anggota->nama_usaha, 0, 2)) }}
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-name">{{ $anggota->nama_usaha }}</div>
+                        <div class="admin-email">{{ $anggota->email }} - {{ $anggota->nama_usaha_perusahaan }}</div>
+                    </div>
+                    <span class="admin-badge badge-{{ $anggota->status }}">
+                        @if($anggota->status === 'pending')
+                            MENUNGGU
+                        @elseif($anggota->status === 'approved')
+                            DISETUJUI
+                        @else
+                            DITOLAK
+                        @endif
+                    </span>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>Belum ada pendaftar dari wilayah {{ $admin->domisili }}</p>
+                </div>
+                @endforelse
             </div>
-            @endforelse
         </div>
     </div>
 @else
-    {{-- Content untuk BPD --}}
-    
-    {{-- Anggota Terbaru dari SEMUA Domisili --}}
-    <div class="admin-section">
-        <div class="section-header">
-            <h3 class="section-title">Pendaftar Terbaru (Semua Domisili)</h3>
-            <a href="{{ route('admin.anggota.list') }}" class="view-all-btn">Lihat Semua</a>
+    {{-- Content untuk BPD dengan Tab Navigation --}}
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button active" data-tab="anggota">
+                <i class="fas fa-users"></i> Anggota
+                <span class="tab-badge">{{ $totalAnggotaApproved }}</span>
+            </button>
+            <button class="tab-button" data-tab="admin">
+                <i class="fas fa-user-shield"></i> Admin
+                <span class="tab-badge">{{ $totalAdmins }}</span>
+            </button>
+            <button class="tab-button" data-tab="katalog">
+                <i class="fas fa-briefcase"></i> E-Katalog
+                <span class="tab-badge">{{ $totalKatalog }}</span>
+            </button>
+            <button class="tab-button" data-tab="organisasi">
+                <i class="fas fa-sitemap"></i> Organisasi
+                <span class="tab-badge">{{ $totalOrganisasi }}</span>
+            </button>
+            <button class="tab-button" data-tab="berita">
+                <i class="fas fa-newspaper"></i> Berita
+                <span class="tab-badge">{{ $totalBerita }}</span>
+            </button>
+            <button class="tab-button" data-tab="umkm">
+                <i class="fas fa-store"></i> UMKM
+                <span class="tab-badge">{{ $totalUmkm }}</span>
+            </button>
         </div>
-        <div class="admin-list">
-            @forelse($recentAnggota as $anggota)
-            <div class="admin-item">
-                <div class="admin-avatar">
-                    {{ strtoupper(substr($anggota->nama_usaha, 0, 2)) }}
-                </div>
-                <div class="admin-info">
-                    <div class="admin-name">{{ $anggota->nama_usaha }} - {{ $anggota->domisili }}</div>
-                    <div class="admin-email">{{ $anggota->email }} - {{ $anggota->nama_usaha_perusahaan }}</div>
-                </div>
-                <span class="admin-badge badge-{{ $anggota->status }}">
-                    @if($anggota->status === 'pending')
-                        MENUNGGU
-                    @elseif($anggota->status === 'approved')
-                        DISETUJUI
-                    @else
-                        DITOLAK
-                    @endif
-                </span>
-            </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <p>Belum ada pendaftar</p>
-            </div>
-            @endforelse
-        </div>
-    </div>
-    
-    {{-- Admin List Section --}}
-    <div class="admin-section">
-        <div class="section-header">
-            <h3 class="section-title">Daftar Admin Terdaftar</h3>
-            <a href="{{ route('admin.info-admin') }}" class="view-all-btn">Lihat Semua</a>
-        </div>
-        <div class="admin-list">
-            @forelse($recentAdmins as $adminItem)
-            <div class="admin-item">
-                <div class="admin-avatar">
-                    @if($adminItem->photo)
-                    <img src="{{ $adminItem->photo_url }}" alt="{{ $adminItem->name }}">
-                    @else
-                    {{ strtoupper(substr($adminItem->name, 0, 2)) }}
-                    @endif
-                </div>
-                <div class="admin-info">
-                    <div class="admin-name">{{ $adminItem->name }}</div>
-                    <div class="admin-email">{{ $adminItem->email }}</div>
-                </div>
-                <span class="admin-badge badge-{{ $adminItem->category }}">
-                    {{ strtoupper($adminItem->category) }}
-                    @if($adminItem->domisili) - {{ $adminItem->domisili }} @endif
-                </span>
-            </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <p>Belum ada admin terdaftar</p>
-            </div>
-            @endforelse
-        </div>
-    </div>
-    
-    {{-- Katalog Section --}}
-    <div class="admin-section">
-        <div class="section-header">
-            <h3 class="section-title">E-Katalog Terbaru</h3>
-            <a href="{{ route('admin.katalog.index') }}" class="view-all-btn">Lihat Semua</a>
-        </div>
-        <div class="admin-list">
-            @forelse($recentKatalogs as $katalog)
-            <div class="katalog-item">
-                <div class="katalog-thumbnail">
-                    <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}">
-                </div>
-                <div class="katalog-content">
-                    <div class="katalog-header">
-                        <h4 class="katalog-title">{{ $katalog->company_name }}</h4>
-                        <p class="katalog-field">{{ $katalog->business_field }}</p>
-                    </div>
-                    <div class="katalog-footer">
-                        <span class="katalog-meta">Ditambahkan {{ $katalog->created_at->diffForHumans() }}</span>
-                        <span class="admin-badge badge-aktif">AKTIF</span>
-                    </div>
-                </div>
-            </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-briefcase"></i>
-                <p>Belum ada katalog bisnis</p>
-            </div>
-            @endforelse
-        </div>
-    </div>
 
-    {{-- Organisasi Section --}}
-    <div class="admin-section">
-        <div class="section-header">
-            <h3 class="section-title">Struktur Organisasi Terbaru</h3>
-            <a href="{{ route('admin.organisasi.index') }}" class="view-all-btn">Lihat Semua</a>
+        {{-- Tab: Anggota --}}
+        <div id="tab-anggota" class="tab-content active">
+            <div class="section-header">
+                <h3 class="section-title">Pendaftar Terbaru (Semua Domisili)</h3>
+                <a href="{{ route('admin.anggota.list') }}" class="view-all-btn">Lihat Semua</a>
+            </div>
+            <div class="admin-list">
+                @forelse($recentAnggota as $anggota)
+                <div class="admin-item">
+                    <div class="admin-avatar">
+                        {{ strtoupper(substr($anggota->nama_usaha, 0, 2)) }}
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-name">{{ $anggota->nama_usaha }} - {{ $anggota->domisili }}</div>
+                        <div class="admin-email">{{ $anggota->email }} - {{ $anggota->nama_usaha_perusahaan }}</div>
+                    </div>
+                    <span class="admin-badge badge-{{ $anggota->status }}">
+                        @if($anggota->status === 'pending')
+                            MENUNGGU
+                        @elseif($anggota->status === 'approved')
+                            DISETUJUI
+                        @else
+                            DITOLAK
+                        @endif
+                    </span>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>Belum ada pendaftar</p>
+                </div>
+                @endforelse
+            </div>
         </div>
-        <div class="admin-list">
-            @forelse($recentOrganisasi as $org)
-            <div class="organisasi-item">
-                <div class="organisasi-photo">
-                    <img src="{{ $org->foto_url }}" alt="{{ $org->nama }}">
-                </div>
-                <div class="organisasi-content">
-                    <div>
-                        <h4 class="organisasi-name">{{ $org->nama }}</h4>
-                        <p class="organisasi-position">{{ $org->jabatan }}</p>
-                    </div>
-                    <div class="organisasi-footer">
-                        <span class="katalog-meta">Urutan: {{ $org->urutan }}</span>
-                        <span class="admin-badge badge-{{ $org->kategori }}">
-                            {{ strtoupper(str_replace('_', ' ', $org->kategori)) }}
-                        </span>
-                    </div>
-                </div>
+
+        {{-- Tab: Admin --}}
+        <div id="tab-admin" class="tab-content">
+            <div class="section-header">
+                <h3 class="section-title">Daftar Admin Terdaftar</h3>
+                <a href="{{ route('admin.info-admin') }}" class="view-all-btn">Lihat Semua</a>
             </div>
-            @empty
-            <div class="empty-state">
-                <i class="fas fa-sitemap"></i>
-                <p>Belum ada data organisasi</p>
+            <div class="admin-list">
+                @forelse($recentAdmins as $adminItem)
+                <div class="admin-item">
+                    <div class="admin-avatar">
+                        @if($adminItem->photo)
+                        <img src="{{ $adminItem->photo_url }}" alt="{{ $adminItem->name }}">
+                        @else
+                        {{ strtoupper(substr($adminItem->name, 0, 2)) }}
+                        @endif
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-name">{{ $adminItem->name }}</div>
+                        <div class="admin-email">{{ $adminItem->email }}</div>
+                    </div>
+                    <span class="admin-badge badge-{{ $adminItem->category }}">
+                        {{ strtoupper($adminItem->category) }}
+                        @if($adminItem->domisili) - {{ $adminItem->domisili }} @endif
+                    </span>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <p>Belum ada admin terdaftar</p>
+                </div>
+                @endforelse
             </div>
-            @endforelse
+        </div>
+
+        {{-- Tab: Katalog --}}
+        <div id="tab-katalog" class="tab-content">
+            <div class="section-header">
+                <h3 class="section-title">E-Katalog Terbaru</h3>
+                <a href="{{ route('admin.katalog.index') }}" class="view-all-btn">Lihat Semua</a>
+            </div>
+            <div class="admin-list">
+                @forelse($recentKatalogs as $katalog)
+                <div class="katalog-item">
+                    <div class="katalog-thumbnail">
+                        <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}">
+                    </div>
+                    <div class="katalog-content">
+                        <div class="katalog-header">
+                            <h4 class="katalog-title">{{ $katalog->company_name }}</h4>
+                            <p class="katalog-field">{{ $katalog->business_field }}</p>
+                        </div>
+                        <div class="katalog-footer">
+                            <span class="katalog-meta">Ditambahkan {{ $katalog->created_at->diffForHumans() }}</span>
+                            <span class="admin-badge badge-aktif">AKTIF</span>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-briefcase"></i>
+                    <p>Belum ada katalog bisnis</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- Tab: Organisasi --}}
+        <div id="tab-organisasi" class="tab-content">
+            <div class="section-header">
+                <h3 class="section-title">Struktur Organisasi Terbaru</h3>
+                <a href="{{ route('admin.organisasi.index') }}" class="view-all-btn">Lihat Semua</a>
+            </div>
+            <div class="admin-list">
+                @forelse($recentOrganisasi as $org)
+                <div class="organisasi-item">
+                    <div class="organisasi-photo">
+                        <img src="{{ $org->foto_url }}" alt="{{ $org->nama }}">
+                    </div>
+                    <div class="organisasi-content">
+                        <div>
+                            <h4 class="organisasi-name">{{ $org->nama }}</h4>
+                            <p class="organisasi-position">{{ $org->jabatan }}</p>
+                        </div>
+                        <div class="organisasi-footer">
+                            <span class="katalog-meta">Urutan: {{ $org->urutan }}</span>
+                            <span class="admin-badge badge-{{ $org->kategori }}">
+                                {{ strtoupper(str_replace('_', ' ', $org->kategori)) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-sitemap"></i>
+                    <p>Belum ada data organisasi</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- Tab: Berita --}}
+        <div id="tab-berita" class="tab-content">
+            <div class="section-header">
+                <h3 class="section-title">Berita Terbaru</h3>
+                <a href="#" class="view-all-btn">Lihat Semua</a>
+            </div>
+            <div class="admin-list">
+                @forelse($recentBerita as $berita)
+                <div class="katalog-item">
+                    <div class="katalog-thumbnail">
+                        <img src="{{ $berita->gambar_url }}" alt="{{ $berita->judul }}">
+                    </div>
+                    <div class="katalog-content">
+                        <div class="katalog-header">
+                            <h4 class="katalog-title">{{ $berita->judul }}</h4>
+                            <p class="katalog-field">
+                                <i class="fas fa-eye"></i> {{ $berita->views }} views | 
+                                <i class="fas fa-calendar"></i> {{ $berita->tanggal_format }}
+                            </p>
+                        </div>
+                        <div class="katalog-footer">
+                            <span class="katalog-meta">{{ $berita->created_at->diffForHumans() }}</span>
+                            <div>
+                                @if($berita->is_populer)
+                                <span class="admin-badge" style="background: #f59e0b; color: white; margin-right: 0.5rem;">POPULER</span>
+                                @endif
+                                <span class="admin-badge badge-{{ $berita->is_active ? 'aktif' : 'pending' }}">
+                                    {{ $berita->is_active ? 'AKTIF' : 'TIDAK AKTIF' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-newspaper"></i>
+                    <p>Belum ada berita</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+
+        {{-- Tab: UMKM --}}
+        <div id="tab-umkm" class="tab-content">
+            <div class="section-header">
+                <h3 class="section-title">Pendaftaran UMKM Terbaru</h3>
+                <a href="#" class="view-all-btn">Lihat Semua</a>
+            </div>
+            <div class="admin-list">
+                @forelse($recentUmkm as $umkm)
+                <div class="admin-item">
+                    <div class="admin-avatar">
+                        {{ strtoupper(substr($umkm->nama_usaha, 0, 2)) }}
+                    </div>
+                    <div class="admin-info">
+                        <div class="admin-name">{{ $umkm->nama_usaha }}</div>
+                        <div class="admin-email">
+                            {{ $umkm->nama_lengkap }} - {{ $umkm->email }}
+                            <br>
+                            <small>{{ $umkm->bidang_usaha }} | {{ $umkm->status_legalitas }}</small>
+                        </div>
+                    </div>
+                    <span class="admin-badge badge-{{ $umkm->status }}">
+                        @if($umkm->status === 'pending')
+                            MENUNGGU
+                        @elseif($umkm->status === 'approved')
+                            DISETUJUI
+                        @else
+                            DITOLAK
+                        @endif
+                    </span>
+                </div>
+                @empty
+                <div class="empty-state">
+                    <i class="fas fa-store"></i>
+                    <p>Belum ada pendaftaran UMKM</p>
+                </div>
+                @endforelse
+            </div>
         </div>
     </div>
 @endif
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button and corresponding content
+                this.classList.add('active');
+                const targetContent = document.getElementById(`tab-${tabName}`);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+@endpush

@@ -12,27 +12,15 @@ class AdminSeeder extends Seeder
     {
         $password = Hash::make('password123');
 
-        // Array 27 Kabupaten/Kota di Jawa Barat
+        // Array Kabupaten/Kota di Jawa Barat (sesuai urutan select option)
         $kabupatens = [
-            // 9 Kota
             'Bandung',
+            'Bandung Barat',
             'Bekasi',
             'Bogor',
-            'Cimahi',
-            'Cirebon',
-            'Depok',
-            'Sukabumi',
-            'Tasikmalaya',
-            'Banjar',
-            
-            // 18 Kabupaten
-            'Bandung Barat',
-            'Kabupaten Bandung',
-            'Kabupaten Bekasi',
-            'Kabupaten Bogor',
             'Ciamis',
             'Cianjur',
-            'Kabupaten Cirebon',
+            'Cirebon',
             'Garut',
             'Indramayu',
             'Karawang',
@@ -41,9 +29,12 @@ class AdminSeeder extends Seeder
             'Pangandaran',
             'Purwakarta',
             'Subang',
-            'Kabupaten Sukabumi',
+            'Sukabumi',
             'Sumedang',
-            'Kabupaten Tasikmalaya',
+            'Tasikmalaya',
+            'Banjar',
+            'Cimahi',
+            'Depok',
         ];
 
         // Create BPC untuk setiap Kabupaten/Kota

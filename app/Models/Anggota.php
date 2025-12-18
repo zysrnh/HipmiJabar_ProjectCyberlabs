@@ -24,7 +24,7 @@ class Anggota extends Authenticatable
         'kode_pos',
         'email',
         'password',
-        'initial_password', // ← TAMBAHKAN INI
+        'initial_password',
         'nomor_ktp',
         'foto_ktp',
         'foto_diri',
@@ -42,6 +42,10 @@ class Anggota extends Authenticatable
         'no_nota_pendirian',
         'profile_perusahaan',
         'logo_perusahaan',
+        'detail_image_1',
+        'detail_image_2',
+        'detail_image_3',
+        'deskripsi_detail',
         'sfc_hipmi',
         'referensi_hipmi',
         'organisasi_lain',
@@ -61,12 +65,54 @@ class Anggota extends Authenticatable
         'approved_at' => 'datetime',
     ];
 
-    // ... sisa method tetap sama
-    
+    // =====================================================
+    // RELATIONSHIPS
+    // =====================================================
+
+    /**
+     * Relasi ke Admin yang menyetujui
+     */
     public function approvedBy()
     {
         return $this->belongsTo(Admin::class, 'approved_by');
     }
+
+    /**
+     * Relasi ke UMKM (One to Many)
+     * Satu anggota bisa memiliki banyak UMKM
+     */
+    public function umkms()
+    {
+        return $this->hasMany(Umkm::class, 'anggota_id');
+    }
+
+    /**
+     * Get UMKM yang sudah diapprove
+     */
+    public function approvedUmkms()
+    {
+        return $this->hasMany(Umkm::class, 'anggota_id')->where('status', 'approved');
+    }
+
+    /**
+     * Get UMKM yang pending
+     */
+    public function pendingUmkms()
+    {
+        return $this->hasMany(Umkm::class, 'anggota_id')->where('status', 'pending');
+    }
+
+    /**
+     * Get UMKM yang ditolak
+     */
+    public function rejectedUmkms()
+    {
+        return $this->hasMany(Umkm::class, 'anggota_id')->where('status', 'rejected');
+    }
+
+    // =====================================================
+    // ACCESSORS (URL Attributes)
+    // =====================================================
 
     public function getFotoKtpUrlAttribute()
     {
@@ -88,6 +134,21 @@ class Anggota extends Authenticatable
         return $this->logo_perusahaan ? Storage::url($this->logo_perusahaan) : null;
     }
 
+    public function getDetailImage1UrlAttribute()
+    {
+        return $this->detail_image_1 ? Storage::url($this->detail_image_1) : null;
+    }
+
+    public function getDetailImage2UrlAttribute()
+    {
+        return $this->detail_image_2 ? Storage::url($this->detail_image_2) : null;
+    }
+
+    public function getDetailImage3UrlAttribute()
+    {
+        return $this->detail_image_3 ? Storage::url($this->detail_image_3) : null;
+    }
+
     public function getPhotoUrlAttribute()
     {
         if ($this->foto_diri) {
@@ -98,6 +159,10 @@ class Anggota extends Authenticatable
             ? asset('images/placeholder/female_ph.jpeg') 
             : asset('images/placeholder/male_ph.jpeg');
     }
+
+    // =====================================================
+    // SCOPES
+    // =====================================================
 
     public function scopePending($query)
     {
@@ -113,6 +178,10 @@ class Anggota extends Authenticatable
     {
         return $query->where('status', 'rejected');
     }
+
+    // =====================================================
+    // METHODS
+    // =====================================================
 
     public function approve($adminId)
     {
@@ -132,5 +201,43 @@ class Anggota extends Authenticatable
             'approved_by' => $adminId,
             'approved_at' => null,
         ]);
+    }
+
+    /**
+     * Check apakah anggota sudah pernah mendaftar UMKM
+     */
+    public function hasUmkmRegistration()
+    {
+        return $this->umkms()->exists();
+    }
+
+    /**
+     * Check apakah anggota punya UMKM yang diapprove
+     */
+    public function hasApprovedUmkm()
+    {
+        return $this->umkms()->where('status', 'approved')->exists();
+    }
+
+    /**
+     * Get jumlah UMKM yang dimiliki
+     */
+    public function getUmkmCountAttribute()
+    {
+        return $this->umkms()->count();
+    }
+
+    /**
+     * Get status verifikasi anggota dengan badge
+     */
+    public function getStatusBadgeAttribute()
+    {
+        $badges = [
+            'pending' => '<span class="badge badge-warning">Menunggu Verifikasi</span>',
+            'approved' => '<span class="badge badge-success">Disetujui</span>',
+            'rejected' => '<span class="badge badge-danger">Ditolak</span>',
+        ];
+
+        return $badges[$this->status] ?? '<span class="badge badge-secondary">Tidak Diketahui</span>';
     }
 }
