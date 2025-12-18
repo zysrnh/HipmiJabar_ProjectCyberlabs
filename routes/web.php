@@ -9,12 +9,13 @@ use App\Http\Controllers\Admin\KatalogController as AdminKatalogController;
 use App\Http\Controllers\Admin\MisiController;
 use App\Http\Controllers\Admin\AnggotaManagementController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
+use App\Http\Controllers\Admin\UmkmManagementController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\BukuAnggotaController;
 use App\Http\Controllers\BeritaController;
-use App\Http\Controllers\UmkmController; // TAMBAH INI
+use App\Http\Controllers\UmkmController;
 
 // =====================================================
 // ADMIN ROUTES
@@ -73,9 +74,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/{anggota}', [AnggotaManagementController::class, 'show'])->name('show');
             Route::post('/{anggota}/approve', [AnggotaManagementController::class, 'approve'])->name('approve');
             Route::post('/{anggota}/reject', [AnggotaManagementController::class, 'reject'])->name('reject');
-            Route::delete('/{anggota}', [AnggotaManagementController::class, 'destroy'])->name('destroy');
+            Route::delete('/{anggota}', [AnggotaManagementController::class, 'destroy'])->name('anggota.destroy');
             Route::get('/list/all', [AnggotaManagementController::class, 'listAll'])->name('list');
             Route::get('/list/{anggota}/detail', [AnggotaManagementController::class, 'showReadOnly'])->name('show-readonly');
+        });
+
+        // UMKM Management
+        Route::prefix('umkm-management')->name('umkm.')->group(function () {
+            Route::get('/', [UmkmManagementController::class, 'index'])->name('index');
+            Route::get('/{umkm}', [UmkmManagementController::class, 'show'])->name('show');
+            Route::post('/{umkm}/approve', [UmkmManagementController::class, 'approve'])->name('approve');
+            Route::post('/{umkm}/reject', [UmkmManagementController::class, 'reject'])->name('reject');
+            Route::delete('/{umkm}', [UmkmManagementController::class, 'destroy'])->name('destroy');
         });
     });
 });
@@ -98,7 +108,7 @@ Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita-de
 // Other Public Pages
 Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
 
-// UMKM Registration - GANTI DENGAN INI
+// UMKM Registration
 Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
 Route::post('/umkm', [UmkmController::class, 'store'])->name('umkm.store');
 

@@ -212,24 +212,59 @@
                 </div>
             </div>
 
-          {{-- Ganti menu berita yang lama dengan ini --}}
+            {{-- Ganti menu berita yang lama dengan ini --}}
 
-{{-- Berita Dropdown --}}
+            {{-- Berita Dropdown --}}
+            <div class="menu-dropdown">
+                <div class="menu-item has-dropdown {{ $activeMenu === 'berita' ? 'active' : '' }}" onclick="toggleDropdown(this)">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                            <polyline points="13 2 13 9 20 9" />
+                        </svg>
+                        <span>Berita</span>
+                    </div>
+                    <svg class="dropdown-icon" viewBox="0 0 24 24">
+                        <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                </div>
+                <div class="submenu {{ $activeMenu === 'berita' ? 'active' : '' }}">
+                    <a href="{{ route('berita') }}" class="submenu-item" target="_blank">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
+                        <span>Lihat Halaman</span>
+                    </a>
+                    @if($admin->category === 'bpd')
+                    <a href="{{ route('admin.berita.index') }}" class="submenu-item {{ $activeMenu === 'berita' ? 'active' : '' }}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        <span>Kelola Data</span>
+                    </a>
+                    @endif
+                </div>
+            </div>
+            {{-- UMKM Dropdown --}}
 <div class="menu-dropdown">
-    <div class="menu-item has-dropdown {{ $activeMenu === 'berita' ? 'active' : '' }}" onclick="toggleDropdown(this)">
+    <div class="menu-item has-dropdown {{ $activeMenu === 'umkm' ? 'active' : '' }}" onclick="toggleDropdown(this)">
         <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
             <svg viewBox="0 0 24 24">
-                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-                <polyline points="13 2 13 9 20 9" />
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
             </svg>
-            <span>Berita</span>
+            <span>UMKM</span>
         </div>
         <svg class="dropdown-icon" viewBox="0 0 24 24">
             <polyline points="6 9 12 15 18 9" />
         </svg>
     </div>
-    <div class="submenu {{ $activeMenu === 'berita' ? 'active' : '' }}">
-        <a href="{{ route('berita') }}" class="submenu-item" target="_blank">
+    <div class="submenu {{ $activeMenu === 'umkm' ? 'active' : '' }}">
+        <a href="{{ route('umkm') }}" class="submenu-item" target="_blank">
             <svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
@@ -238,7 +273,7 @@
             <span>Lihat Halaman</span>
         </a>
         @if($admin->category === 'bpd')
-        <a href="{{ route('admin.berita.index') }}" class="submenu-item {{ $activeMenu === 'berita' ? 'active' : '' }}">
+        <a href="{{ route('admin.umkm.index') }}" class="submenu-item {{ $activeMenu === 'umkm' ? 'active' : '' }}">
             <svg viewBox="0 0 24 24">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -248,14 +283,6 @@
         @endif
     </div>
 </div>
-            <a href="{{ route('umkm') }}" class="menu-item" target="_blank">
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                    <line x1="12" y1="22.08" x2="12" y2="12" />
-                </svg>
-                <span>UMKM</span>
-            </a>
         </div>
     </div>
 </div>

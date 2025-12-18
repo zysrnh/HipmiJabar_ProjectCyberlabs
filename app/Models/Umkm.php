@@ -28,10 +28,15 @@ class Umkm extends Model
         'sumber_pembiayaan',
         'tujuan',
         'pelatihan',
+        'status',
+        'rejection_reason',
+        'verified_at',
+        'verified_by',
     ];
 
     protected $casts = [
         'platform' => 'array', // Cast JSON to array
         'tanggal_lahir' => 'date',
+        'verified_at' => 'datetime',
     ];
 }
