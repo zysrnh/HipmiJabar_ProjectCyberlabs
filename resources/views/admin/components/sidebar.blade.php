@@ -79,7 +79,7 @@
                         <span>Daftar Anggota</span>
                     </a>
                     @endif
-                    
+
                     {{-- Menu untuk Super Admin Only --}}
                     @if($admin->category === 'super_admin')
                     <a href="{{ route('admin.info-admin') }}" class="submenu-item {{ $activeMenu === 'info-admin' ? 'active' : '' }}">
@@ -130,6 +130,15 @@
                             <line x1="9" y1="11" x2="15" y2="11" />
                         </svg>
                         <span>Kelola Misi</span>
+                    </a>
+                    @endif
+                    @if($admin->canManageContent())
+                    <a href="{{ route('admin.strategic-plan.index') }}" class="submenu-item {{ $activeMenu === 'strategic-plan' ? 'active' : '' }}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                        <span>Kelola Section Strategic</span>
                     </a>
                     @endif
                 </div>
@@ -276,6 +285,8 @@
                     </a>
                     @endif
                 </div>
+            </div>
+            <div class="menu-dropdown">
             </div>
         </div>
     </div>

@@ -240,4 +240,5 @@ class Anggota extends Authenticatable
 
         return $badges[$this->status] ?? '<span class="badge badge-secondary">Tidak Diketahui</span>';
     }
+    
 }

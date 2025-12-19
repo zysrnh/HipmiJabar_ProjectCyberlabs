@@ -10,7 +10,7 @@
         <p>Sebagai Jembatan Informasi</p>
         <h3>Hayu, kita maju babarengan!</h3>
         <div class="hero-buttons">
-            <a href="#" class="btn">Jadi Anggota</a>
+            <a href="{{ route('jadi-anggota') }}" class="btn">Jadi Anggota</a>
             <a href="#" class="fa fa-instagram social-icons"></a>
             <a href="#" class="fa fa-facebook social-icons"></a>
             <a href="#" class="fa fa-linkedin social-icons"></a>

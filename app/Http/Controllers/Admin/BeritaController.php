@@ -14,8 +14,8 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        // Hanya BPD yang bisa akses
-        if ($admin->category !== 'bpd') {
+        // ✅ Gunakan method canManageContent() biar include super_admin
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
@@ -28,7 +28,7 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        if ($admin->category !== 'bpd') {
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
@@ -39,7 +39,7 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        if ($admin->category !== 'bpd') {
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
 
@@ -77,7 +77,7 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        if ($admin->category !== 'bpd') {
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
@@ -90,7 +90,7 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        if ($admin->category !== 'bpd') {
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
 
@@ -130,7 +130,7 @@ class BeritaController extends Controller
     {
         $admin = auth()->guard('admin')->user();
         
-        if ($admin->category !== 'bpd') {
+        if (!$admin->canManageContent()) {
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
 

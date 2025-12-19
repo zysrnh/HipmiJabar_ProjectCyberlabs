@@ -10,8 +10,7 @@ use App\Http\Controllers\Admin\MisiController;
 use App\Http\Controllers\Admin\AnggotaManagementController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
 use App\Http\Controllers\Admin\UmkmManagementController;
-use App\Http\Controllers\Admin\StrategicPlanController as AdminStrategicPlanController; // ✅ Alias untuk Admin
-use App\Http\Controllers\StrategicPlanController as PublicStrategicPlanController; // ✅ Alias untuk Public
+use App\Http\Controllers\Admin\StrategicPlanController; // ✅ Tanpa alias
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AnggotaController;
@@ -45,7 +44,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('delete-admin/{admin}', [AdminDashboardController::class, 'deleteAdmin'])->name('delete-admin');
         
         // ✅ Strategic Plan CRUD (Admin)
-        Route::resource('strategic-plan', AdminStrategicPlanController::class);
+        Route::resource('strategic-plan', StrategicPlanController::class);
 
         // Logout
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
@@ -120,8 +119,9 @@ Route::prefix('anggota')->name('anggota.')->group(function () {
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// ✅ Strategic Plan Public Routes
-Route::get('/strategic-plan/{id}', [PublicStrategicPlanController::class, 'show'])->name('strategic-plan.detail');
+// ✅ Strategic Plan Public Route (menggunakan controller yang sama)
+Route::get('/strategic-plan/{strategicPlan}', [StrategicPlanController::class, 'show'])
+    ->name('strategic-plan.detail');
 
 // E-Katalog Public Routes
 Route::get('/e-katalog', [KatalogController::class, 'index'])->name('e-katalog');

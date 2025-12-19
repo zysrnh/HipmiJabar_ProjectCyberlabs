@@ -28,7 +28,7 @@
     .success-icon {
         width: 100px;
         height: 100px;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: #10b981;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -70,7 +70,7 @@
     }
 
     .credentials-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #667eea;
         border-radius: 12px;
         padding: 2rem;
         margin: 2rem 0;
@@ -111,7 +111,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: white;
         padding: 1rem;
         border-radius: 8px;
         color: #0a2540;
@@ -319,7 +319,6 @@
         }
     }
 
-    /* Hidden print content */
     #printContent {
         display: none;
     }
@@ -425,7 +424,6 @@
     </div>
 </div>
 
-<!-- Hidden content for PDF generation -->
 <div id="printContent">
     <div style="font-family: 'Montserrat', Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">
         <div style="text-align: center; margin-bottom: 30px;">
@@ -476,9 +474,18 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
+    let credentialsSaved = false;
+    let emailCopied = false;
+    let passwordCopied = false;
+
     function copyText(elementId, button) {
         const text = document.getElementById(elementId).textContent;
         const originalText = button.textContent;
+        
+        if (elementId === 'emailText') emailCopied = true;
+        if (elementId === 'passwordText') passwordCopied = true;
+        
+        if (emailCopied && passwordCopied) credentialsSaved = true;
         
         navigator.clipboard.writeText(text).then(() => {
             button.classList.add('copy-success');
@@ -494,6 +501,7 @@
     }
 
     function downloadAsPDF() {
+        credentialsSaved = true;
         const element = document.getElementById('printContent');
         const opt = {
             margin: 10,
@@ -507,6 +515,7 @@
     }
 
     function downloadAsTXT() {
+        credentialsSaved = true;
         const email = document.getElementById('emailText').textContent;
         const password = document.getElementById('passwordText').textContent;
         const date = new Date().toLocaleString('id-ID', { 
@@ -555,43 +564,6 @@ Password       : ${password}
         window.URL.revokeObjectURL(url);
     }
 
-    // Track if credentials have been saved
-    let credentialsSaved = false;
-    
-    // Mark as saved when user downloads
-    document.querySelectorAll('.btn-download').forEach(btn => {
-        btn.addEventListener('click', function() {
-            credentialsSaved = true;
-        });
-    });
-
-    // Mark as saved when user copies both
-    let emailCopied = false;
-    let passwordCopied = false;
-    
-    function copyText(elementId, button) {
-        const text = document.getElementById(elementId).textContent;
-        const originalText = button.textContent;
-        
-        if (elementId === 'emailText') emailCopied = true;
-        if (elementId === 'passwordText') passwordCopied = true;
-        
-        if (emailCopied && passwordCopied) credentialsSaved = true;
-        
-        navigator.clipboard.writeText(text).then(() => {
-            button.classList.add('copy-success');
-            button.textContent = '✓ Copied!';
-            
-            setTimeout(() => {
-                button.classList.remove('copy-success');
-                button.textContent = originalText;
-            }, 2000);
-        }).catch(err => {
-            alert('Gagal menyalin. Silakan copy manual.');
-        });
-    }
-
-    // Warn before leaving if credentials not saved
     window.addEventListener('beforeunload', function (e) {
         if (!credentialsSaved) {
             e.preventDefault();
