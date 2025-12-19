@@ -527,59 +527,6 @@
         <span class="form-error">{{ $message }}</span>
     @enderror
 </div>
-
-
-<!-- ========================================== -->
-<!-- FORM EDIT ADMIN - Domisili Field -->
-<!-- ========================================== -->
-<div class="form-group full-width" id="domisiliField">
-    <label class="form-label required">Domisili</label>
-    <select 
-        name="domisili" 
-        class="form-select @error('domisili') error @enderror"
-    >
-        <option value="">Pilih Domisili</option>
-        
-        {{-- KABUPATEN (18) --}}
-        <optgroup label="Kabupaten">
-            <option value="Bandung" {{ old('domisili', $admin->domisili) == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
-            <option value="Bandung Barat" {{ old('domisili', $admin->domisili) == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
-            <option value="Bekasi" {{ old('domisili', $admin->domisili) == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
-            <option value="Bogor" {{ old('domisili', $admin->domisili) == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
-            <option value="Ciamis" {{ old('domisili', $admin->domisili) == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
-            <option value="Cianjur" {{ old('domisili', $admin->domisili) == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
-            <option value="Cirebon" {{ old('domisili', $admin->domisili) == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
-            <option value="Garut" {{ old('domisili', $admin->domisili) == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
-            <option value="Indramayu" {{ old('domisili', $admin->domisili) == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
-            <option value="Karawang" {{ old('domisili', $admin->domisili) == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
-            <option value="Kuningan" {{ old('domisili', $admin->domisili) == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
-            <option value="Majalengka" {{ old('domisili', $admin->domisili) == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
-            <option value="Pangandaran" {{ old('domisili', $admin->domisili) == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
-            <option value="Purwakarta" {{ old('domisili', $admin->domisili) == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
-            <option value="Subang" {{ old('domisili', $admin->domisili) == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
-            <option value="Sukabumi" {{ old('domisili', $admin->domisili) == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
-            <option value="Sumedang" {{ old('domisili', $admin->domisili) == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
-            <option value="Tasikmalaya" {{ old('domisili', $admin->domisili) == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
-        </optgroup>
-        
-        {{-- KOTA (9) --}}
-        <optgroup label="Kota">
-            <option value="Kota Bandung" {{ old('domisili', $admin->domisili) == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
-            <option value="Kota Banjar" {{ old('domisili', $admin->domisili) == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
-            <option value="Kota Bekasi" {{ old('domisili', $admin->domisili) == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
-            <option value="Kota Bogor" {{ old('domisili', $admin->domisili) == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
-            <option value="Kota Cimahi" {{ old('domisili', $admin->domisili) == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
-            <option value="Kota Cirebon" {{ old('domisili', $admin->domisili) == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
-            <option value="Kota Depok" {{ old('domisili', $admin->domisili) == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
-            <option value="Kota Sukabumi" {{ old('domisili', $admin->domisili) == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
-            <option value="Kota Tasikmalaya" {{ old('domisili', $admin->domisili) == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
-        </optgroup>
-    </select>
-    <span class="form-help">Pilih domisili untuk admin BPC</span>
-    @error('domisili')
-        <span class="form-error">{{ $message }}</span>
-    @enderror
-</div>
                 </div>
             </div>
 

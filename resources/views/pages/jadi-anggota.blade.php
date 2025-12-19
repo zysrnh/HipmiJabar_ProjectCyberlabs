@@ -112,53 +112,53 @@
                         </div>
                     </div>
                 </div>
-<div class="form-row">
-    <div class="form-group">
-        <label for="tempat_lahir">Tempat lahir<span class="required">*</span></label>
-        <select id="tempat_lahir" name="tempat_lahir" class="form-control" required>
-            <option value="">Pilih Kota/Kabupaten</option>
-            
-            {{-- KABUPATEN (18) --}}
-            <optgroup label="Kabupaten">
-                <option value="Bandung" {{ old('tempat_lahir') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
-                <option value="Bandung Barat" {{ old('tempat_lahir') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
-                <option value="Bekasi" {{ old('tempat_lahir') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
-                <option value="Bogor" {{ old('tempat_lahir') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
-                <option value="Ciamis" {{ old('tempat_lahir') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
-                <option value="Cianjur" {{ old('tempat_lahir') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
-                <option value="Cirebon" {{ old('tempat_lahir') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
-                <option value="Garut" {{ old('tempat_lahir') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
-                <option value="Indramayu" {{ old('tempat_lahir') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
-                <option value="Karawang" {{ old('tempat_lahir') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
-                <option value="Kuningan" {{ old('tempat_lahir') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
-                <option value="Majalengka" {{ old('tempat_lahir') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
-                <option value="Pangandaran" {{ old('tempat_lahir') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
-                <option value="Purwakarta" {{ old('tempat_lahir') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
-                <option value="Subang" {{ old('tempat_lahir') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
-                <option value="Sukabumi" {{ old('tempat_lahir') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
-                <option value="Sumedang" {{ old('tempat_lahir') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
-                <option value="Tasikmalaya" {{ old('tempat_lahir') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
-            </optgroup>
-            
-            {{-- KOTA (9) --}}
-            <optgroup label="Kota">
-                <option value="Kota Bandung" {{ old('tempat_lahir') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
-                <option value="Kota Banjar" {{ old('tempat_lahir') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
-                <option value="Kota Bekasi" {{ old('tempat_lahir') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
-                <option value="Kota Bogor" {{ old('tempat_lahir') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
-                <option value="Kota Cimahi" {{ old('tempat_lahir') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
-                <option value="Kota Cirebon" {{ old('tempat_lahir') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
-                <option value="Kota Depok" {{ old('tempat_lahir') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
-                <option value="Kota Sukabumi" {{ old('tempat_lahir') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
-                <option value="Kota Tasikmalaya" {{ old('tempat_lahir') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
-            </optgroup>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="tanggal_lahir">Tanggal Lahir<span class="required">*</span></label>
-        <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
-    </div>
-</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tempat_lahir">Tempat lahir<span class="required">*</span></label>
+                        <select id="tempat_lahir" name="tempat_lahir" class="form-control" required>
+                            <option value="">Pilih Kota/Kabupaten</option>
+
+                            {{-- KABUPATEN (18) --}}
+                            <optgroup label="Kabupaten">
+                                <option value="Bandung" {{ old('tempat_lahir') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
+                                <option value="Bandung Barat" {{ old('tempat_lahir') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
+                                <option value="Bekasi" {{ old('tempat_lahir') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
+                                <option value="Bogor" {{ old('tempat_lahir') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
+                                <option value="Ciamis" {{ old('tempat_lahir') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
+                                <option value="Cianjur" {{ old('tempat_lahir') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
+                                <option value="Cirebon" {{ old('tempat_lahir') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
+                                <option value="Garut" {{ old('tempat_lahir') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
+                                <option value="Indramayu" {{ old('tempat_lahir') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
+                                <option value="Karawang" {{ old('tempat_lahir') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
+                                <option value="Kuningan" {{ old('tempat_lahir') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
+                                <option value="Majalengka" {{ old('tempat_lahir') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
+                                <option value="Pangandaran" {{ old('tempat_lahir') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
+                                <option value="Purwakarta" {{ old('tempat_lahir') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
+                                <option value="Subang" {{ old('tempat_lahir') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
+                                <option value="Sukabumi" {{ old('tempat_lahir') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
+                                <option value="Sumedang" {{ old('tempat_lahir') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
+                                <option value="Tasikmalaya" {{ old('tempat_lahir') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
+                            </optgroup>
+
+                            {{-- KOTA (9) --}}
+                            <optgroup label="Kota">
+                                <option value="Kota Bandung" {{ old('tempat_lahir') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
+                                <option value="Kota Banjar" {{ old('tempat_lahir') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
+                                <option value="Kota Bekasi" {{ old('tempat_lahir') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
+                                <option value="Kota Bogor" {{ old('tempat_lahir') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
+                                <option value="Kota Cimahi" {{ old('tempat_lahir') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
+                                <option value="Kota Cirebon" {{ old('tempat_lahir') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
+                                <option value="Kota Depok" {{ old('tempat_lahir') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
+                                <option value="Kota Sukabumi" {{ old('tempat_lahir') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
+                                <option value="Kota Tasikmalaya" {{ old('tempat_lahir') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_lahir">Tanggal Lahir<span class="required">*</span></label>
+                        <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir') }}" required>
+                    </div>
+                </div>
 
                 <div class="form-row">
                     <div class="form-group">
