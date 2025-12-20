@@ -10,10 +10,7 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $password = Hash::make('password123');
-
         // 27 Kabupaten/Kota di Jawa Barat
-        // 18 Kabupaten + 9 Kota
         $wilayahJabar = [
             // KABUPATEN (18)
             'Bandung',
@@ -49,33 +46,32 @@ class AdminSeeder extends Seeder
 
         // Create BPC untuk setiap Kabupaten/Kota
         foreach ($wilayahJabar as $wilayah) {
-            // Generate username: bpc_bandung, bpc_kota_bandung, dll
             $username = 'bpc_' . strtolower(str_replace(' ', '_', $wilayah));
-            
-            // Generate email: bpc.bandung@hipmi.com, bpc.kotabandung@hipmi.com
             $email = 'bpc.' . strtolower(str_replace(' ', '', $wilayah)) . '@hipmi.com';
-            
-            // Nama Admin
             $name = str_contains($wilayah, 'Kota') 
                 ? 'Admin BPC ' . $wilayah 
                 : 'Admin BPC Kabupaten ' . $wilayah;
+            
+            // Password = username@2025
+            // Contoh: bpc_bandung@2025, bpc_kota_bandung@2025
+            $password = $username . '@2025';
             
             Admin::create([
                 'name' => $name,
                 'username' => $username,
                 'email' => $email,
-                'password' => $password,
+                'password' => Hash::make($password),
                 'category' => 'bpc',
                 'domisili' => $wilayah,
             ]);
         }
 
-        // BPD Jawa Barat (tidak perlu domisili)
+        // BPD Jawa Barat
         Admin::create([
             'name' => 'Admin BPD Jawa Barat',
             'username' => 'adminbpd',
             'email' => 'adminbpd@hipmi.com',
-            'password' => $password,
+            'password' => Hash::make('adminbpd@2025'),
             'category' => 'bpd',
             'domisili' => null,
         ]);

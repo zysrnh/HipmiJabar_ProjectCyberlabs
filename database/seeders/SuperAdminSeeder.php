@@ -14,7 +14,7 @@ class SuperAdminSeeder extends Seeder
             'name' => 'Super Admin',
             'username' => 'superadmin',
             'email' => 'superadmin@hipmi-jabar.org',
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('Svp3r4dm1N@2O2S'),
             'category' => 'super_admin',
             'domisili' => null,
         ]);

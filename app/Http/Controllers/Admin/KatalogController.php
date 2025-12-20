@@ -20,6 +20,67 @@ class KatalogController extends Controller
         return view('admin.katalog.create');
     }
 
+    /**
+     * Extract Google Maps embed URL from various formats
+     */
+    private function extractGoogleMapsUrl($input)
+    {
+        if (empty($input)) {
+            return null;
+        }
+
+        // Clean input
+        $input = trim($input);
+
+        // Jika sudah format embed URL yang benar
+        if (strpos($input, 'maps/embed') !== false) {
+            // Extract URL dari iframe jika ada
+            if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
+                return $matches[1];
+            }
+            return $input;
+        }
+
+        // Extract dari iframe (format apapun)
+        if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
+            $url = $matches[1];
+            if (strpos($url, 'google.com/maps') !== false) {
+                return $url;
+            }
+        }
+
+        // Extract koordinat dari Google Maps URL biasa
+        // Format: https://www.google.com/maps/place/.../@-6.9034495,107.6189571,17z/...
+        // atau: https://www.google.com/maps/@-6.9034495,107.6189571,17z/...
+        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $input, $matches)) {
+            $lat = $matches[1];
+            $lng = $matches[2];
+            // Gunakan format query sederhana yang lebih reliable
+            return "https://www.google.com/maps?q={$lat},{$lng}&output=embed";
+        }
+
+        // Extract place_id dari URL
+        if (preg_match('/place_id[=:]([A-Za-z0-9_-]+)/', $input, $matches)) {
+            $placeId = $matches[1];
+            return "https://www.google.com/maps?q=place_id:{$placeId}&output=embed";
+        }
+
+        // Extract dari search query URL
+        // Format: https://www.google.com/maps/search/Location+Name
+        if (preg_match('/maps\/search\/([^\/\?&]+)/', $input, $matches)) {
+            $query = urldecode($matches[1]);
+            return "https://www.google.com/maps?q=" . urlencode($query) . "&output=embed";
+        }
+
+        // Jika format tidak dikenali tapi ada google.com/maps, coba sebagai fallback
+        if (strpos($input, 'google.com/maps') !== false || strpos($input, 'maps.app.goo.gl') !== false) {
+            // Simpan URL asli, akan di-handle di frontend atau manual
+            return $input;
+        }
+
+        return null;
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -31,7 +92,7 @@ class KatalogController extends Controller
             'address' => 'required|string',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'map_embed_url' => 'nullable|url',
+            'map_embed_url' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
 
@@ -48,6 +109,11 @@ class KatalogController extends Controller
                 $imagePaths[] = $image->store('katalog/images', 'public');
             }
             $validated['images'] = $imagePaths;
+        }
+
+        // Auto-extract Google Maps URL
+        if ($request->filled('map_embed_url')) {
+            $validated['map_embed_url'] = $this->extractGoogleMapsUrl($request->map_embed_url);
         }
 
         $validated['is_active'] = $request->has('is_active');
@@ -74,7 +140,7 @@ class KatalogController extends Controller
             'address' => 'required|string',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'map_embed_url' => 'nullable|url',
+            'map_embed_url' => 'nullable|string',
             'is_active' => 'boolean'
         ]);
 
@@ -103,6 +169,11 @@ class KatalogController extends Controller
                 $imagePaths[] = $image->store('katalog/images', 'public');
             }
             $validated['images'] = $imagePaths;
+        }
+
+        // Auto-extract Google Maps URL
+        if ($request->filled('map_embed_url')) {
+            $validated['map_embed_url'] = $this->extractGoogleMapsUrl($request->map_embed_url);
         }
 
         $validated['is_active'] = $request->has('is_active');
