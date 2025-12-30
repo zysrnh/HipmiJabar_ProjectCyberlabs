@@ -25,17 +25,35 @@
 <section class="main-info">
     <div class="info-card">
         <img src="{{ asset('images/icons/users.png') }}" alt="Anggota" class="icon">
-        <h2><span class="counter" data-target="{{ $totalAnggota }}">0</span></h2>
+        <h2>
+            @if($totalAnggota == 0)
+                0
+            @else
+                <span class="counter" data-target="{{ $totalAnggota }}">0</span>
+            @endif
+        </h2>
         <h3>Anggota</h3>
     </div>
     <div class="info-card">
         <img src="{{ asset('images/icons/building.png') }}" alt="Perusahaan" class="icon">
-        <h2><span class="counter" data-target="{{ $totalKatalog }}">0</span></h2>
+        <h2>
+            @if($totalKatalog == 0)
+                0
+            @else
+                <span class="counter" data-target="{{ $totalKatalog }}">0</span>
+            @endif
+        </h2>
         <h3>Perusahaan</h3>
     </div>
     <div class="info-card">
         <img src="{{ asset('images/icons/folder.png') }}" alt="Klasifikasi Usaha" class="icon">
-        <h2><span class="counter" data-target="{{ $totalUmkm }}">0</span></h2>
+        <h2>
+            @if($totalUmkm == 0)
+                0
+            @else
+                <span class="counter" data-target="{{ $totalUmkm }}">0</span>
+            @endif
+        </h2>
         <h3>Klasifikasi Usaha</h3>
     </div>
 </section>
@@ -59,7 +77,7 @@
 
 
 <section class="misi" id="misi">
-    <div class="yellow-accent" style="align-self: center; !important"></div>
+    <div class="yellow-accent" style="align-self: center;"></div>
     <h2>Misi Kami</h2>
 
     @if($misi->count() > 0)
@@ -357,14 +375,14 @@
     {{-- Hidden Data untuk JavaScript --}}
     <script id="kegiatan-data" type="application/json">
         @php
-        $kegiatanArray = $kegiatanBerita - > map(function($item) {
+        $kegiatanArray = $kegiatanBerita->map(function($item) {
             return [
-                'judul' => $item - > judul,
-                'slug' => $item - > slug,
-                'gambar_url' => $item - > gambar_url ?? asset('images/hipmi-logo.png'),
-                'tanggal_format' => $item - > tanggal_format ?? $item - > tanggal_publish - > format('d M Y'),
+                'judul' => $item->judul,
+                'slug' => $item->slug,
+                'gambar_url' => $item->gambar_url ?? asset('images/hipmi-logo.png'),
+                'tanggal_format' => $item->tanggal_format ?? $item->tanggal_publish->format('d M Y'),
             ];
-        }) - > toArray();
+        })->toArray();
         @endphp {
             !!json_encode($kegiatanArray) !!
         }
@@ -750,7 +768,7 @@
 </script>
 @endpush
 <section class="ekatalog-home">
-    <div class="green-accent" style="align-self: center; !important"></div>
+    <div class="green-accent" style="align-self: center;"></div>
     <h2>E-Katalog Bisnis HIPMI Jabar</h2>
     <div class="e-katalog-content-home">
         @forelse($katalogs->take(2) as $katalog)

@@ -28,7 +28,7 @@
     .success-icon {
         width: 100px;
         height: 100px;
-        background: #10b981;
+        background: #1e40af;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -57,7 +57,7 @@
 
     .success-card h1 {
         font-size: 2rem;
-        color: #0a2540;
+        color: #1e3a8a;
         margin: 0 0 1rem 0;
         font-weight: 700;
     }
@@ -70,7 +70,7 @@
     }
 
     .credentials-section {
-        background: #667eea;
+        background: #3b82f6;
         border-radius: 12px;
         padding: 2rem;
         margin: 2rem 0;
@@ -149,13 +149,13 @@
     .download-section {
         margin: 2rem 0;
         padding: 1.5rem;
-        background: #f0fdf4;
-        border: 2px solid #86efac;
+        background: #eff6ff;
+        border: 2px solid #93c5fd;
         border-radius: 12px;
     }
 
     .download-section h4 {
-        color: #166534;
+        color: #1e40af;
         font-size: 1rem;
         font-weight: 700;
         margin: 0 0 1rem 0;
@@ -172,7 +172,7 @@
     }
 
     .btn-download {
-        background: #16a34a;
+        background: #2563eb;
         color: white;
         border: none;
         padding: 0.875rem 1.75rem;
@@ -188,14 +188,14 @@
     }
 
     .btn-download:hover {
-        background: #15803d;
+        background: #1e40af;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     .important-notes {
-        background: #fee2e2;
-        border: 2px solid #fca5a5;
+        background: #eff6ff;
+        border: 2px solid #93c5fd;
         border-radius: 10px;
         padding: 1.5rem;
         margin: 1.5rem 0;
@@ -203,7 +203,7 @@
     }
 
     .important-notes h4 {
-        color: #dc2626;
+        color: #1e40af;
         font-size: 1rem;
         font-weight: 700;
         margin: 0 0 1rem 0;
@@ -212,7 +212,7 @@
     .important-notes ul {
         margin: 0;
         padding-left: 1.5rem;
-        color: #991b1b;
+        color: #1e3a8a;
     }
 
     .important-notes li {
@@ -266,12 +266,12 @@
     }
 
     .info-box {
-        background: #e0e7ff;
-        border: 2px solid #818cf8;
+        background: #dbeafe;
+        border: 2px solid #60a5fa;
         border-radius: 10px;
         padding: 1.25rem;
         margin: 2rem 0;
-        color: #3730a3;
+        color: #1e40af;
         font-size: 0.9375rem;
         line-height: 1.6;
         text-align: left;
@@ -318,10 +318,6 @@
             justify-content: center;
         }
     }
-
-    #printContent {
-        display: none;
-    }
 </style>
 
 <div class="success-container">
@@ -363,18 +359,10 @@
                 <span>💾</span>
                 <span>Download Kredensial Anda</span>
             </h4>
-            <p style="color: #166534; margin-bottom: 1rem; font-size: 0.9375rem;">
+            <p style="color: #1e40af; margin-bottom: 1rem; font-size: 0.9375rem;">
                 Simpan kredensial Anda dalam format yang mudah diakses
             </p>
             <div class="download-buttons">
-                <button class="btn-download" onclick="downloadAsPDF()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="7 10 12 15 17 10"></polyline>
-                        <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                    Download PDF
-                </button>
                 <button class="btn-download" onclick="downloadAsTXT()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -424,55 +412,6 @@
     </div>
 </div>
 
-<div id="printContent">
-    <div style="font-family: 'Montserrat', Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #0a2540; margin: 0 0 10px 0;">HIPMI Jawa Barat</h1>
-            <h2 style="color: #667eea; margin: 0; font-size: 1.5rem;">Kredensial Login Anggota</h2>
-        </div>
-        
-        <div style="background: #f9fafb; padding: 20px; border-radius: 10px; margin: 20px 0;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <tr>
-                    <td style="padding: 10px 0; color: #6b7280; font-weight: 600;">Email Login:</td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px; background: white; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 14px; word-break: break-all;">
-                        {{ session('user_email') }}
-                    </td>
-                </tr>
-                <tr><td style="height: 15px;"></td></tr>
-                <tr>
-                    <td style="padding: 10px 0; color: #6b7280; font-weight: 600;">Password:</td>
-                </tr>
-                <tr>
-                    <td style="padding: 10px; background: white; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 14px; font-weight: bold;">
-                        {{ session('generated_password') }}
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div style="background: #fef3c7; padding: 20px; border-radius: 10px; border: 2px solid #fbbf24; margin: 20px 0;">
-            <h3 style="color: #92400e; margin: 0 0 10px 0; font-size: 1rem;">⚠️ Peringatan Keamanan</h3>
-            <ul style="margin: 0; padding-left: 20px; color: #92400e; line-height: 1.8;">
-                <li>Simpan dokumen ini di tempat yang aman</li>
-                <li>Jangan bagikan kredensial kepada siapapun</li>
-                <li>Ganti password setelah login pertama kali</li>
-                <li>Hubungi admin jika lupa password</li>
-            </ul>
-        </div>
-
-        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 0.875rem;">
-            <p style="margin: 5px 0;">Dokumen ini digenerate otomatis pada:</p>
-            <p style="margin: 5px 0; font-weight: 600;">{{ now()->format('d F Y, H:i') }} WIB</p>
-            <p style="margin: 15px 0 5px 0;">Website: www.hipmijawabarat.com</p>
-            <p style="margin: 5px 0;">Email: info@hipmijawabarat.com</p>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
     let credentialsSaved = false;
     let emailCopied = false;
@@ -498,20 +437,6 @@
         }).catch(err => {
             alert('Gagal menyalin. Silakan copy manual.');
         });
-    }
-
-    function downloadAsPDF() {
-        credentialsSaved = true;
-        const element = document.getElementById('printContent');
-        const opt = {
-            margin: 10,
-            filename: 'HIPMI_Kredensial_Login.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(element).save();
     }
 
     function downloadAsTXT() {

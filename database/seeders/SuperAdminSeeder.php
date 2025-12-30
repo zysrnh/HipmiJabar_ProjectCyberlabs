@@ -13,7 +13,7 @@ class SuperAdminSeeder extends Seeder
         Admin::create([
             'name' => 'Super Admin',
             'username' => 'superadmin',
-            'email' => 'superadmin@hipmi-jabar.org',
+            'email' => '    ',
             'password' => Hash::make('Svp3r4dm1N@2O2S'),
             'category' => 'super_admin',
             'domisili' => null,
