@@ -94,14 +94,23 @@
                 <h1 class="berita-badge">Kegiatan Populer</h1>
                 
                 @forelse($kegiatanPopuler as $item)
-                <div class="berita-detail-right-item">
+                <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
                     <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
                         <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+                        <div class="image-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
                     </a>
                     <div class="berita-detail-right-item-content">
                         <div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                                <span class="berita-home-date" style="margin-bottom: 0;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
+                                <span class="bidang-badge" style="margin-bottom: 0;">{{ $item->bidang }}</span>
+                            </div>
                             <h3>{{ $item->judul }}</h3>
-                            <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
                             <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
                         </div>
                     </div>
@@ -116,14 +125,23 @@
                 <h1 class="berita-badge">Kegiatan Lainnya</h1>
                 
                 @forelse($kegiatanLainnya as $item)
-                <div class="berita-detail-right-item">
+                <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
                     <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
                         <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+                        <div class="image-overlay">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </div>
                     </a>
                     <div class="berita-detail-right-item-content">
                         <div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                                <span class="berita-home-date" style="margin-bottom: 0;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
+                                <span class="bidang-badge" style="margin-bottom: 0;">{{ $item->bidang }}</span>
+                            </div>
                             <h3>{{ $item->judul }}</h3>
-                            <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
                             <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
                         </div>
                     </div>
@@ -452,6 +470,61 @@
             margin-bottom: 0;
         }
 
+        /* Badge Bidang */
+        .bidang-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #0a2540 0%, #1a4068 100%);
+            color: #ffd700;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(10, 37, 64, 0.2);
+        }
+
+        /* Image Preview Overlay */
+        .berita-detail-right-item-image {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 37, 64, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-overlay svg {
+            color: #ffd700;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .berita-detail-right-item-image:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .berita-detail-right-item-image img {
+            transition: transform 0.3s ease;
+        }
+
+        .berita-detail-right-item-image:hover img {
+            transform: scale(1.05);
+        }
+
         /* Lightbox */
         .lightbox {
             display: none;
@@ -602,6 +675,20 @@
 
             .sidebar-section {
                 margin-bottom: 2rem;
+            }
+
+            .bidang-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .berita-detail-right-item-image {
+                margin-bottom: 0.875rem;
+            }
+
+            .image-overlay svg {
+                width: 28px;
+                height: 28px;
             }
 
             .lightbox-content {
