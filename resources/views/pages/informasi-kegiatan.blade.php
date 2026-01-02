@@ -83,8 +83,8 @@
                             @endif
                         </div>
                         <h3>{{ $item->judul }}</h3>
-                        <p style="margin-bottom: 15px">{{ $item->tanggal_publish->format('d F Y') }}</p>
-                        <p>{{ Str::limit($item->konten, 150, '...') }}</p>
+                        <p style="margin-bottom: 15px; font-size: 0.875rem; color: #6b7280;">{{ $item->tanggal_publish->format('d F Y') }}</p>
+                        <p style="color: #374151; line-height: 1.6;">{{ Str::limit(strip_tags($item->konten), 80, '...') }}</p>
                     </div>
                     <a href="{{ route('detail-kegiatan', $item->slug) }}" class="info-kegiatan-btn-more">Baca Selengkapnya</a>
                 </div>
@@ -103,4 +103,66 @@
         </div>
         @endif
     </section>
+
+    <style>
+        /* Fix thumbnail landscape aspect ratio */
+        .informasi-kegiatan-card-image {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+            display: block;
+        }
+
+        .informasi-kegiatan-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .informasi-kegiatan-card-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Adjust card text padding */
+        .informasi-kegiatan-card-text {
+            padding: 1.25rem;
+        }
+
+        .informasi-kegiatan-card-text h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .informasi-kegiatan-card-text p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: #6b7280;
+        }
+
+        /* Ensure consistent card height */
+        .informasi-kegiatan-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .informasi-kegiatan-card-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-kegiatan-btn-more {
+            margin-top: auto;
+        }
+    </style>
 @endsection

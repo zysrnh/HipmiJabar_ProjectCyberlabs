@@ -341,17 +341,379 @@ $activeMenu = 'kegiatan';
             <div class="form-help">Pilih bidang kegiatan BPD</div>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">
-                Konten Kegiatan <span class="required">*</span>
-            </label>
-            <textarea name="konten" class="form-textarea" required
-                placeholder="Tulis konten kegiatan lengkap...">{{ old('konten') }}</textarea>
-            @error('konten')
-            <div class="error-message">{{ $message }}</div>
-            @enderror
-        </div>
+      <!-- Tambahkan di bagian form group konten -->
+<div class="form-group">
+    <label class="form-label">
+        Konten Kegiatan <span class="required">*</span>
+    </label>
+    
+    <!-- Toolbar Editor -->
+    <div class="editor-toolbar">
+        <button type="button" class="toolbar-btn" onclick="formatText('bold')" title="Bold (Ctrl+B)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+                <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
+            </svg>
+        </button>
+        
+        <button type="button" class="toolbar-btn" onclick="formatText('italic')" title="Italic (Ctrl+I)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="4" x2="10" y2="4"></line>
+                <line x1="14" y1="20" x2="5" y2="20"></line>
+                <line x1="15" y1="4" x2="9" y2="20"></line>
+            </svg>
+        </button>
+        
+        <button type="button" class="toolbar-btn" onclick="formatText('underline')" title="Underline (Ctrl+U)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path>
+                <line x1="4" y1="21" x2="20" y2="21"></line>
+            </svg>
+        </button>
+        
+        <div class="toolbar-divider"></div>
+        
+        <button type="button" class="toolbar-btn" onclick="formatText('insertUnorderedList')" title="Bullet List">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+        </button>
+        
+        <button type="button" class="toolbar-btn" onclick="formatText('insertOrderedList')" title="Numbered List">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="10" y1="6" x2="21" y2="6"></line>
+                <line x1="10" y1="12" x2="21" y2="12"></line>
+                <line x1="10" y1="18" x2="21" y2="18"></line>
+                <path d="M4 6h1v4"></path>
+                <path d="M4 10h2"></path>
+                <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
+            </svg>
+        </button>
+        
+        <div class="toolbar-divider"></div>
+        
+        <select class="toolbar-select" onchange="formatHeading(this.value)">
+            <option value="">Normal</option>
+            <option value="h2">Heading 2</option>
+            <option value="h3">Heading 3</option>
+            <option value="h4">Heading 4</option>
+        </select>
+        
+        <div class="toolbar-divider"></div>
+        
+        <button type="button" class="toolbar-btn" onclick="insertLink()" title="Insert Link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg>
+        </button>
+        
+        <button type="button" class="toolbar-btn" onclick="formatText('removeFormat')" title="Clear Formatting">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                <line x1="9" y1="20" x2="15" y2="20"></line>
+                <line x1="12" y1="4" x2="12" y2="20"></line>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Content Editable Area -->
+    <div id="editor" class="form-editor" contenteditable="true" 
+         placeholder="Tulis konten kegiatan lengkap...">{{ old('konten') }}</div>
+    
+    <!-- Hidden textarea untuk submit (TANPA required attribute) -->
+    <textarea name="konten" id="konten" style="display: none;"></textarea>
+    
+    @error('konten')
+    <div class="error-message">{{ $message }}</div>
+    @enderror
+    <div id="kontenError" class="error-message" style="display: none;">Konten kegiatan wajib diisi!</div>
+</div>
 
+<style>
+    .editor-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        background: #f9fafb;
+        border: 1px solid #d1d5db;
+        border-bottom: none;
+        border-radius: 8px 8px 0 0;
+        flex-wrap: wrap;
+    }
+
+    .toolbar-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid transparent;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        padding: 0;
+    }
+
+    .toolbar-btn:hover {
+        background: #e5e7eb;
+        border-color: #d1d5db;
+    }
+
+    .toolbar-btn:active,
+    .toolbar-btn.active {
+        background: #0a2540;
+        color: white;
+    }
+
+    .toolbar-btn:active svg,
+    .toolbar-btn.active svg {
+        stroke: white;
+    }
+
+    .toolbar-btn svg {
+        stroke: #374151;
+    }
+
+    .toolbar-divider {
+        width: 1px;
+        height: 24px;
+        background: #d1d5db;
+        margin: 0 0.25rem;
+    }
+
+    .toolbar-select {
+        padding: 0.375rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 4px;
+        background: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .toolbar-select:focus {
+        outline: none;
+        border-color: #0a2540;
+    }
+
+    .form-editor {
+        width: 100%;
+        min-height: 300px;
+        padding: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0 0 8px 8px;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        font-family: 'Montserrat', sans-serif;
+        overflow-y: auto;
+        background: white;
+    }
+
+    .form-editor:focus {
+        outline: none;
+        border-color: #0a2540;
+        box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
+    }
+
+    .form-editor.error {
+        border-color: #dc2626;
+    }
+
+    .form-editor[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #9ca3af;
+    }
+
+    /* Styling untuk konten di editor */
+    .form-editor h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 1rem 0 0.5rem;
+        color: #1f2937;
+    }
+
+    .form-editor h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 1rem 0 0.5rem;
+        color: #1f2937;
+    }
+
+    .form-editor h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 1rem 0 0.5rem;
+        color: #1f2937;
+    }
+
+    .form-editor ul,
+    .form-editor ol {
+        margin: 0.5rem 0;
+        padding-left: 2rem;
+    }
+
+    .form-editor li {
+        margin: 0.25rem 0;
+    }
+
+    .form-editor a {
+        color: #0a2540;
+        text-decoration: underline;
+    }
+
+    .form-editor strong {
+        font-weight: 700;
+    }
+
+    .form-editor em {
+        font-style: italic;
+    }
+
+    .form-editor u {
+        text-decoration: underline;
+    }
+
+    .form-editor p {
+        margin: 0.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+        .editor-toolbar {
+            padding: 0.375rem;
+        }
+
+        .toolbar-btn {
+            width: 28px;
+            height: 28px;
+        }
+
+        .toolbar-select {
+            font-size: 0.8125rem;
+            padding: 0.25rem 0.375rem;
+        }
+    }
+</style>
+
+<script>
+    // Format text
+    function formatText(command) {
+        document.execCommand(command, false, null);
+        document.getElementById('editor').focus();
+    }
+
+    // Format heading
+    function formatHeading(tag) {
+        if (tag) {
+            document.execCommand('formatBlock', false, tag);
+        } else {
+            document.execCommand('formatBlock', false, 'p');
+        }
+        document.getElementById('editor').focus();
+        
+        // Reset select
+        event.target.value = '';
+    }
+
+    // Insert link
+    function insertLink() {
+        const url = prompt('Masukkan URL:');
+        if (url) {
+            document.execCommand('createLink', false, url);
+            document.getElementById('editor').focus();
+        }
+    }
+
+    // Validate editor content
+    function validateEditorContent() {
+        const editor = document.getElementById('editor');
+        const errorDiv = document.getElementById('kontenError');
+        const content = editor.innerText.trim();
+        
+        if (content.length === 0) {
+            editor.classList.add('error');
+            errorDiv.style.display = 'block';
+            editor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        } else {
+            editor.classList.remove('error');
+            errorDiv.style.display = 'none';
+            return true;
+        }
+    }
+
+    // Sync editor content to hidden textarea before submit
+    const form = document.querySelector('form');
+    const originalSubmitHandler = form.onsubmit;
+    
+    form.addEventListener('submit', function(e) {
+        // Validate editor content first
+        if (!validateEditorContent()) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Sync content
+        const editorContent = document.getElementById('editor').innerHTML;
+        document.getElementById('konten').value = editorContent;
+        
+        // Continue with other validations if any
+        return true;
+    });
+
+    // Clear error on typing
+    document.getElementById('editor').addEventListener('input', function() {
+        if (this.innerText.trim().length > 0) {
+            this.classList.remove('error');
+            document.getElementById('kontenError').style.display = 'none';
+        }
+    });
+
+    // Keyboard shortcuts
+    document.getElementById('editor').addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key.toLowerCase()) {
+                case 'b':
+                    e.preventDefault();
+                    formatText('bold');
+                    break;
+                case 'i':
+                    e.preventDefault();
+                    formatText('italic');
+                    break;
+                case 'u':
+                    e.preventDefault();
+                    formatText('underline');
+                    break;
+            }
+        }
+    });
+
+    // Update toolbar button states
+    document.getElementById('editor').addEventListener('mouseup', updateToolbar);
+    document.getElementById('editor').addEventListener('keyup', updateToolbar);
+
+    function updateToolbar() {
+        // Update button active states
+        document.querySelectorAll('.toolbar-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+
+    // Paste as plain text (optional - removes formatting when pasting)
+    document.getElementById('editor').addEventListener('paste', function(e) {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        document.execCommand('insertText', false, text);
+    });
+</script>
         <div class="form-group">
             <label class="form-label">
                 Gambar Utama <span class="required">*</span>

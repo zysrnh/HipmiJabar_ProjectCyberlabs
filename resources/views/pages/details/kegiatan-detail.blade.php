@@ -7,34 +7,82 @@
 
     <section class="page-banner">
         <h1>{{ $kegiatan->judul }}</h1>
-        <p>{{ $kegiatan->tanggal_publish->format('d F Y') }}</p>
     </section>
 
     <section class="detail-berita">
         <div class="detail-berita-content">
-            <img src="{{ asset('storage/' . $kegiatan->gambar) }}" alt="{{ $kegiatan->judul }}">
-            
-            {{-- Tampilkan konten dengan format paragraf --}}
-            <p>{!! nl2br(e($kegiatan->konten)) !!}</p>
+            {{-- Info Metadata --}}
+            <div class="kegiatan-meta">
+                <div class="meta-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>{{ $kegiatan->tanggal_publish->format('d F Y') }}</span>
+                </div>
+                <div class="meta-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Diterbitkan oleh <strong>{{ $kegiatan->bidang }}</strong></span>
+                </div>
+            </div>
 
-            {{-- Galeri Dokumentasi --}}
+            <div class="thumbnail-wrapper">
+                <img src="{{ asset('storage/' . $kegiatan->gambar) }}" alt="{{ $kegiatan->judul }}">
+            </div>
+            
+            {{-- Tampilkan konten dengan HTML formatting --}}
+            <div class="konten-kegiatan">
+                {!! $kegiatan->konten !!}
+            </div>
+
+            {{-- Carousel Dokumentasi --}}
             @if($kegiatan->gambar_dokumentasi && count($kegiatan->gambar_dokumentasi) > 0)
             <div class="dokumentasi-section">
                 <h2 class="dokumentasi-title">Dokumentasi Kegiatan</h2>
-                <div class="dokumentasi-grid">
-                    @foreach($kegiatan->gambar_dokumentasi as $index => $gambar)
-                    <div class="dokumentasi-item" onclick="openLightbox({{ $index }})">
-                        <img src="{{ asset('storage/' . $gambar) }}" alt="Dokumentasi {{ $index + 1 }}">
-                        <div class="dokumentasi-overlay">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.35-4.35"></path>
-                                <line x1="11" y1="8" x2="11" y2="14"></line>
-                                <line x1="8" y1="11" x2="14" y2="11"></line>
-                            </svg>
+                
+                <div class="carousel-container">
+                    <div class="carousel-wrapper">
+                        @foreach($kegiatan->gambar_dokumentasi as $index => $gambar)
+                        <div class="carousel-slide {{ $index === 0 ? 'active' : '' }}">
+                            <img src="{{ asset('storage/' . $gambar) }}" 
+                                 alt="Dokumentasi {{ $index + 1 }}"
+                                 onclick="openLightbox({{ $index }})">
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
+
+                    {{-- Navigation Buttons --}}
+                    @if(count($kegiatan->gambar_dokumentasi) > 1)
+                    <button class="carousel-btn carousel-prev" onclick="moveCarousel(-1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="carousel-btn carousel-next" onclick="moveCarousel(1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+
+                    {{-- Dots Indicator --}}
+                    <div class="carousel-dots">
+                        @foreach($kegiatan->gambar_dokumentasi as $index => $gambar)
+                        <span class="dot {{ $index === 0 ? 'active' : '' }}" onclick="goToSlide({{ $index }})"></span>
+                        @endforeach
+                    </div>
+
+                    {{-- Counter --}}
+                    <div class="carousel-counter">
+                        <span id="current-slide">1</span> / {{ count($kegiatan->gambar_dokumentasi) }}
+                    </div>
+                    @endif
                 </div>
             </div>
             @endif
@@ -52,7 +100,7 @@
                     <div>
                         <h3>{{ $item->judul }}</h3>
                         <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
-                        <p>{{ Str::limit($item->konten, 100, '...') }}</p>
+                        <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
                     </div>
                 </div>
             </div>
@@ -65,18 +113,176 @@
     {{-- Lightbox Modal --}}
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close">&times;</span>
-        <button class="lightbox-prev" onclick="changeImage(-1); event.stopPropagation();">&#10094;</button>
-        <button class="lightbox-next" onclick="changeImage(1); event.stopPropagation();">&#10095;</button>
+        <button class="lightbox-prev" onclick="changeLightboxImage(-1); event.stopPropagation();">&#10094;</button>
+        <button class="lightbox-next" onclick="changeLightboxImage(1); event.stopPropagation();">&#10095;</button>
         <img class="lightbox-content" id="lightbox-img" onclick="event.stopPropagation()">
         <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
 
     <style>
+        /* Kegiatan Metadata */
+        .kegiatan-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9375rem;
+        }
+
+        .meta-item svg {
+            flex-shrink: 0;
+            color: #0a2540;
+        }
+
+        .meta-item strong {
+            color: #0a2540;
+            font-weight: 600;
+        }
+
+        /* Thumbnail Gambar Utama */
+        .thumbnail-wrapper {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 0 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .thumbnail-wrapper img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Konten Kegiatan Styling */
+        .konten-kegiatan {
+            line-height: 1.8;
+            color: #374151;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            max-width: 100%;
+        }
+
+        .konten-kegiatan h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem;
+            color: #1f2937;
+            line-height: 1.3;
+        }
+
+        .konten-kegiatan h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.75rem;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+
+        .konten-kegiatan h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+
+        .konten-kegiatan p {
+            margin: 1rem 0;
+            line-height: 1.8;
+        }
+
+        .konten-kegiatan strong,
+        .konten-kegiatan b {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .konten-kegiatan em,
+        .konten-kegiatan i {
+            font-style: italic;
+        }
+
+        .konten-kegiatan u {
+            text-decoration: underline;
+        }
+
+        .konten-kegiatan ul,
+        .konten-kegiatan ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .konten-kegiatan ul {
+            list-style-type: disc;
+        }
+
+        .konten-kegiatan ol {
+            list-style-type: decimal;
+        }
+
+        .konten-kegiatan li {
+            margin: 0.5rem 0;
+            line-height: 1.8;
+        }
+
+        .konten-kegiatan a {
+            color: #0a2540;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .konten-kegiatan a:hover {
+            color: #ffd700;
+        }
+
+        .konten-kegiatan blockquote {
+            border-left: 4px solid #0a2540;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .konten-kegiatan code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .konten-kegiatan pre {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .konten-kegiatan pre code {
+            background: none;
+            padding: 0;
+        }
+
         /* Dokumentasi Section */
         .dokumentasi-section {
             margin-top: 3rem;
             padding-top: 2rem;
             border-top: 2px solid #e5e7eb;
+            max-width: 100%;
         }
 
         .dokumentasi-title {
@@ -86,61 +292,130 @@
             margin-bottom: 1.5rem;
         }
 
-        .dokumentasi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (min-width: 768px) {
-            .dokumentasi-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-
-        .dokumentasi-item {
+        /* Carousel Container */
+        .carousel-container {
             position: relative;
-            aspect-ratio: 1;
-            overflow: hidden;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .dokumentasi-item:hover {
-            transform: scale(1.05);
-        }
-
-        .dokumentasi-item img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+            max-width: 100%;
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f9fafb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        .dokumentasi-overlay {
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+        }
+
+        .carousel-slide {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
 
-        .dokumentasi-item:hover .dokumentasi-overlay {
+        .carousel-slide.active {
             opacity: 1;
+            z-index: 1;
         }
 
-        .dokumentasi-overlay svg {
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+
+        /* Carousel Navigation Buttons */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .carousel-btn:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn svg {
+            color: #374151;
+        }
+
+        .carousel-prev {
+            left: 16px;
+        }
+
+        .carousel-next {
+            right: 16px;
+        }
+
+        /* Dots Indicator */
+        .carousel-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background: white;
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Counter */
+        .carousel-counter {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            width: 32px;
-            height: 32px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 10;
         }
 
         /* Lightbox */
@@ -166,6 +441,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             animation: zoom 0.3s;
+            cursor: default;
         }
 
         @keyframes zoom {
@@ -230,7 +506,66 @@
             border-radius: 4px;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
+            .kegiatan-meta {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0.75rem 0;
+                margin-bottom: 1rem;
+            }
+
+            .meta-item {
+                font-size: 0.875rem;
+            }
+
+            .thumbnail-wrapper {
+                border-radius: 8px;
+                margin-bottom: 1.5rem;
+            }
+
+            .thumbnail-wrapper img {
+                max-height: 350px;
+            }
+
+            .konten-kegiatan {
+                font-size: 0.9375rem;
+            }
+
+            .konten-kegiatan h2 {
+                font-size: 1.25rem;
+            }
+
+            .konten-kegiatan h3 {
+                font-size: 1.125rem;
+            }
+
+            .konten-kegiatan h4 {
+                font-size: 1rem;
+            }
+
+            .carousel-wrapper {
+                aspect-ratio: 4 / 3;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .carousel-prev {
+                left: 8px;
+            }
+
+            .carousel-next {
+                right: 8px;
+            }
+
+            .carousel-counter {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
+
             .lightbox-content {
                 max-width: 95%;
                 max-height: 80vh;
@@ -247,30 +582,61 @@
                 padding: 12px 16px;
                 font-size: 24px;
             }
-
-            .lightbox-prev {
-                left: 10px;
-            }
-
-            .lightbox-next {
-                right: 10px;
-            }
         }
     </style>
 
     <script>
         const images = @json($kegiatan->gambar_dokumentasi_url ?? []);
-        let currentIndex = 0;
+        let currentCarouselIndex = 0;
+        let currentLightboxIndex = 0;
 
+        // Carousel Functions
+        function moveCarousel(direction) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides[currentCarouselIndex].classList.remove('active');
+            dots[currentCarouselIndex].classList.remove('active');
+            
+            currentCarouselIndex += direction;
+            
+            if (currentCarouselIndex >= slides.length) {
+                currentCarouselIndex = 0;
+            } else if (currentCarouselIndex < 0) {
+                currentCarouselIndex = slides.length - 1;
+            }
+            
+            slides[currentCarouselIndex].classList.add('active');
+            dots[currentCarouselIndex].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentCarouselIndex + 1;
+        }
+
+        function goToSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            slides[currentCarouselIndex].classList.remove('active');
+            dots[currentCarouselIndex].classList.remove('active');
+            
+            currentCarouselIndex = index;
+            
+            slides[currentCarouselIndex].classList.add('active');
+            dots[currentCarouselIndex].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentCarouselIndex + 1;
+        }
+
+        // Lightbox Functions
         function openLightbox(index) {
-            currentIndex = index;
+            currentLightboxIndex = index;
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
             const caption = document.getElementById('lightbox-caption');
             
             lightbox.style.display = 'block';
-            img.src = images[currentIndex];
-            caption.textContent = `Dokumentasi ${currentIndex + 1} dari ${images.length}`;
+            img.src = images[currentLightboxIndex];
+            caption.textContent = `Dokumentasi ${currentLightboxIndex + 1} dari ${images.length}`;
             document.body.style.overflow = 'hidden';
         }
 
@@ -279,35 +645,71 @@
             document.body.style.overflow = 'auto';
         }
 
-        function changeImage(direction) {
-            currentIndex += direction;
+        function changeLightboxImage(direction) {
+            currentLightboxIndex += direction;
             
-            if (currentIndex >= images.length) {
-                currentIndex = 0;
-            } else if (currentIndex < 0) {
-                currentIndex = images.length - 1;
+            if (currentLightboxIndex >= images.length) {
+                currentLightboxIndex = 0;
+            } else if (currentLightboxIndex < 0) {
+                currentLightboxIndex = images.length - 1;
             }
             
             const img = document.getElementById('lightbox-img');
             const caption = document.getElementById('lightbox-caption');
             
-            img.src = images[currentIndex];
-            caption.textContent = `Dokumentasi ${currentIndex + 1} dari ${images.length}`;
+            img.src = images[currentLightboxIndex];
+            caption.textContent = `Dokumentasi ${currentLightboxIndex + 1} dari ${images.length}`;
         }
 
-        // Keyboard navigation
+        // Keyboard Navigation
         document.addEventListener('keydown', function(e) {
             const lightbox = document.getElementById('lightbox');
+            
+            // Lightbox navigation
             if (lightbox.style.display === 'block') {
                 if (e.key === 'Escape') {
                     closeLightbox();
                 } else if (e.key === 'ArrowLeft') {
-                    changeImage(-1);
+                    changeLightboxImage(-1);
                 } else if (e.key === 'ArrowRight') {
-                    changeImage(1);
+                    changeLightboxImage(1);
+                }
+            } 
+            // Carousel navigation (when lightbox is closed)
+            else {
+                if (e.key === 'ArrowLeft') {
+                    moveCarousel(-1);
+                } else if (e.key === 'ArrowRight') {
+                    moveCarousel(1);
                 }
             }
         });
+
+        // Touch/Swipe Support for Carousel
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const carouselWrapper = document.querySelector('.carousel-wrapper');
+        
+        if (carouselWrapper) {
+            carouselWrapper.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            carouselWrapper.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                moveCarousel(1); // Swipe left
+            }
+            if (touchEndX > touchStartX + 50) {
+                moveCarousel(-1); // Swipe right
+            }
+        }
     </script>
 
 @endsection
