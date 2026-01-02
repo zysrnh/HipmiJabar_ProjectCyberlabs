@@ -89,24 +89,49 @@
         </div>
         
         <div class="berita-detail-right">
-            <h1 class="berita-badge">Kegiatan Lainnya</h1>
-            
-            @forelse($kegiatanLainnya as $item)
-            <div class="berita-detail-right-item">
-                <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
-                    <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
-                </a>
-                <div class="berita-detail-right-item-content">
-                    <div>
-                        <h3>{{ $item->judul }}</h3>
-                        <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
-                        <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
+            {{-- Kegiatan Populer --}}
+            <div class="sidebar-section">
+                <h1 class="berita-badge">Kegiatan Populer</h1>
+                
+                @forelse($kegiatanPopuler as $item)
+                <div class="berita-detail-right-item">
+                    <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
+                        <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+                    </a>
+                    <div class="berita-detail-right-item-content">
+                        <div>
+                            <h3>{{ $item->judul }}</h3>
+                            <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
+                            <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
+                        </div>
                     </div>
                 </div>
+                @empty
+                <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan populer</p>
+                @endforelse
             </div>
-            @empty
-            <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan lainnya</p>
-            @endforelse
+
+            {{-- Kegiatan Lainnya --}}
+            <div class="sidebar-section">
+                <h1 class="berita-badge">Kegiatan Lainnya</h1>
+                
+                @forelse($kegiatanLainnya as $item)
+                <div class="berita-detail-right-item">
+                    <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
+                        <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+                    </a>
+                    <div class="berita-detail-right-item-content">
+                        <div>
+                            <h3>{{ $item->judul }}</h3>
+                            <p class="berita-home-date">{{ $item->tanggal_publish->format('F d, Y') }}</p>
+                            <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan lainnya</p>
+                @endforelse
+            </div>
         </div>
     </section>
 
@@ -418,6 +443,15 @@
             z-index: 10;
         }
 
+        /* Sidebar Section Spacing */
+        .sidebar-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
         /* Lightbox */
         .lightbox {
             display: none;
@@ -564,6 +598,10 @@
             .carousel-counter {
                 font-size: 12px;
                 padding: 4px 10px;
+            }
+
+            .sidebar-section {
+                margin-bottom: 2rem;
             }
 
             .lightbox-content {

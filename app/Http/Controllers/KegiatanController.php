@@ -31,7 +31,6 @@ class KegiatanController extends Controller
 
         $kegiatan = $query->paginate(12)->appends($request->except('page'));
 
-        // ✅ PERBAIKAN: Tambahkan prefix 'pages.'
         return view('pages.informasi-kegiatan', compact('kegiatan'));
     }
 
@@ -44,14 +43,21 @@ class KegiatanController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        // Ambil kegiatan lainnya (exclude current, max 3)
+        // ✅ Ambil kegiatan populer (is_populer = true, max 3)
+        $kegiatanPopuler = Kegiatan::active()
+            ->where('is_populer', true)
+            ->where('id', '!=', $kegiatan->id)
+            ->orderBy('tanggal_publish', 'desc')
+            ->take(3)
+            ->get();
+
+        // ✅ Ambil kegiatan lainnya (exclude current, max 3)
         $kegiatanLainnya = Kegiatan::active()
             ->where('id', '!=', $kegiatan->id)
             ->orderBy('tanggal_publish', 'desc')
             ->take(3)
             ->get();
 
-        // ✅ PERBAIKAN: Tambahkan prefix 'pages.details.'
-        return view('pages.details.kegiatan-detail', compact('kegiatan', 'kegiatanLainnya'));
+        return view('pages.details.kegiatan-detail', compact('kegiatan', 'kegiatanPopuler', 'kegiatanLainnya'));
     }
 }
