@@ -14,8 +14,9 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('konten');
             $table->string('gambar');
+            $table->json('gambar_dokumentasi')->nullable(); // Field baru untuk multiple images
             $table->date('tanggal_publish');
-            $table->string('bidang'); // Field baru untuk Bidang 1-10
+            $table->string('bidang');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_populer')->default(false);
             $table->timestamps();

@@ -17,6 +17,7 @@ class Kegiatan extends Model
         'slug',
         'konten',
         'gambar',
+        'gambar_dokumentasi', // Tambahkan ini
         'tanggal_publish',
         'bidang',
         'is_active',
@@ -27,9 +28,9 @@ class Kegiatan extends Model
         'tanggal_publish' => 'date',
         'is_active' => 'boolean',
         'is_populer' => 'boolean',
+        'gambar_dokumentasi' => 'array', // Cast ke array
     ];
 
-    // Auto generate slug dari judul
     protected static function boot()
     {
         parent::boot();
@@ -47,34 +48,43 @@ class Kegiatan extends Model
         });
     }
 
-    // Scope untuk kegiatan aktif
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    // Scope untuk kegiatan populer
     public function scopePopuler($query)
     {
         return $query->where('is_populer', true);
     }
 
-    // Scope untuk filter berdasarkan bidang
     public function scopeBidang($query, $bidang)
     {
         return $query->where('bidang', $bidang);
     }
-    // Di App\Models\Kegiatan.php
-public function getGambarUrlAttribute()
-{
-    if ($this->gambar) {
-        return asset('storage/' . $this->gambar);
-    }
-    return asset('images/hipmi-logo.png');
-}
 
-public function getTanggalFormatAttribute()
-{
-    return $this->tanggal_publish->format('d M Y');
-}
+    public function getGambarUrlAttribute()
+    {
+        if ($this->gambar) {
+            return asset('storage/' . $this->gambar);
+        }
+        return asset('images/hipmi-logo.png');
+    }
+
+    public function getTanggalFormatAttribute()
+    {
+        return $this->tanggal_publish->format('d M Y');
+    }
+
+    // Accessor untuk gambar dokumentasi dengan URL lengkap
+    public function getGambarDokumentasiUrlAttribute()
+    {
+        if (!$this->gambar_dokumentasi) {
+            return [];
+        }
+        
+        return array_map(function($path) {
+            return asset('storage/' . $path);
+        }, $this->gambar_dokumentasi);
+    }
 }

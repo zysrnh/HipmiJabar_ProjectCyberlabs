@@ -82,6 +82,118 @@ $activeMenu = 'kegiatan';
         border: 2px solid #e5e7eb;
     }
 
+    /* Multiple Images Styles */
+    .dokumentasi-container {
+        margin-top: 1rem;
+    }
+
+    .dokumentasi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .dokumentasi-item {
+        position: relative;
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 150px;
+        background: #f9fafb;
+    }
+
+    .dokumentasi-item img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .dokumentasi-item .remove-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        line-height: 1;
+        transition: all 0.2s;
+    }
+
+    .dokumentasi-item .remove-btn:hover {
+        background: #b91c1c;
+        transform: scale(1.1);
+    }
+
+    .dokumentasi-placeholder {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 0.875rem;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    .file-input-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: #0a2540;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-size: 0.875rem;
+    }
+
+    .file-input-label:hover {
+        background: #ffd700;
+        color: #0a2540;
+        transform: translateY(-2px);
+    }
+
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .images-count {
+        display: inline-block;
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .images-count.warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .images-count.success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
     .checkbox-group {
         display: flex;
         align-items: center;
@@ -173,6 +285,10 @@ $activeMenu = 'kegiatan';
         .btn-cancel {
             width: 100%;
         }
+
+        .dokumentasi-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
     }
 </style>
 @endpush
@@ -251,6 +367,42 @@ $activeMenu = 'kegiatan';
             </div>
         </div>
 
+        <!-- Multiple Images Documentation -->
+        <div class="form-group">
+            <label class="form-label">
+                Gambar Dokumentasi (Minimal 6 Gambar)
+            </label>
+            <div class="form-help">Upload minimal 6 gambar dokumentasi kegiatan. Format: JPG, JPEG, PNG. Maksimal 2MB per gambar.</div>
+            
+            <div class="file-input-wrapper">
+                <label for="gambar_dokumentasi" class="file-input-label">
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem; stroke: currentColor; fill: none; stroke-width: 2;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Pilih Gambar Dokumentasi
+                </label>
+                <input type="file" 
+                       name="gambar_dokumentasi[]" 
+                       id="gambar_dokumentasi" 
+                       accept="image/jpeg,image/jpg,image/png" 
+                       multiple
+                       onchange="handleDokumentasiFiles(event)">
+                <span class="images-count" id="imagesCount">0 gambar dipilih</span>
+            </div>
+
+            @error('gambar_dokumentasi.*')
+            <div class="error-message">{{ $message }}</div>
+            @enderror
+
+            <div class="dokumentasi-container">
+                <div class="dokumentasi-grid" id="dokumentasiGrid">
+                    <!-- Preview images will be inserted here -->
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <label class="form-label">
                 Tanggal Publish <span class="required">*</span>
@@ -285,6 +437,7 @@ $activeMenu = 'kegiatan';
 
 @push('scripts')
 <script>
+    // Preview gambar utama
     function previewImage(event) {
         const preview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
@@ -299,6 +452,84 @@ $activeMenu = 'kegiatan';
             reader.readAsDataURL(file);
         }
     }
+
+    // Handle multiple dokumentasi files
+    let dokumentasiFiles = [];
+
+    function handleDokumentasiFiles(event) {
+        const files = Array.from(event.target.files);
+        const grid = document.getElementById('dokumentasiGrid');
+        const countSpan = document.getElementById('imagesCount');
+        
+        // Add new files to array
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                dokumentasiFiles.push(file);
+            }
+        });
+
+        // Update display
+        updateDokumentasiDisplay();
+    }
+
+    function updateDokumentasiDisplay() {
+        const grid = document.getElementById('dokumentasiGrid');
+        const countSpan = document.getElementById('imagesCount');
+        
+        grid.innerHTML = '';
+        
+        dokumentasiFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'dokumentasi-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="Dokumentasi ${index + 1}">
+                    <button type="button" class="remove-btn" onclick="removeDokumentasi(${index})">×</button>
+                `;
+                grid.appendChild(div);
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // Update count
+        const count = dokumentasiFiles.length;
+        countSpan.textContent = `${count} gambar dipilih`;
+        
+        if (count < 6) {
+            countSpan.className = 'images-count warning';
+        } else {
+            countSpan.className = 'images-count success';
+        }
+
+        // Update file input
+        updateFileInput();
+    }
+
+    function removeDokumentasi(index) {
+        dokumentasiFiles.splice(index, 1);
+        updateDokumentasiDisplay();
+    }
+
+    function updateFileInput() {
+        const input = document.getElementById('gambar_dokumentasi');
+        const dataTransfer = new DataTransfer();
+        
+        dokumentasiFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        
+        input.files = dataTransfer.files;
+    }
+
+    // Validation before submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (dokumentasiFiles.length < 6) {
+            e.preventDefault();
+            alert('Mohon upload minimal 6 gambar dokumentasi!');
+            document.getElementById('gambar_dokumentasi').scrollIntoView({ behavior: 'smooth' });
+        }
+    });
 </script>
 @endpush
 @endsection

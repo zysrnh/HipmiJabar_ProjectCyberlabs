@@ -263,6 +263,7 @@
             transition: all 0.2s;
             text-decoration: none;
             flex-shrink: 0;
+            padding: 0;
         }
 
         .btn-icon:hover {
@@ -277,100 +278,92 @@
             fill: none;
             stroke-width: 2;
         }
+
         .btn-icon-promote {
-    border-color: #2563eb;
-}
+            border-color: #2563eb;
+        }
 
-.btn-icon-promote:hover {
-    background: #eff6ff;
-    border-color: #1e40af;
-}
+        .btn-icon-promote:hover {
+            background: #eff6ff;
+            border-color: #1e40af;
+        }
 
-.btn-icon-promote svg {
-    stroke: #2563eb;
-}
+        .btn-icon-promote svg {
+            stroke: #2563eb;
+        }
+
+        .btn-icon-delete {
+            border-color: #dc2626;
+            background: white;
+        }
+
+        .btn-icon-delete:hover {
+            background: #fef2f2;
+            border-color: #b91c1c;
+        }
+
+        .btn-icon-delete svg {
+            stroke: #dc2626;
+        }
+
+        .btn-icon-delete:hover svg {
+            stroke: #b91c1c;
+        }
 
         /* Pagination Style */
-       /* Pagination Style - GANTI SEMUA */
-.pagination-wrapper {
-    padding: 1.5rem 2rem;
-    border-top: 1px solid #e5e7eb;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .pagination-wrapper {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.pagination-info {
-    font-size: 0.875rem;
-    color: #6b7280;
-}
+        .pagination-info {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
 
-.pagination-buttons {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
+        .pagination-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
 
-.pagination-btn {
-    padding: 0.5rem 1rem;
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #374151;
-    transition: all 0.2s;
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-}
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            transition: all 0.2s;
+            font-family: 'Montserrat', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+        }
 
-.pagination-btn:hover:not(.disabled) {
-    background: #f3f4f6;
-}
+        .pagination-btn:hover:not(.disabled) {
+            background: #f3f4f6;
+        }
 
-.pagination-btn.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-}
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
 
-.pagination-btn.active {
-    background: #0a2540;
-    color: white;
-    border-color: #0a2540;
-}
+        .pagination-btn.active {
+            background: #0a2540;
+            color: white;
+            border-color: #0a2540;
+        }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .pagination-wrapper {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1.25rem 1rem;
-        align-items: flex-start;
-    }
-
-    .pagination-info {
-        font-size: 0.8125rem;
-        width: 100%;
-    }
-
-    .pagination-buttons {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .pagination-btn {
-        padding: 0.5rem 0.75rem;
-        font-size: 0.8125rem;
-        min-width: 36px;
-    }
-}
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -450,15 +443,25 @@
             }
 
             .pagination-wrapper {
-                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem 1rem;
+                align-items: flex-start;
             }
 
-            .pagination {
-                gap: 0.375rem;
+            .pagination-info {
+                font-size: 0.8125rem;
+                width: 100%;
             }
 
-            .pagination .page-link {
-                padding: 0.375rem 0.625rem;
+            .pagination-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .pagination-btn {
+                padding: 0.5rem 0.75rem;
                 font-size: 0.8125rem;
                 min-width: 36px;
             }
@@ -641,79 +644,99 @@
                                 </td>
                                 <td>{{ $item->created_at->format('d M Y') }}</td>
                                 <td>
-    <div class="action-buttons">
-        <a href="{{ route('admin.anggota.show-readonly', $item) }}" 
-           class="btn-icon" 
-           title="Lihat Detail">
-            <svg viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-            </svg>
-        </a>
-        
-        @if($admin->isSuperAdmin() && $item->status === 'approved')
-            <a href="{{ route('admin.anggota.promote', $item) }}" 
-               class="btn-icon btn-icon-promote" 
-               title="Promosikan ke Admin">
-                <svg viewBox="0 0 24 24">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="8.5" cy="7" r="4" />
-                    <polyline points="17 11 19 13 23 9" />
-                </svg>
-            </a>
-        @endif
-    </div>
-</td>
+                                    <div class="action-buttons">
+                                        <a href="{{ route('admin.anggota.show-readonly', $item) }}" 
+                                           class="btn-icon" 
+                                           title="Lihat Detail">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </a>
+                                        
+                                        @if($admin->isSuperAdmin() && $item->status === 'approved')
+                                            <a href="{{ route('admin.anggota.promote', $item) }}" 
+                                               class="btn-icon btn-icon-promote" 
+                                               title="Promosikan ke Admin">
+                                                <svg viewBox="0 0 24 24">
+                                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                                    <circle cx="8.5" cy="7" r="4" />
+                                                    <polyline points="17 11 19 13 23 9" />
+                                                </svg>
+                                            </a>
+                                        @endif
+                                        
+                                        @if($admin->isSuperAdmin())
+                                            <form action="{{ route('admin.anggota.destroy', $item) }}" 
+                                                  method="POST" 
+                                                  style="display: inline;"
+                                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota {{ $item->nama_usaha }}?\n\nTindakan ini akan:\n- Menghapus semua data anggota\n- Menghapus semua file terkait\n- Menghapus akun admin jika ada\n\nTindakan ini TIDAK DAPAT dibatalkan!')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="btn-icon btn-icon-delete" 
+                                                        title="Hapus Anggota">
+                                                    <svg viewBox="0 0 24 24">
+                                                        <polyline points="3 6 5 6 21 6" />
+                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                        <line x1="10" y1="11" x2="10" y2="17" />
+                                                        <line x1="14" y1="11" x2="14" y2="17" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-           {{-- Pagination --}}
-<div class="pagination-wrapper">
-    <div class="pagination-info">
-        Menampilkan {{ $anggota->firstItem() }} - {{ $anggota->lastItem() }} dari {{ $anggota->total() }} anggota
-    </div>
-    <div class="pagination-buttons">
-        @if ($anggota->onFirstPage())
-            <span class="pagination-btn disabled">Previous</span>
+            {{-- Pagination --}}
+            <div class="pagination-wrapper">
+                <div class="pagination-info">
+                    Menampilkan {{ $anggota->firstItem() }} - {{ $anggota->lastItem() }} dari {{ $anggota->total() }} anggota
+                </div>
+                <div class="pagination-buttons">
+                    @if ($anggota->onFirstPage())
+                        <span class="pagination-btn disabled">Previous</span>
+                    @else
+                        <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->previousPageUrl() }}" class="pagination-btn">
+                            Previous
+                        </a>
+                    @endif
+                    
+                    @foreach($anggota->getUrlRange(1, $anggota->lastPage()) as $page => $url)
+                        @if ($page == $anggota->currentPage())
+                            <span class="pagination-btn active">{{ $page }}</span>
+                        @else
+                            <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->url($page) }}" class="pagination-btn">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endforeach
+                    
+                    @if ($anggota->hasMorePages())
+                        <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->nextPageUrl() }}" class="pagination-btn">
+                            Next
+                        </a>
+                    @else
+                        <span class="pagination-btn disabled">Next</span>
+                    @endif
+                </div>
+            </div>
         @else
-            <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->previousPageUrl() }}" class="pagination-btn">
-                Previous
-            </a>
-        @endif
-        
-        @foreach($anggota->getUrlRange(1, $anggota->lastPage()) as $page => $url)
-            @if ($page == $anggota->currentPage())
-                <span class="pagination-btn active">{{ $page }}</span>
-            @else
-                <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->url($page) }}" class="pagination-btn">
-                    {{ $page }}
-                </a>
-            @endif
-        @endforeach
-        
-        @if ($anggota->hasMorePages())
-            <a href="{{ $anggota->appends(['status' => $status, 'domisili' => $domisili ?? 'all'])->nextPageUrl() }}" class="pagination-btn">
-                Next
-            </a>
-        @else
-            <span class="pagination-btn disabled">Next</span>
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <h3>Tidak ada data</h3>
+                <p>Belum ada anggota untuk kategori ini.</p>
+            </div>
         @endif
     </div>
-</div>
-@else
-    <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        <h3>Tidak ada data</h3>
-        <p>Belum ada anggota untuk kategori ini.</p>
-    </div>
-@endif
-</div>
 @endsection

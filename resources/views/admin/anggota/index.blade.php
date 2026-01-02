@@ -243,6 +243,8 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            padding: 0;
+            text-decoration: none;
         }
 
         .btn-icon:hover {
@@ -261,6 +263,24 @@
         .btn-icon.disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .btn-icon-delete {
+            border-color: #dc2626;
+            background: white;
+        }
+
+        .btn-icon-delete:hover {
+            background: #fef2f2;
+            border-color: #b91c1c;
+        }
+
+        .btn-icon-delete svg {
+            stroke: #dc2626;
+        }
+
+        .btn-icon-delete:hover svg {
+            stroke: #b91c1c;
         }
 
         /* Pagination Style */
@@ -343,6 +363,25 @@
             font-weight: 500;
         }
 
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #059669;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .pagination-wrapper {
@@ -397,10 +436,16 @@
         </div>
     </div>
 
-    {{-- Success Message --}}
+    {{-- Success/Error Messages --}}
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-error">
+            {{ session('error') }}
         </div>
     @endif
 
@@ -563,6 +608,26 @@
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                     </a>
+
+                                    @if($admin->isSuperAdmin())
+                                        <form action="{{ route('admin.anggota.destroy', $item) }}" 
+                                              method="POST" 
+                                              style="display: inline;"
+                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota {{ $item->nama_usaha }}?\n\nTindakan ini akan:\n- Menghapus semua data anggota\n- Menghapus semua file terkait\n- Menghapus akun admin jika ada\n\nTindakan ini TIDAK DAPAT dibatalkan!')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" 
+                                                    class="btn-icon btn-icon-delete" 
+                                                    title="Hapus Anggota">
+                                                <svg viewBox="0 0 24 24">
+                                                    <polyline points="3 6 5 6 21 6" />
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                                    <line x1="10" y1="11" x2="10" y2="17" />
+                                                    <line x1="14" y1="11" x2="14" y2="17" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

@@ -100,6 +100,141 @@ $activeMenu = 'kegiatan';
         border: 2px solid #e5e7eb;
     }
 
+    /* Multiple Images Styles */
+    .dokumentasi-section {
+        margin-top: 1.5rem;
+    }
+
+    .existing-images {
+        margin-bottom: 1.5rem;
+    }
+
+    .dokumentasi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .dokumentasi-item {
+        position: relative;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.5rem;
+        background: white;
+    }
+
+    .dokumentasi-item.existing {
+        border-color: #d1fae5;
+        background: #f0fdf4;
+    }
+
+    .dokumentasi-item.new {
+        border-color: #dbeafe;
+        background: #eff6ff;
+    }
+
+    .dokumentasi-item img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .dokumentasi-item .remove-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        line-height: 1;
+        transition: all 0.2s;
+        font-weight: bold;
+    }
+
+    .dokumentasi-item .remove-btn:hover {
+        background: #b91c1c;
+        transform: scale(1.1);
+    }
+
+    .dokumentasi-item .image-badge {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        margin-top: 1rem;
+    }
+
+    .file-input-label {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: #0a2540;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-size: 0.875rem;
+    }
+
+    .file-input-label:hover {
+        background: #ffd700;
+        color: #0a2540;
+        transform: translateY(-2px);
+    }
+
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .images-count {
+        display: inline-block;
+        margin-left: 1rem;
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .images-count.warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .images-count.success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .section-divider {
+        border-top: 2px dashed #e5e7eb;
+        margin: 1.5rem 0;
+        padding-top: 1rem;
+    }
+
     .checkbox-group {
         display: flex;
         align-items: center;
@@ -191,6 +326,10 @@ $activeMenu = 'kegiatan';
         .btn-cancel {
             width: 100%;
         }
+
+        .dokumentasi-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
     }
 </style>
 @endpush
@@ -273,6 +412,69 @@ $activeMenu = 'kegiatan';
             </div>
         </div>
 
+        <!-- Multiple Images Documentation -->
+        <div class="form-group">
+            <label class="form-label">
+                Gambar Dokumentasi
+            </label>
+            
+            <!-- Existing Images -->
+            @if($kegiatan->gambar_dokumentasi && count($kegiatan->gambar_dokumentasi) > 0)
+            <div class="existing-images">
+                <div class="current-image-label">
+                    Gambar dokumentasi saat ini ({{ count($kegiatan->gambar_dokumentasi) }} gambar):
+                </div>
+                <div class="dokumentasi-grid" id="existingGrid">
+                    @foreach($kegiatan->gambar_dokumentasi as $index => $path)
+                    <div class="dokumentasi-item existing" data-path="{{ $path }}">
+                        <img src="{{ asset('storage/' . $path) }}" alt="Dokumentasi {{ $index + 1 }}">
+                        <button type="button" class="remove-btn" onclick="removeExistingImage('{{ $path }}')">×</button>
+                        <span class="image-badge">Existing</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <div class="section-divider"></div>
+
+            <!-- Add New Images -->
+            <div class="form-help">Tambah gambar dokumentasi baru. Format: JPG, JPEG, PNG. Maksimal 2MB per gambar.</div>
+            
+            <div class="file-input-wrapper">
+                <label for="gambar_dokumentasi" class="file-input-label">
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem; stroke: currentColor; fill: none; stroke-width: 2;">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Tambah Gambar Baru
+                </label>
+                <input type="file" 
+                       name="gambar_dokumentasi[]" 
+                       id="gambar_dokumentasi" 
+                       accept="image/jpeg,image/jpg,image/png" 
+                       multiple
+                       onchange="handleNewFiles(event)">
+                <span class="images-count" id="imagesCount">
+                    Total: <span id="totalCount">{{ count($kegiatan->gambar_dokumentasi ?? []) }}</span> gambar
+                </span>
+            </div>
+
+            @error('gambar_dokumentasi.*')
+            <div class="error-message">{{ $message }}</div>
+            @enderror
+
+            <div class="dokumentasi-section">
+                <div class="dokumentasi-grid" id="newImagesGrid">
+                    <!-- New preview images will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Hidden inputs for images to delete -->
+            <div id="deleteInputs"></div>
+        </div>
+
         <div class="form-group">
             <label class="form-label">
                 Tanggal Publish <span class="required">*</span>
@@ -309,6 +511,7 @@ $activeMenu = 'kegiatan';
 
 @push('scripts')
 <script>
+    // Preview gambar utama
     function previewImage(event) {
         const preview = document.getElementById('imagePreview');
         const previewImg = document.getElementById('previewImg');
@@ -325,6 +528,122 @@ $activeMenu = 'kegiatan';
             preview.style.display = 'none';
         }
     }
+
+    // Track images
+    let existingImages = [];
+    let imagesToDelete = [];
+    let newFiles = [];
+
+    // Initialize existing images
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dokumentasi-item.existing').forEach(item => {
+            existingImages.push(item.dataset.path);
+        });
+        updateTotalCount();
+    });
+
+    // Remove existing image
+    function removeExistingImage(path) {
+        const item = document.querySelector(`[data-path="${path}"]`);
+        if (item) {
+            item.remove();
+            existingImages = existingImages.filter(p => p !== path);
+            imagesToDelete.push(path);
+            
+            // Add hidden input for deletion
+            const deleteInputs = document.getElementById('deleteInputs');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'hapus_dokumentasi[]';
+            input.value = path;
+            deleteInputs.appendChild(input);
+            
+            updateTotalCount();
+        }
+    }
+
+    // Handle new files
+    function handleNewFiles(event) {
+        const files = Array.from(event.target.files);
+        const grid = document.getElementById('newImagesGrid');
+        
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                newFiles.push(file);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'dokumentasi-item new';
+                    div.dataset.fileIndex = newFiles.length - 1;
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="New Image">
+                        <button type="button" class="remove-btn" onclick="removeNewImage(${newFiles.length - 1})">×</button>
+                        <span class="image-badge">New</span>
+                    `;
+                    grid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        updateTotalCount();
+        updateFileInput();
+    }
+
+    // Remove new image
+    function removeNewImage(index) {
+        const item = document.querySelector(`[data-file-index="${index}"]`);
+        if (item) {
+            item.remove();
+            newFiles.splice(index, 1);
+            
+            // Re-index remaining items
+            document.querySelectorAll('.dokumentasi-item.new').forEach((item, i) => {
+                item.dataset.fileIndex = i;
+                const btn = item.querySelector('.remove-btn');
+                btn.onclick = () => removeNewImage(i);
+            });
+            
+            updateTotalCount();
+            updateFileInput();
+        }
+    }
+
+    // Update file input
+    function updateFileInput() {
+        const input = document.getElementById('gambar_dokumentasi');
+        const dataTransfer = new DataTransfer();
+        
+        newFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        
+        input.files = dataTransfer.files;
+    }
+
+    // Update total count
+    function updateTotalCount() {
+        const total = existingImages.length + newFiles.length;
+        document.getElementById('totalCount').textContent = total;
+        
+        const countSpan = document.getElementById('imagesCount');
+        if (total < 6) {
+            countSpan.className = 'images-count warning';
+        } else {
+            countSpan.className = 'images-count success';
+        }
+    }
+
+    // Validation before submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const total = existingImages.length + newFiles.length;
+        if (total < 6) {
+            e.preventDefault();
+            alert('Total gambar dokumentasi minimal 6! Saat ini: ' + total + ' gambar');
+            window.scrollTo({ top: document.getElementById('gambar_dokumentasi').offsetTop - 100, behavior: 'smooth' });
+        }
+    });
 </script>
 @endpush
 @endsection

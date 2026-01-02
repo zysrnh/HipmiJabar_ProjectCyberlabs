@@ -348,29 +348,22 @@
         </div>
     </div>
 </section>
-{{-- SECTION INFORMASI KEGIATAN BPD - FIXED VERSION --}}
+{{-- SECTION INFORMASI KEGIATAN BPD - SMOOTH & ELEGANT VERSION --}}
 <section class="events">
     <div class="green-accent" style="align-self: center;"></div>
     <h2>Informasi Kegiatan BPD</h2>
 
-    {{-- DEBUG: Cek apakah data ada --}}
-    @php
-    $hasData = isset($kegiatanBerita) && $kegiatanBerita->count() > 0;
-    @endphp
-
-    @if($hasData)
-    {{-- Ada data kegiatan --}}
+    @if($kegiatanBerita->count() > 0)
     <div class="events-content" id="kegiatan-container">
-        {{-- Initial loading state --}}
-        <div style="text-align: center; padding: 3rem; color: #ffffff;">
-            <p>Memuat {{ $kegiatanBerita->count() }} kegiatan...</p>
-        </div>
+        {{-- Konten akan di-render oleh JavaScript --}}
     </div>
 
     {{-- Indikator dots --}}
-    <div style="text-align: center; margin-top: 20px;">
+    @if($kegiatanBerita->count() > 5)
+    <div style="text-align: center; margin-top: 30px;">
         <div id="kegiatan-indicators" style="display: inline-flex; gap: 10px;"></div>
     </div>
+    @endif
 
     {{-- Hidden Data untuk JavaScript --}}
     <script id="kegiatan-data" type="application/json">
@@ -383,40 +376,30 @@
                 'tanggal_format' => $item->tanggal_format ?? $item->tanggal_publish->format('d M Y'),
             ];
         })->toArray();
-        @endphp {
-            !!json_encode($kegiatanArray) !!
-        }
+        @endphp
+        {!! json_encode($kegiatanArray) !!}
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Kegiatan auto-rotate script started');
-
-            // Ambil data kegiatan dari script tag
             const dataElement = document.getElementById('kegiatan-data');
-            if (!dataElement) {
-                console.error('❌ Element kegiatan-data tidak ditemukan!');
-                return;
-            }
+            if (!dataElement) return;
 
             let kegiatanData;
             try {
                 kegiatanData = JSON.parse(dataElement.textContent);
-                console.log('✅ Data kegiatan berhasil di-parse:', kegiatanData.length, 'items');
             } catch (e) {
-                console.error('❌ Error parsing JSON:', e);
+                console.error('Error parsing kegiatan data:', e);
                 return;
             }
 
-            if (kegiatanData.length === 0) {
-                console.warn('⚠️ Tidak ada data kegiatan');
-                return;
-            }
+            if (kegiatanData.length === 0) return;
 
             const container = document.getElementById('kegiatan-container');
             const indicatorsContainer = document.getElementById('kegiatan-indicators');
             let currentIndex = 0;
             let autoRotateInterval;
+            let isTransitioning = false;
 
             // Fungsi untuk membuat HTML konten kegiatan
             function createKegiatanHTML(startIndex) {
@@ -433,12 +416,15 @@
                     <div class="events-lastest">
                         <a class="events-hover" href="/informasi-kegiatan/${featured.slug}" style="text-decoration: none; color: white;">
                             <div class="events-banner-card-lastest">
-                                <img src="${featured.gambar_url}" class="events-banner-bg" alt="${escapeHtml(featured.judul)}" onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
+                                <img src="${featured.gambar_url}" 
+                                     class="events-banner-bg" 
+                                     alt="${escapeHtml(featured.judul)}" 
+                                     onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
                                 <div class="events-overlay"></div>
                                 <div class="events-banner-content">
                                     <h2>${truncate(escapeHtml(featured.judul), 80)}</h2>
                                     <p class="events-date">${escapeHtml(featured.tanggal_format)}</p>
-                                    <a href="/informasi-kegiatan/${featured.slug}" class="events-btn-more">Lihat Lebih Banyak</a>
+                                    <span class="events-btn-more">Lihat Lebih Banyak</span>
                                 </div>
                             </div>
                         </a>
@@ -448,9 +434,12 @@
                         ${others.map(item => `
                             <a href="/informasi-kegiatan/${item.slug}" style="text-decoration: none; color: white;">
                                 <div class="events-banner-card">
-                                    <img src="${item.gambar_url}" class="events-banner-bg" alt="${escapeHtml(item.judul)}" onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
+                                    <img src="${item.gambar_url}" 
+                                         class="events-banner-bg" 
+                                         alt="${escapeHtml(item.judul)}" 
+                                         onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
                                     <div class="events-overlay"></div>
-                                    <div class="events-banner-content" style="left: 20px; bottom: 20px;">
+                                    <div class="events-banner-content">
                                         <h2>${truncate(escapeHtml(item.judul), 60)}</h2>
                                         <p class="events-date">${escapeHtml(item.tanggal_format)}</p>
                                         <span class="events-btn-more">Lihat Lebih Banyak</span>
@@ -462,311 +451,260 @@
                 `;
             }
 
-            // Fungsi helper untuk escape HTML
+            // Helper functions
             function escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
             }
 
-            // Fungsi helper untuk truncate text
             function truncate(str, length) {
                 return str.length > length ? str.substring(0, length) + '...' : str;
             }
 
-            // Fungsi untuk render kegiatan dengan fade effect
+            // Render kegiatan dengan smooth fade effect
             function renderKegiatan(index, useFade = true) {
+                if (isTransitioning) return;
+                
                 if (useFade) {
-                    container.classList.add('fade-out');
+                    isTransitioning = true;
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(10px)';
                 }
 
                 setTimeout(() => {
                     container.innerHTML = createKegiatanHTML(index);
+                    updateIndicators(index);
 
                     if (useFade) {
-                        container.classList.remove('fade-out');
-                        container.classList.add('fade-in');
+                        requestAnimationFrame(() => {
+                            container.style.opacity = '1';
+                            container.style.transform = 'translateY(0)';
+                            setTimeout(() => {
+                                isTransitioning = false;
+                            }, 600);
+                        });
                     }
-
-                    updateIndicators(index);
-                    console.log('✅ Kegiatan rendered, index:', index);
-                }, useFade ? 500 : 0);
+                }, useFade ? 400 : 0);
             }
 
             // Buat indicator dots
             function createIndicators() {
-                // Hanya buat indicator jika ada lebih dari 5 kegiatan
-                if (kegiatanData.length <= 5) {
-                    console.log('ℹ️ Tidak membuat indicator (data <= 5)');
-                    return;
-                }
+                if (kegiatanData.length <= 5 || !indicatorsContainer) return;
 
                 indicatorsContainer.innerHTML = kegiatanData.map((_, index) =>
                     `<span class="kegiatan-indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`
                 ).join('');
 
-                // Add click event ke indicators
                 document.querySelectorAll('.kegiatan-indicator').forEach(indicator => {
                     indicator.addEventListener('click', function() {
+                        if (isTransitioning) return;
                         const newIndex = parseInt(this.getAttribute('data-index'));
+                        if (newIndex === currentIndex) return;
                         currentIndex = newIndex;
                         renderKegiatan(currentIndex);
                         resetAutoRotate();
                     });
                 });
-
-                console.log('✅ Indicators created:', kegiatanData.length, 'dots');
             }
 
-            // Update active indicator
+            // Update active indicator dengan smooth transition
             function updateIndicators(activeIndex) {
                 document.querySelectorAll('.kegiatan-indicator').forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === activeIndex);
+                    if (index === activeIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
                 });
             }
 
-            // Auto rotate ke kegiatan berikutnya
+            // Auto rotate
             function autoRotate() {
                 currentIndex = (currentIndex + 1) % kegiatanData.length;
                 renderKegiatan(currentIndex);
-                console.log('🔄 Auto-rotate to index:', currentIndex);
             }
 
-            // Reset auto rotate timer
             function resetAutoRotate() {
                 clearInterval(autoRotateInterval);
-                autoRotateInterval = setInterval(autoRotate, 10000); // 10 detik
-                console.log('⏱️ Auto-rotate timer reset');
+                if (kegiatanData.length > 5) {
+                    autoRotateInterval = setInterval(autoRotate, 10000);
+                }
             }
 
-            // Pause saat hover
+            // Pause on hover
             container.addEventListener('mouseenter', () => {
                 clearInterval(autoRotateInterval);
-                console.log('⏸️ Auto-rotate paused');
             });
 
             container.addEventListener('mouseleave', () => {
                 resetAutoRotate();
-                console.log('▶️ Auto-rotate resumed');
             });
 
             // Initialize
-            console.log('🎬 Initializing...');
             createIndicators();
-            renderKegiatan(0, false); // Render pertama tanpa fade
+            renderKegiatan(0, false);
 
-            // Start auto rotate hanya jika ada lebih dari 5 kegiatan
             if (kegiatanData.length > 5) {
                 autoRotateInterval = setInterval(autoRotate, 10000);
-                console.log('✅ Auto-rotate started (10 seconds interval)');
-            } else {
-                console.log('ℹ️ Auto-rotate disabled (data <= 5)');
             }
         });
     </script>
     @else
-    {{-- Tidak ada data kegiatan --}}
     <div style="text-align: center; padding: 3rem 0; color: #ffffff;">
         <p>Belum ada informasi kegiatan yang tersedia.</p>
-        @if(!isset($kegiatanBerita))
-        <p style="color: #ff6b6b; margin-top: 10px;">
-            <strong>Debug:</strong> Variable $kegiatanBerita tidak terdefinisi!
-        </p>
-        @endif
     </div>
     @endif
 
     <div style="text-align:center; margin-top: 50px;">
         <a href="{{ route('informasi-kegiatan') }}" class="btn">Lihat Lebih Banyak</a>
     </div>
-</section>{{-- Hidden Data untuk JavaScript --}}
-<script id="kegiatan-data" type="application/json">
-    {
-        !!json_encode($kegiatanBerita - > map(function($item) {
-            return [
-                'judul' => $item - > judul,
-                'slug' => $item - > slug,
-                'gambar_url' => $item - > gambar_url,
-                'tanggal_format' => $item - > tanggal_format,
-            ];
-        })) !!
-    }
-</script>
+</section>
 
 <style>
-    /* Indicator Dots */
+    /* ============ SMOOTH TRANSITIONS ============ */
+    .events-content {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============ INDICATOR DOTS - ELEGANT STYLE ============ */
     .kegiatan-indicator {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        border: 2px solid #04293B;
+        background: rgba(255, 255, 255, 0.3);
+        border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .kegiatan-indicator::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(4, 41, 59, 0.1);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .kegiatan-indicator:hover::before {
+        opacity: 1;
     }
 
     .kegiatan-indicator.active {
         background: #04293B;
-        transform: scale(1.2);
+        width: 28px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px rgba(4, 41, 59, 0.3);
     }
 
     .kegiatan-indicator:hover {
-        background: rgba(4, 41, 59, 0.7);
+        background: rgba(4, 41, 59, 0.6);
+        transform: scale(1.1);
     }
 
-    /* Fade Animation */
-    .events-content {
-        transition: opacity 0.5s ease-in-out;
+    .kegiatan-indicator.active:hover {
+        transform: scale(1);
     }
 
-    .events-content.fade-out {
+    /* ============ CARDS HOVER EFFECTS ============ */
+    .events-banner-card-lastest,
+    .events-banner-card {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .events-hover:hover .events-banner-card-lastest,
+    .events-banner-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .events-banner-bg {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .events-hover:hover .events-banner-bg,
+    .events-banner-card:hover .events-banner-bg {
+        transform: scale(1.05);
+    }
+
+    /* ============ OVERLAY ANIMATION ============ */
+    .events-overlay {
+        transition: background 0.4s ease;
+    }
+
+    .events-hover:hover .events-overlay,
+    .events-banner-card:hover .events-overlay {
+        background: linear-gradient(to top, rgba(4, 41, 59, 0.9), transparent);
+    }
+
+    /* ============ BUTTON EFFECTS ============ */
+    .events-btn-more {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-block;
+    }
+
+    .events-hover:hover .events-btn-more,
+    .events-banner-card:hover .events-btn-more {
+        transform: translateX(5px);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ============ CONTENT FADE IN ============ */
+    .events-banner-content h2,
+    .events-banner-content p,
+    .events-banner-content .events-btn-more {
         opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    .events-content.fade-in {
-        opacity: 1;
+    .events-banner-content h2 {
+        animation-delay: 0.1s;
+    }
+
+    .events-banner-content p {
+        animation-delay: 0.2s;
+    }
+
+    .events-banner-content .events-btn-more {
+        animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ============ SMOOTH IMAGE LOADING ============ */
+    .events-banner-bg {
+        background: rgba(4, 41, 59, 0.1);
+    }
+
+    /* ============ RESPONSIVE ADJUSTMENTS ============ */
+    @media (max-width: 768px) {
+        .kegiatan-indicator {
+            width: 8px;
+            height: 8px;
+        }
+
+        .kegiatan-indicator.active {
+            width: 24px;
+        }
     }
 </style>
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Ambil data kegiatan dari script tag
-        const kegiatanData = JSON.parse(document.getElementById('kegiatan-data').textContent);
-
-        if (kegiatanData.length === 0) return;
-
-        const container = document.getElementById('kegiatan-container');
-        const indicatorsContainer = document.getElementById('kegiatan-indicators');
-        let currentIndex = 0;
-        let autoRotateInterval;
-
-        // Fungsi untuk membuat HTML konten kegiatan
-        function createKegiatanHTML(startIndex) {
-            const featured = kegiatanData[startIndex];
-            const others = [];
-
-            // Ambil 4 kegiatan berikutnya (wrap around jika perlu)
-            for (let i = 1; i <= 4; i++) {
-                const index = (startIndex + i) % kegiatanData.length;
-                others.push(kegiatanData[index]);
-            }
-
-            return `
-            <div class="events-lastest">
-                <a class="events-hover" href="/berita/${featured.slug}" style="text-decoration: none; color: white;">
-                    <div class="events-banner-card-lastest">
-                        <img src="${featured.gambar_url}" class="events-banner-bg" alt="${featured.judul}">
-                        <div class="events-overlay"></div>
-                        <div class="events-banner-content">
-                            <h2>${truncate(featured.judul, 80)}</h2>
-                            <p class="events-date">${featured.tanggal_format}</p>
-                            <a href="/berita/${featured.slug}" class="events-btn-more">Lihat Lebih Banyak</a>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="events-others">
-                ${others.map(item => `
-                    <a href="/berita/${item.slug}" style="text-decoration: none; color: white;">
-                        <div class="events-banner-card">
-                            <img src="${item.gambar_url}" class="events-banner-bg" alt="${item.judul}">
-                            <div class="events-overlay"></div>
-                            <div class="events-banner-content" style="left: 20px; bottom: 20px;">
-                                <h2>${truncate(item.judul, 60)}</h2>
-                                <p class="events-date">${item.tanggal_format}</p>
-                                <span class="events-btn-more">Lihat Lebih Banyak</span>
-                            </div>
-                        </div>
-                    </a>
-                `).join('')}
-            </div>
-        `;
-        }
-
-        // Fungsi helper untuk truncate text
-        function truncate(str, length) {
-            return str.length > length ? str.substring(0, length) + '...' : str;
-        }
-
-        // Fungsi untuk render kegiatan dengan fade effect
-        function renderKegiatan(index, useFade = true) {
-            if (useFade) {
-                container.classList.add('fade-out');
-            }
-
-            setTimeout(() => {
-                container.innerHTML = createKegiatanHTML(index);
-
-                if (useFade) {
-                    container.classList.remove('fade-out');
-                    container.classList.add('fade-in');
-                }
-
-                updateIndicators(index);
-            }, useFade ? 500 : 0);
-        }
-
-        // Buat indicator dots
-        function createIndicators() {
-            // Hanya buat indicator jika ada lebih dari 5 kegiatan
-            if (kegiatanData.length <= 5) return;
-
-            indicatorsContainer.innerHTML = kegiatanData.map((_, index) =>
-                `<span class="kegiatan-indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`
-            ).join('');
-
-            // Add click event ke indicators
-            document.querySelectorAll('.kegiatan-indicator').forEach(indicator => {
-                indicator.addEventListener('click', function() {
-                    const newIndex = parseInt(this.getAttribute('data-index'));
-                    currentIndex = newIndex;
-                    renderKegiatan(currentIndex);
-                    resetAutoRotate();
-                });
-            });
-        }
-
-        // Update active indicator
-        function updateIndicators(activeIndex) {
-            document.querySelectorAll('.kegiatan-indicator').forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === activeIndex);
-            });
-        }
-
-        // Auto rotate ke kegiatan berikutnya
-        function autoRotate() {
-            currentIndex = (currentIndex + 1) % kegiatanData.length;
-            renderKegiatan(currentIndex);
-        }
-
-        // Reset auto rotate timer
-        function resetAutoRotate() {
-            clearInterval(autoRotateInterval);
-            autoRotateInterval = setInterval(autoRotate, 10000); // 10 detik
-        }
-
-        // Pause saat hover (opsional)
-        container.addEventListener('mouseenter', () => {
-            clearInterval(autoRotateInterval);
-        });
-
-        container.addEventListener('mouseleave', () => {
-            resetAutoRotate();
-        });
-
-        // Initialize
-        createIndicators();
-        renderKegiatan(0, false); // Render pertama tanpa fade
-
-        // Start auto rotate hanya jika ada lebih dari 5 kegiatan
-        if (kegiatanData.length > 5) {
-            autoRotateInterval = setInterval(autoRotate, 10000);
-        }
-    });
-</script>
-@endpush
 <section class="ekatalog-home">
     <div class="green-accent" style="align-self: center;"></div>
     <h2>E-Katalog Bisnis HIPMI Jabar</h2>

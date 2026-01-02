@@ -10,17 +10,14 @@ use Illuminate\Support\Str;
 
 class KegiatanController extends Controller
 {
-    // Daftar kegiatan
     public function index(Request $request)
     {
         $query = Kegiatan::query()->orderBy('tanggal_publish', 'desc');
 
-        // Filter berdasarkan bidang
         if ($request->filled('bidang')) {
             $query->where('bidang', $request->bidang);
         }
 
-        // Search
         if ($request->filled('search')) {
             $query->where('judul', 'like', '%' . $request->search . '%');
         }
@@ -30,32 +27,46 @@ class KegiatanController extends Controller
         return view('admin.kegiatan.index', compact('kegiatan'));
     }
 
-    // Form tambah kegiatan
     public function create()
     {
         return view('admin.kegiatan.create');
     }
 
-    // Simpan kegiatan baru
     public function store(Request $request)
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'konten' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'gambar_dokumentasi.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'tanggal_publish' => 'required|date',
             'bidang' => 'required|string',
             'is_active' => 'boolean',
             'is_populer' => 'boolean',
+        ], [
+            'gambar_dokumentasi.*.image' => 'File dokumentasi harus berupa gambar',
+            'gambar_dokumentasi.*.mimes' => 'Format gambar dokumentasi harus JPG, JPEG, atau PNG',
+            'gambar_dokumentasi.*.max' => 'Ukuran gambar dokumentasi maksimal 2MB',
         ]);
 
-        // Upload gambar
+        // Upload gambar utama
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
             $filename = time() . '_' . Str::slug($request->judul) . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('kegiatan', $filename, 'public');
             $validated['gambar'] = $path;
         }
+
+        // Upload gambar dokumentasi
+        $dokumentasiPaths = [];
+        if ($request->hasFile('gambar_dokumentasi')) {
+            foreach ($request->file('gambar_dokumentasi') as $index => $file) {
+                $filename = time() . '_dok_' . $index . '_' . Str::slug($request->judul) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('kegiatan/dokumentasi', $filename, 'public');
+                $dokumentasiPaths[] = $path;
+            }
+        }
+        $validated['gambar_dokumentasi'] = $dokumentasiPaths;
 
         $validated['is_active'] = $request->has('is_active');
         $validated['is_populer'] = $request->has('is_populer');
@@ -66,28 +77,27 @@ class KegiatanController extends Controller
             ->with('success', 'Kegiatan berhasil ditambahkan!');
     }
 
-    // Form edit kegiatan
     public function edit(Kegiatan $kegiatan)
     {
         return view('admin.kegiatan.edit', compact('kegiatan'));
     }
 
-    // Update kegiatan
     public function update(Request $request, Kegiatan $kegiatan)
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'konten' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'gambar_dokumentasi.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'hapus_dokumentasi' => 'nullable|array',
             'tanggal_publish' => 'required|date',
             'bidang' => 'required|string',
             'is_active' => 'boolean',
             'is_populer' => 'boolean',
         ]);
 
-        // Upload gambar baru jika ada
+        // Upload gambar utama baru jika ada
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
             if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
                 Storage::disk('public')->delete($kegiatan->gambar);
             }
@@ -98,6 +108,31 @@ class KegiatanController extends Controller
             $validated['gambar'] = $path;
         }
 
+        // Kelola gambar dokumentasi
+        $existingDokumentasi = $kegiatan->gambar_dokumentasi ?? [];
+        
+        // Hapus gambar yang dipilih untuk dihapus
+        if ($request->filled('hapus_dokumentasi')) {
+            foreach ($request->hapus_dokumentasi as $pathToDelete) {
+                if (Storage::disk('public')->exists($pathToDelete)) {
+                    Storage::disk('public')->delete($pathToDelete);
+                }
+                $existingDokumentasi = array_filter($existingDokumentasi, function($path) use ($pathToDelete) {
+                    return $path !== $pathToDelete;
+                });
+            }
+        }
+
+        // Upload gambar dokumentasi baru
+        if ($request->hasFile('gambar_dokumentasi')) {
+            foreach ($request->file('gambar_dokumentasi') as $index => $file) {
+                $filename = time() . '_dok_' . $index . '_' . Str::slug($request->judul) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('kegiatan/dokumentasi', $filename, 'public');
+                $existingDokumentasi[] = $path;
+            }
+        }
+
+        $validated['gambar_dokumentasi'] = array_values($existingDokumentasi);
         $validated['is_active'] = $request->has('is_active');
         $validated['is_populer'] = $request->has('is_populer');
 
@@ -107,12 +142,20 @@ class KegiatanController extends Controller
             ->with('success', 'Kegiatan berhasil diperbarui!');
     }
 
-    // Hapus kegiatan
     public function destroy(Kegiatan $kegiatan)
     {
-        // Hapus gambar
+        // Hapus gambar utama
         if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
             Storage::disk('public')->delete($kegiatan->gambar);
+        }
+
+        // Hapus semua gambar dokumentasi
+        if ($kegiatan->gambar_dokumentasi) {
+            foreach ($kegiatan->gambar_dokumentasi as $path) {
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
         }
 
         $kegiatan->delete();
