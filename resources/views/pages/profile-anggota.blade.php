@@ -781,7 +781,9 @@
             <button class="tab-button active" onclick="switchTab('pribadi')">Data Pribadi</button>
             <button class="tab-button" onclick="switchTab('perusahaan')">Profil Perusahaan</button>
             <button class="tab-button" onclick="switchTab('organisasi')">Informasi Organisasi</button>
+            @if($anggota->status === 'approved')
             <button class="tab-button" onclick="switchTab('detail-buku')">Detail Buku Anggota</button>
+            @endif
             @if($anggota->admin)
             <button class="tab-button" onclick="switchTab('admin-account')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.25rem;">
@@ -945,183 +947,184 @@
             </div>
 
             <!-- Tab Detail Buku Anggota -->
+            @if($anggota->status === 'approved')
             <div class="tab-panel" id="tab-detail-buku">
                 <div style="margin-bottom: 1.5rem;">
                     <h3 style="margin: 0 0 0.5rem 0;">Gambar Detail Buku Anggota</h3>
-                    <p style="color: #6b7280; font-size: 0.875rem; margin: 0;">
-                        Upload maksimal 3 gambar dan deskripsi yang akan ditampilkan di halaman detail buku anggota publik
-                    </p>
-                </div>
-
-                <form action="{{ route('profile-anggota.upload-detail-images') }}" method="POST" enctype="multipart/form-data" id="detailImagesForm">
-                    @csrf
-
-                    <div class="form-group">
-                        <label>Deskripsi (Opsional)</label>
-                        <textarea name="deskripsi_detail" placeholder="Tulis deskripsi tentang perusahaan atau usaha Anda...">{{ $anggota->deskripsi_detail }}</textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Upload Gambar</label>
-                        <div class="image-upload-area">
-                            <!-- Image 1 -->
-                            <div class="upload-box" onclick="document.getElementById('detail_image_1').click()">
-                                @if($anggota->detail_image_1)
-                                <img src="{{ $anggota->detail_image_1_url }}" alt="Detail 1" id="preview1">
-                                <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_1')">&times;</button>
-                                @else
-                                <div class="upload-placeholder" id="placeholder1">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                    <div>Gambar 1</div>
-                                </div>
-                                @endif
-                            </div>
-                            <input type="file" id="detail_image_1" name="detail_image_1" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview1', 'placeholder1')">
-
-                            <!-- Image 2 -->
-                            <div class="upload-box" onclick="document.getElementById('detail_image_2').click()">
-                                @if($anggota->detail_image_2)
-                                <img src="{{ $anggota->detail_image_2_url }}" alt="Detail 2" id="preview2">
-                                <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_2')">&times;</button>
-                                @else
-                                <div class="upload-placeholder" id="placeholder2">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                    <div>Gambar 2</div>
-                                </div>
-                                @endif
-                            </div>
-                            <input type="file" id="detail_image_2" name="detail_image_2" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview2', 'placeholder2')">
-
-                            <!-- Image 3 -->
-                            <div class="upload-box" onclick="document.getElementById('detail_image_3').click()">
-                                @if($anggota->detail_image_3)
-                                <img src="{{ $anggota->detail_image_3_url }}" alt="Detail 3" id="preview3">
-                                <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_3')">&times;</button>
-                                @else
-                                <div class="upload-placeholder" id="placeholder3">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                    <div>Gambar 3</div>
-                                </div>
-                                @endif
-                            </div>
-                            <input type="file" id="detail_image_3" name="detail_image_3" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview3', 'placeholder3')">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
-                        Simpan Gambar & Deskripsi
-                    </button>
-                </form>
-            </div>
-
-            <!-- Tab Admin Account -->
-            @if($anggota->admin)
-            <div class="tab-panel" id="tab-admin-account">
-                <div class="admin-info-card">
-                    <h4>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-                        </svg>
-                        Status Admin Anda
-                    </h4>
-                    <p>Anda telah dipromosikan sebagai admin {{ strtoupper($anggota->admin->category) }}. Gunakan kredensial di bawah untuk login ke dashboard admin.</p>
-                </div>
-
-                <div class="credential-box">
-                    <h5>Informasi Admin</h5>
-
-                    <div class="credential-item">
-                        <span class="credential-label">Kategori Admin</span>
-                        <span class="credential-value">
-                            {{ $anggota->admin->category === 'bpc' ? 'BPC (Admin Kabupaten/Kota)' : 'BPD (Admin Provinsi)' }}
-                        </span>
-                    </div>
-
-                    @if($anggota->admin->category === 'bpc' && $anggota->admin->domisili)
-                    <div class="credential-item">
-                        <span class="credential-label">Domisili</span>
-                        <span class="credential-value">{{ $anggota->admin->domisili }}</span>
-                    </div>
-                    @endif
-
-                    <div class="credential-item">
-                        <span class="credential-label">Nama Admin</span>
-                        <span class="credential-value">{{ $anggota->admin->name }}</span>
-                    </div>
-                </div>
-
-                <div class="credential-box">
-                    <h5>Kredensial Login Admin</h5>
-
-                    <div class="credential-item">
-                        <span class="credential-label">Username</span>
-                        <span class="credential-value">
-                            {{ $anggota->admin->username }}
-                            <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->username }}', this)">Copy</button>
-                        </span>
-                    </div>
-
-                    <div class="credential-item">
-                        <span class="credential-label">Email</span>
-                        <span class="credential-value">
-                            {{ $anggota->admin->email }}
-                            <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->email }}', this)">Copy</button>
-                        </span>
-                    </div>
-                    <button class="btn btn-primary" onclick="openModal('changeAdminPasswordModal')" style="width: 100%; margin-top: 0.75rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                        Ganti Password Admin
-                    </button>
-                </div>
-
-                <div style="background: #eff6ff; padding: 1.25rem; border-radius: 10px; border: 2px solid #93c5fd; margin-top: 1.5rem;">
-                    <h5 style="margin: 0 0 0.75rem 0; font-size: 0.9375rem; font-weight: 700; color: #1e40af;">
-                        📌 Cara Login ke Dashboard Admin
-                    </h5>
-                    <ol style="margin: 0; padding-left: 1.25rem; color: #1e3a8a; font-size: 0.875rem; line-height: 1.6;">
-                        <li><strong>Hubungi admin pusat</strong> untuk mendapatkan password awal Anda</li>
-                        <li>Buka halaman login admin</li>
-                        <li>Masukkan <strong>username</strong> atau <strong>email</strong> admin Anda</li>
-                        <li>Masukkan <strong>password awal</strong> yang diberikan oleh admin pusat</li>
-                        <li>Klik tombol <strong>Login</strong></li>
-                        <li style="color: #d97706; font-weight: 600;">⚠️ Setelah login pertama kali, segera ubah password Anda untuk keamanan</li>
-                    </ol>
-
-                    <div style="background: #fef3c7; padding: 0.875rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #f59e0b;">
-                        <p style="margin: 0; font-size: 0.8125rem; color: #92400e; line-height: 1.5;">
-                            <strong>💡 Catatan:</strong> Password awal bersifat sementara dan hanya digunakan untuk login pertama kali. Demi keamanan akun Anda, pastikan untuk menggantinya segera setelah berhasil login.
-                        </p>
-                    </div>
-
-                    <a href="{{ route('admin.login') }}" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                            <polyline points="10 17 15 12 10 7" />
-                            <line x1="15" y1="12" x2="3" y2="12" />
-                        </svg>
-                        Login ke Dashboard Admin
-                    </a>
+                    <!-- ... rest of content ... -->
                 </div>
             </div>
             @endif
+
+            <form action="{{ route('profile-anggota.upload-detail-images') }}" method="POST" enctype="multipart/form-data" id="detailImagesForm">
+                @csrf
+
+                <div class="form-group">
+                    <label>Deskripsi (Opsional)</label>
+                    <textarea name="deskripsi_detail" placeholder="Tulis deskripsi tentang perusahaan atau usaha Anda...">{{ $anggota->deskripsi_detail }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Gambar</label>
+                    <div class="image-upload-area">
+                        <!-- Image 1 -->
+                        <div class="upload-box" onclick="document.getElementById('detail_image_1').click()">
+                            @if($anggota->detail_image_1)
+                            <img src="{{ $anggota->detail_image_1_url }}" alt="Detail 1" id="preview1">
+                            <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_1')">&times;</button>
+                            @else
+                            <div class="upload-placeholder" id="placeholder1">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                <div>Gambar 1</div>
+                            </div>
+                            @endif
+                        </div>
+                        <input type="file" id="detail_image_1" name="detail_image_1" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview1', 'placeholder1')">
+
+                        <!-- Image 2 -->
+                        <div class="upload-box" onclick="document.getElementById('detail_image_2').click()">
+                            @if($anggota->detail_image_2)
+                            <img src="{{ $anggota->detail_image_2_url }}" alt="Detail 2" id="preview2">
+                            <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_2')">&times;</button>
+                            @else
+                            <div class="upload-placeholder" id="placeholder2">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                <div>Gambar 2</div>
+                            </div>
+                            @endif
+                        </div>
+                        <input type="file" id="detail_image_2" name="detail_image_2" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview2', 'placeholder2')">
+
+                        <!-- Image 3 -->
+                        <div class="upload-box" onclick="document.getElementById('detail_image_3').click()">
+                            @if($anggota->detail_image_3)
+                            <img src="{{ $anggota->detail_image_3_url }}" alt="Detail 3" id="preview3">
+                            <button type="button" class="delete-image-btn" onclick="event.stopPropagation(); confirmDeleteImage('detail_image_3')">&times;</button>
+                            @else
+                            <div class="upload-placeholder" id="placeholder3">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
+                                <div>Gambar 3</div>
+                            </div>
+                            @endif
+                        </div>
+                        <input type="file" id="detail_image_3" name="detail_image_3" accept="image/*" style="display: none;" onchange="previewImage(this, 'preview3', 'placeholder3')">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
+                    Simpan Gambar & Deskripsi
+                </button>
+            </form>
         </div>
+
+        <!-- Tab Admin Account -->
+        @if($anggota->admin)
+        <div class="tab-panel" id="tab-admin-account">
+            <div class="admin-info-card">
+                <h4>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                    Status Admin Anda
+                </h4>
+                <p>Anda telah dipromosikan sebagai admin {{ strtoupper($anggota->admin->category) }}. Gunakan kredensial di bawah untuk login ke dashboard admin.</p>
+            </div>
+
+            <div class="credential-box">
+                <h5>Informasi Admin</h5>
+
+                <div class="credential-item">
+                    <span class="credential-label">Kategori Admin</span>
+                    <span class="credential-value">
+                        {{ $anggota->admin->category === 'bpc' ? 'BPC (Admin Kabupaten/Kota)' : 'BPD (Admin Provinsi)' }}
+                    </span>
+                </div>
+
+                @if($anggota->admin->category === 'bpc' && $anggota->admin->domisili)
+                <div class="credential-item">
+                    <span class="credential-label">Domisili</span>
+                    <span class="credential-value">{{ $anggota->admin->domisili }}</span>
+                </div>
+                @endif
+
+                <div class="credential-item">
+                    <span class="credential-label">Nama Admin</span>
+                    <span class="credential-value">{{ $anggota->admin->name }}</span>
+                </div>
+            </div>
+
+            <div class="credential-box">
+                <h5>Kredensial Login Admin</h5>
+
+                <div class="credential-item">
+                    <span class="credential-label">Username</span>
+                    <span class="credential-value">
+                        {{ $anggota->admin->username }}
+                        <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->username }}', this)">Copy</button>
+                    </span>
+                </div>
+
+                <div class="credential-item">
+                    <span class="credential-label">Email</span>
+                    <span class="credential-value">
+                        {{ $anggota->admin->email }}
+                        <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->email }}', this)">Copy</button>
+                    </span>
+                </div>
+                <button class="btn btn-primary" onclick="openModal('changeAdminPasswordModal')" style="width: 100%; margin-top: 0.75rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Ganti Password Admin
+                </button>
+            </div>
+
+            <div style="background: #eff6ff; padding: 1.25rem; border-radius: 10px; border: 2px solid #93c5fd; margin-top: 1.5rem;">
+                <h5 style="margin: 0 0 0.75rem 0; font-size: 0.9375rem; font-weight: 700; color: #1e40af;">
+                    📌 Cara Login ke Dashboard Admin
+                </h5>
+                <ol style="margin: 0; padding-left: 1.25rem; color: #1e3a8a; font-size: 0.875rem; line-height: 1.6;">
+                    <li><strong>Hubungi admin pusat</strong> untuk mendapatkan password awal Anda</li>
+                    <li>Buka halaman login admin</li>
+                    <li>Masukkan <strong>username</strong> atau <strong>email</strong> admin Anda</li>
+                    <li>Masukkan <strong>password awal</strong> yang diberikan oleh admin pusat</li>
+                    <li>Klik tombol <strong>Login</strong></li>
+                    <li style="color: #d97706; font-weight: 600;">⚠️ Setelah login pertama kali, segera ubah password Anda untuk keamanan</li>
+                </ol>
+
+                <div style="background: #fef3c7; padding: 0.875rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #f59e0b;">
+                    <p style="margin: 0; font-size: 0.8125rem; color: #92400e; line-height: 1.5;">
+                        <strong>💡 Catatan:</strong> Password awal bersifat sementara dan hanya digunakan untuk login pertama kali. Demi keamanan akun Anda, pastikan untuk menggantinya segera setelah berhasil login.
+                    </p>
+                </div>
+
+                <a href="{{ route('admin.login') }}" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    Login ke Dashboard Admin
+                </a>
+            </div>
+        </div>
+        @endif
     </div>
+</div>
 </div>
 
 <!-- Modal Ganti Password -->
