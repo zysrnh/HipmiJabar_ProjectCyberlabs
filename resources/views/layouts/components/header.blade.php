@@ -35,9 +35,6 @@
                     <a href="{{ route('berita') }}" class="nav-link {{ Request::routeIs('berita') ? 'active' : '' }}">
                         Berita
                     </a>
-                    <a href="{{ route('umkm') }}" class="nav-link {{ Request::routeIs('umkm') ? 'active' : '' }}">
-                        UMKM
-                    </a>
                     <div class="buttons-mobile">
                         @auth('admin')
                             {{-- Jika login sebagai Admin --}}
