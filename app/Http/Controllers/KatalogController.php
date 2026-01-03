@@ -10,26 +10,55 @@ class KatalogController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Katalog::where('is_active', true);
+        $query = Katalog::with(['anggota', 'admin'])
+            ->where('status', 'approved')
+            ->where('is_active', true);
 
+        // Filter Search
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('company_name', 'like', "%{$search}%")
-                  ->orWhere('business_field', 'like', "%{$search}%");
+                  ->orWhere('business_field', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
-        $katalogs = $query->latest()->paginate(12);
+        // Filter Bidang (untuk katalog dari pengurus/admin)
+        if ($request->has('bidang') && $request->bidang != '') {
+            $bidang = $request->bidang;
+            
+            // Filter katalog yang dibuat oleh admin dengan bidang tertentu
+            $query->whereHas('admin', function($q) use ($bidang) {
+                $q->where('bidang', $bidang);
+            });
+        }
+
+        // Filter Tipe (Anggota atau Pengurus)
+        if ($request->has('tipe') && $request->tipe != '') {
+            if ($request->tipe === 'anggota') {
+                // Katalog dari anggota (anggota_id tidak null)
+                $query->whereNotNull('anggota_id');
+            } elseif ($request->tipe === 'pengurus') {
+                // Katalog dari pengurus/admin (anggota_id null)
+                $query->whereNull('anggota_id');
+            }
+        }
+
+        $katalogs = $query->latest()->paginate(12)->withQueryString();
 
         return view('pages.ekatalog', compact('katalogs'));
     }
 
     public function show(Katalog $katalog)
     {
-        if (!$katalog->is_active) {
+        // Pastikan katalog sudah approved dan aktif
+        if ($katalog->status !== 'approved' || !$katalog->is_active) {
             abort(404);
         }
+
+        // Load relationships
+        $katalog->load(['anggota', 'admin']);
 
         // Cek apakah user sudah login dan terverifikasi
         $canViewFullDetail = $this->canViewFullDetail();

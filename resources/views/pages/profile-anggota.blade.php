@@ -1094,10 +1094,10 @@
 
         <!-- Tab E-Katalog Saya -->
         <div class="tab-panel" id="tab-katalog">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.25rem; border-bottom: 2px solid #f3f4f6;">
                 <div>
-                    <h3 style="margin: 0 0 0.5rem 0;">E-Katalog Perusahaan Saya</h3>
-                    <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">Kelola katalog perusahaan yang akan ditampilkan di halaman E-Katalog</p>
+                    <h3 style="margin: 0 0 0.5rem 0; font-size: 1.375rem; font-weight: 700; color: #0a2540;">E-Katalog Perusahaan</h3>
+                    <p style="margin: 0; color: #6b7280; font-size: 0.9375rem; font-weight: 500;">Kelola katalog perusahaan yang akan ditampilkan di halaman E-Katalog</p>
                 </div>
                 @if($anggota->status === 'approved')
                 <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
@@ -1111,9 +1111,15 @@
             </div>
 
             @if($anggota->status !== 'approved')
-            <div style="background: #fef3c7; padding: 1.25rem; border-radius: 10px; border: 2px solid #fbbf24; text-align: center;">
-                <p style="margin: 0; color: #92400e; font-weight: 600;">
-                    ⚠️ Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
+            <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #fbbf24; text-align: center;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" style="margin: 0 auto 1rem;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h4 style="margin: 0 0 0.5rem 0; color: #92400e; font-size: 1.125rem; font-weight: 700;">Verifikasi Diperlukan</h4>
+                <p style="margin: 0; color: #92400e; font-weight: 500; font-size: 0.9375rem;">
+                    Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
                 </p>
             </div>
             @else
@@ -1122,42 +1128,53 @@
                 @endphp
 
                 @if($katalogs->count() > 0)
-                <div style="display: grid; gap: 1rem;">
+                <div style="display: grid; gap: 1.25rem;">
                     @foreach($katalogs as $katalog)
-                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 1.5rem;">
-                        <div style="display: flex; gap: 1.5rem; align-items: start;">
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 1.75rem; transition: all 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <div style="display: flex; gap: 1.75rem; align-items: start;">
                             <!-- Logo -->
-                            <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}" 
-                                 style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #e5e7eb;">
+                            <div style="flex-shrink: 0;">
+                                <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}" 
+                                     style="width: 110px; height: 110px; object-fit: cover; border-radius: 10px; border: 2px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                            </div>
                             
                             <!-- Info -->
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
-                                    <div>
-                                        <h4 style="margin: 0 0 0.25rem 0; font-size: 1.125rem; font-weight: 700; color: #0a2540;">
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.875rem; gap: 1rem;">
+                                    <div style="flex: 1; min-width: 0;">
+                                        <h4 style="margin: 0 0 0.375rem 0; font-size: 1.25rem; font-weight: 700; color: #0a2540; line-height: 1.3;">
                                             {{ $katalog->company_name }}
                                         </h4>
-                                        <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">{{ $katalog->business_field }}</p>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.9375rem; font-weight: 600;">{{ $katalog->business_field }}</p>
                                     </div>
-                                    <span class="status-badge {{ $katalog->status }}">
+                                    <span class="status-badge {{ $katalog->status }}" style="flex-shrink: 0;">
                                         @if($katalog->status === 'pending')
-                                            ⏳ Menunggu Verifikasi
+                                            Menunggu Verifikasi
                                         @elseif($katalog->status === 'approved')
-                                            ✅ Disetujui
+                                            Disetujui
                                         @else
-                                            ❌ Ditolak
+                                            Ditolak
                                         @endif
                                     </span>
                                 </div>
 
-                                <div style="color: #4b5563; font-size: 0.875rem; margin-bottom: 1rem; line-height: 1.6;">
-                                    {{ Str::limit($katalog->description, 150) }}
+                                <div style="color: #4b5563; font-size: 0.9375rem; margin-bottom: 1.25rem; line-height: 1.7;">
+                                    {{ Str::limit($katalog->description, 180) }}
                                 </div>
 
                                 @if($katalog->status === 'rejected' && $katalog->rejection_reason)
-                                <div style="background: #fee2e2; padding: 0.875rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #ef4444;">
-                                    <strong style="color: #991b1b; font-size: 0.875rem;">Alasan Penolakan:</strong>
-                                    <p style="margin: 0.25rem 0 0 0; color: #991b1b; font-size: 0.875rem;">{{ $katalog->rejection_reason }}</p>
+                                <div style="background: #fee2e2; padding: 1rem; border-radius: 10px; margin-bottom: 1.25rem; border-left: 4px solid #ef4444;">
+                                    <div style="display: flex; align-items: start; gap: 0.75rem;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#991b1b" stroke-width="2" style="flex-shrink: 0; margin-top: 2px;">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                        </svg>
+                                        <div>
+                                            <strong style="color: #991b1b; font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Alasan Penolakan</strong>
+                                            <p style="margin: 0; color: #991b1b; font-size: 0.875rem; line-height: 1.5;">{{ $katalog->rejection_reason }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 @endif
 
@@ -1171,15 +1188,20 @@
                                             </svg>
                                             Lihat di E-Katalog
                                         </a>
-                                    @endif
-
-                                    @if($katalog->canBeEdited())
-                                        <a href="{{ route('profile-anggota.katalog.edit', $katalog) }}" class="btn btn-primary" style="background: #10b981;">
+                                        
+                                        <div style="background: #eff6ff; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #bfdbfe; display: inline-flex; align-items: center; gap: 0.5rem;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                            </svg>
+                                            <span style="color: #1e40af; font-size: 0.875rem; font-weight: 600;">Katalog telah dipublikasikan</span>
+                                        </div>
+                                    @elseif($katalog->status === 'pending')
+                                        <a href="{{ route('profile-anggota.katalog.edit', $katalog) }}" class="btn btn-success">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                             </svg>
-                                            Edit
+                                            Edit Katalog
                                         </a>
 
                                         <form action="{{ route('profile-anggota.katalog.destroy', $katalog) }}" method="POST" 
@@ -1191,7 +1213,28 @@
                                                     <polyline points="3 6 5 6 21 6"></polyline>
                                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                                 </svg>
-                                                Hapus
+                                                Hapus Katalog
+                                            </button>
+                                        </form>
+                                    @elseif($katalog->status === 'rejected')
+                                        <a href="{{ route('profile-anggota.katalog.edit', $katalog) }}" class="btn btn-success">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Perbaiki & Kirim Ulang
+                                        </a>
+
+                                        <form action="{{ route('profile-anggota.katalog.destroy', $katalog) }}" method="POST" 
+                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus katalog ini?')" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                </svg>
+                                                Hapus Katalog
                                             </button>
                                         </form>
                                     @endif
@@ -1202,15 +1245,19 @@
                     @endforeach
                 </div>
                 @else
-                <div style="text-align: center; padding: 3rem; background: #f9fafb; border-radius: 12px;">
-                    <svg viewBox="0 0 24 24" width="64" height="64" stroke="#d1d5db" fill="none" stroke-width="2" style="margin: 0 auto 1rem;">
+                <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%); border-radius: 12px; border: 2px dashed #d1d5db;">
+                    <svg viewBox="0 0 24 24" width="72" height="72" stroke="#9ca3af" fill="none" stroke-width="2" style="margin: 0 auto 1.5rem;">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                         <line x1="9" y1="9" x2="15" y2="9"/>
                         <line x1="9" y1="15" x2="15" y2="15"/>
                     </svg>
-                    <h4 style="margin: 0 0 0.5rem 0; color: #6b7280;">Belum ada katalog</h4>
-                    <p style="margin: 0 0 1rem 0; color: #9ca3af; font-size: 0.875rem;">Tambahkan katalog perusahaan Anda untuk ditampilkan di halaman E-Katalog</p>
-                    <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
+                    <h4 style="margin: 0 0 0.75rem 0; color: #374151; font-size: 1.25rem; font-weight: 700;">Belum Ada Katalog</h4>
+                    <p style="margin: 0 0 1.5rem 0; color: #6b7280; font-size: 0.9375rem; font-weight: 500; max-width: 400px; margin-left: auto; margin-right: auto;">Tambahkan katalog perusahaan Anda untuk ditampilkan di halaman E-Katalog</p>
+                    <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
                         Tambah Katalog Pertama
                     </a>
                 </div>
