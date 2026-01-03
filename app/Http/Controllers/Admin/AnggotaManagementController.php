@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AnggotaManagementController extends Controller
 {
@@ -17,16 +19,16 @@ class AnggotaManagementController extends Controller
         $admin = auth()->guard('admin')->user();
         $status = $request->get('status', 'pending');
         $domisili = $request->get('domisili', 'all');
-        
+
         $query = Anggota::query();
-        
+
         // TAMBAHKAN HANDLER UNTUK SUPER_ADMIN
         if ($admin->category === 'super_admin') {
             // Super Admin bisa lihat semua anggota dengan filter domisili
             if ($domisili !== 'all') {
                 $query->where('domisili', $domisili);
             }
-            
+
             if ($domisili === 'all') {
                 $stats = [
                     'total' => Anggota::count(),
@@ -42,31 +44,29 @@ class AnggotaManagementController extends Controller
                     'rejected' => Anggota::where('domisili', $domisili)->where('status', 'rejected')->count(),
                 ];
             }
-            
+
             $domisiliList = \App\Models\Admin::where('category', 'bpc')
                 ->whereNotNull('domisili')
                 ->orderBy('domisili')
                 ->pluck('domisili')
                 ->unique()
                 ->values();
-                
         } elseif ($admin->category === 'bpc') {
             $query->where('domisili', $admin->domisili);
-            
+
             $stats = [
                 'total' => Anggota::where('domisili', $admin->domisili)->count(),
                 'pending' => Anggota::where('domisili', $admin->domisili)->where('status', 'pending')->count(),
                 'approved' => Anggota::where('domisili', $admin->domisili)->where('status', 'approved')->count(),
                 'rejected' => Anggota::where('domisili', $admin->domisili)->where('status', 'rejected')->count(),
             ];
-            
+
             $domisiliList = null;
-            
         } elseif ($admin->category === 'bpd') {
             if ($domisili !== 'all') {
                 $query->where('domisili', $domisili);
             }
-            
+
             if ($domisili === 'all') {
                 $stats = [
                     'total' => Anggota::count(),
@@ -82,7 +82,7 @@ class AnggotaManagementController extends Controller
                     'rejected' => Anggota::where('domisili', $domisili)->where('status', 'rejected')->count(),
                 ];
             }
-            
+
             $domisiliList = \App\Models\Admin::where('category', 'bpc')
                 ->whereNotNull('domisili')
                 ->orderBy('domisili')
@@ -90,16 +90,16 @@ class AnggotaManagementController extends Controller
                 ->unique()
                 ->values();
         }
-        
+
         if ($status !== 'all') {
             $query->where('status', $status);
         }
-        
+
         $anggota = $query->latest()->paginate(15)->appends([
             'status' => $status,
             'domisili' => $domisili
         ]);
-        
+
         return view('admin.anggota.index', compact(
             'anggota',
             'stats',
@@ -115,16 +115,16 @@ class AnggotaManagementController extends Controller
         $admin = auth()->guard('admin')->user();
         $status = $request->get('status', 'all');
         $domisili = $request->get('domisili', 'all');
-        
+
         $query = Anggota::query();
-        
+
         // Filter berdasarkan kategori admin
         if ($admin->category === 'super_admin') {
             // Super Admin bisa lihat semua anggota dengan filter domisili
             if ($domisili !== 'all') {
                 $query->where('domisili', $domisili);
             }
-            
+
             if ($domisili === 'all') {
                 $stats = [
                     'total' => Anggota::count(),
@@ -140,7 +140,7 @@ class AnggotaManagementController extends Controller
                     'rejected' => Anggota::where('domisili', $domisili)->where('status', 'rejected')->count(),
                 ];
             }
-            
+
             // List domisili untuk dropdown
             $domisiliList = \App\Models\Admin::where('category', 'bpc')
                 ->whereNotNull('domisili')
@@ -148,26 +148,24 @@ class AnggotaManagementController extends Controller
                 ->pluck('domisili')
                 ->unique()
                 ->values();
-                
         } elseif ($admin->category === 'bpc') {
             // BPC hanya bisa lihat anggota di domisilinya
             $query->where('domisili', $admin->domisili);
-            
+
             $stats = [
                 'total' => Anggota::where('domisili', $admin->domisili)->count(),
                 'pending' => Anggota::where('domisili', $admin->domisili)->where('status', 'pending')->count(),
                 'approved' => Anggota::where('domisili', $admin->domisili)->where('status', 'approved')->count(),
                 'rejected' => Anggota::where('domisili', $admin->domisili)->where('status', 'rejected')->count(),
             ];
-            
+
             $domisiliList = null;
-            
         } elseif ($admin->category === 'bpd') {
             // BPD bisa lihat semua anggota dengan filter domisili
             if ($domisili !== 'all') {
                 $query->where('domisili', $domisili);
             }
-            
+
             if ($domisili === 'all') {
                 $stats = [
                     'total' => Anggota::count(),
@@ -183,7 +181,7 @@ class AnggotaManagementController extends Controller
                     'rejected' => Anggota::where('domisili', $domisili)->where('status', 'rejected')->count(),
                 ];
             }
-            
+
             // List domisili untuk dropdown
             $domisiliList = \App\Models\Admin::where('category', 'bpc')
                 ->whereNotNull('domisili')
@@ -192,18 +190,18 @@ class AnggotaManagementController extends Controller
                 ->unique()
                 ->values();
         }
-        
+
         // Filter berdasarkan status
         if ($status !== 'all') {
             $query->where('status', $status);
         }
-        
+
         // Get data dengan pagination
         $anggota = $query->latest()->paginate(15)->appends([
             'status' => $status,
             'domisili' => $domisili
         ]);
-        
+
         return view('admin.anggota.list', compact(
             'anggota',
             'stats',
@@ -217,12 +215,12 @@ class AnggotaManagementController extends Controller
     public function showReadOnly(Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         // BPC hanya bisa lihat anggota di domisilinya
         if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
             abort(403, 'Anda tidak memiliki akses ke data anggota ini.');
         }
-        
+
         return view('admin.anggota.show', compact('anggota'));
     }
 
@@ -230,25 +228,25 @@ class AnggotaManagementController extends Controller
     public function show(Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
             abort(403, 'Anda tidak memiliki akses ke data anggota ini.');
         }
-        
+
         return view('admin.anggota.show', compact('anggota'));
     }
 
     public function approve(Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
             abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
         }
-        
+
         // Gunakan method approve() dari Model
         $anggota->approve($admin->id);
-        
+
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil disetujui!');
     }
@@ -256,18 +254,18 @@ class AnggotaManagementController extends Controller
     public function reject(Request $request, Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
             abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
         }
-        
+
         $request->validate([
             'alasan_penolakan' => 'required|string|max:500'
         ]);
-        
+
         // Gunakan method reject() dari Model
         $anggota->reject($request->alasan_penolakan, $admin->id);
-        
+
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Anggota berhasil ditolak!');
     }
@@ -275,19 +273,19 @@ class AnggotaManagementController extends Controller
     public function destroy(Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
             abort(403, 'Anda tidak memiliki akses untuk menghapus anggota ini.');
         }
-        
+
         // Hapus file-file terkait
         if ($anggota->foto_ktp) Storage::disk('public')->delete($anggota->foto_ktp);
         if ($anggota->foto_diri) Storage::disk('public')->delete($anggota->foto_diri);
         if ($anggota->profile_perusahaan) Storage::disk('public')->delete($anggota->profile_perusahaan);
         if ($anggota->logo_perusahaan) Storage::disk('public')->delete($anggota->logo_perusahaan);
-        
+
         $anggota->delete();
-        
+
         return redirect()->route('admin.anggota.index')
             ->with('success', 'Data anggota berhasil dihapus!');
     }
@@ -295,17 +293,17 @@ class AnggotaManagementController extends Controller
     public function promoteToAdmin(Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         // Hanya Super Admin yang bisa promote
         if (!$admin->isSuperAdmin()) {
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
-        
+
         // Anggota harus sudah approved
         if ($anggota->status !== 'approved') {
             return redirect()->back()->with('error', 'Hanya anggota yang sudah disetujui yang bisa dipromosikan menjadi admin.');
         }
-        
+
         // List domisili untuk dropdown
         $domisiliList = Admin::where('category', 'bpc')
             ->whereNotNull('domisili')
@@ -313,7 +311,7 @@ class AnggotaManagementController extends Controller
             ->pluck('domisili')
             ->unique()
             ->values();
-        
+
         return view('admin.anggota.promote', compact('anggota', 'domisiliList'));
     }
 
@@ -321,17 +319,17 @@ class AnggotaManagementController extends Controller
     public function storePromotedAdmin(Request $request, Anggota $anggota)
     {
         $admin = auth()->guard('admin')->user();
-        
+
         // Hanya Super Admin yang bisa promote
         if (!$admin->isSuperAdmin()) {
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
-        
+
         // Anggota harus sudah approved
         if ($anggota->status !== 'approved') {
             return redirect()->back()->with('error', 'Hanya anggota yang sudah disetujui yang bisa dipromosikan menjadi admin.');
         }
-        
+
         $validated = $request->validate([
             'username' => 'required|string|max:255|unique:admins',
             'password' => 'required|string|min:8|confirmed',
@@ -353,5 +351,170 @@ class AnggotaManagementController extends Controller
 
         return redirect()->route('admin.anggota.list')
             ->with('success', "Anggota {$anggota->nama_usaha} berhasil dipromosikan menjadi admin!");
+    }
+    /**
+     * ✨ NEW: Tampilkan form create anggota baru
+     */
+    public function create()
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // Hanya BPC dan Super Admin yang bisa create
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk membuat anggota baru.');
+        }
+
+        // Untuk Super Admin, tampilkan dropdown domisili
+        $domisiliList = null;
+        if ($admin->isSuperAdmin()) {
+            $domisiliList = Admin::where('category', 'bpc')
+                ->whereNotNull('domisili')
+                ->orderBy('domisili')
+                ->pluck('domisili')
+                ->unique()
+                ->values();
+        }
+
+        return view('admin.anggota.create', compact('admin', 'domisiliList'));
+    }
+
+    /**
+     * ✨ NEW: Store anggota baru (dibuat oleh Admin)
+     */
+    public function storeByAdmin(Request $request)
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // Hanya BPC dan Super Admin yang bisa create
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk membuat anggota baru.');
+        }
+
+        $validator = Validator::make($request->all(), [
+            // Data Pribadi
+            'nama_usaha' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'agama' => 'required|string|max:255',
+            'nomor_telepon' => 'required|string|max:20',
+            'domisili' => 'required|string|max:255',
+            'alamat_domisili' => 'required|string',
+            'kode_pos' => 'required|string|max:10',
+            'email' => 'required|email|max:255|unique:anggota,email',
+            'nomor_ktp' => 'required|string|size:16',
+            'foto_ktp' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'foto_diri' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+
+            // Profile Perusahaan
+            'nama_usaha_perusahaan' => 'required|string|max:255',
+            'legalitas_usaha' => 'required|in:PT,CV,PT Perorangan',
+            'jabatan_usaha' => 'required|string|max:255',
+            'alamat_kantor' => 'required|string',
+            'bidang_usaha' => 'required|string',
+            'brand_usaha' => 'required|string|max:255',
+            'jumlah_karyawan' => 'required|integer|min:0',
+            'nomor_ktp_perusahaan' => 'required|string|size:16',
+            'usia_perusahaan' => 'required|string',
+            'omset_perusahaan' => 'required|string',
+            'npwp_perusahaan' => 'required|string|max:255',
+            'no_nota_pendirian' => 'required|string|max:255',
+            'profile_perusahaan' => 'required|mimes:pdf|max:5120',
+            'logo_perusahaan' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+
+            // Organisasi
+            'sfc_hipmi' => 'required|string|max:255',
+            'referensi_hipmi' => 'required|in:Ya,Tidak',
+            'organisasi_lain' => 'required|in:Ya,Tidak',
+        ], [
+            'required' => ':attribute wajib diisi.',
+            'email' => 'Format email tidak valid.',
+            'unique' => 'Email sudah terdaftar.',
+            'image' => ':attribute harus berupa gambar.',
+            'mimes' => ':attribute harus berformat :values.',
+            'max' => ':attribute maksimal :max KB.',
+            'size' => ':attribute harus :size karakter.',
+            'integer' => ':attribute harus berupa angka.',
+            'in' => ':attribute tidak valid.',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            // Upload files
+            $fotoKtpPath = $request->file('foto_ktp')->store('anggota/ktp', 'public');
+            $fotoDiriPath = $request->file('foto_diri')->store('anggota/foto', 'public');
+            $profilePath = $request->file('profile_perusahaan')->store('anggota/profile', 'public');
+            $logoPath = $request->file('logo_perusahaan')->store('anggota/logo', 'public');
+
+            // Generate random password
+            $randomPassword = Str::random(12);
+
+            // Simpan data ke database
+            $anggota = Anggota::create([
+                // Data Pribadi
+                'nama_usaha' => $request->nama_usaha,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'agama' => $request->agama,
+                'nomor_telepon' => $request->nomor_telepon,
+                'domisili' => $request->domisili,
+                'alamat_domisili' => $request->alamat_domisili,
+                'kode_pos' => $request->kode_pos,
+                'email' => $request->email,
+                'password' => Hash::make($randomPassword),
+                'initial_password' => $randomPassword,
+                'nomor_ktp' => $request->nomor_ktp,
+                'foto_ktp' => $fotoKtpPath,
+                'foto_diri' => $fotoDiriPath,
+
+                // Profile Perusahaan
+                'nama_usaha_perusahaan' => $request->nama_usaha_perusahaan,
+                'legalitas_usaha' => $request->legalitas_usaha,
+                'jabatan_usaha' => $request->jabatan_usaha,
+                'alamat_kantor' => $request->alamat_kantor,
+                'bidang_usaha' => $request->bidang_usaha,
+                'brand_usaha' => $request->brand_usaha,
+                'jumlah_karyawan' => $request->jumlah_karyawan,
+                'nomor_ktp_perusahaan' => $request->nomor_ktp_perusahaan,
+                'usia_perusahaan' => $request->usia_perusahaan,
+                'omset_perusahaan' => $request->omset_perusahaan,
+                'npwp_perusahaan' => $request->npwp_perusahaan,
+                'no_nota_pendirian' => $request->no_nota_pendirian,
+                'profile_perusahaan' => $profilePath,
+                'logo_perusahaan' => $logoPath,
+
+                // Organisasi
+                'sfc_hipmi' => $request->sfc_hipmi,
+                'referensi_hipmi' => $request->referensi_hipmi,
+                'organisasi_lain' => $request->organisasi_lain,
+
+                // Status default pending
+                'status' => 'pending',
+            ]);
+
+            // Redirect dengan pesan sukses
+            return redirect()
+                ->route('admin.anggota.index')
+                ->with('success', "Anggota {$anggota->nama_usaha} berhasil ditambahkan!")
+                ->with('show_password', true)
+                ->with('generated_password', $randomPassword)
+                ->with('user_email', $anggota->email);
+        } catch (\Exception $e) {
+            // Hapus file yang sudah diupload jika ada error
+            if (isset($fotoKtpPath)) Storage::disk('public')->delete($fotoKtpPath);
+            if (isset($fotoDiriPath)) Storage::disk('public')->delete($fotoDiriPath);
+            if (isset($profilePath)) Storage::disk('public')->delete($profilePath);
+            if (isset($logoPath)) Storage::disk('public')->delete($logoPath);
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
     }
 }

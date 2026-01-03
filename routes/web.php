@@ -45,10 +45,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('edit-admin/{admin}', [AdminDashboardController::class, 'editAdmin'])->name('edit-admin');
         Route::put('update-admin/{admin}', [AdminDashboardController::class, 'updateAdmin'])->name('update-admin');
         Route::delete('delete-admin/{admin}', [AdminDashboardController::class, 'deleteAdmin'])->name('delete-admin');
-        
+
         // ✅ Kegiatan CRUD (Admin)
         Route::resource('kegiatan', AdminKegiatanController::class);
-        
+
         // ✅ Strategic Plan CRUD (Admin)
         Route::resource('strategic-plan', StrategicPlanController::class);
 
@@ -83,6 +83,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::prefix('anggota')->name('anggota.')->group(function () {
             Route::get('/', [AnggotaManagementController::class, 'index'])->name('index');
             Route::get('/list', [AnggotaManagementController::class, 'listAll'])->name('list');
+
+            // ✨ TAMBAHKAN 2 BARIS INI (BARU)
+            Route::get('/create', [AnggotaManagementController::class, 'create'])->name('create');
+            Route::post('/store', [AnggotaManagementController::class, 'storeByAdmin'])->name('store');
+
             Route::get('/{anggota}', [AnggotaManagementController::class, 'show'])->name('show');
             Route::get('/{anggota}/readonly', [AnggotaManagementController::class, 'showReadOnly'])->name('show-readonly');
             Route::post('/{anggota}/approve', [AnggotaManagementController::class, 'approve'])->name('approve');

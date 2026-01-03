@@ -283,6 +283,42 @@
             stroke: #b91c1c;
         }
 
+        /* Button Create Style */
+        .btn-create {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #0a2540;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-create:hover {
+            background: #051728;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(10, 37, 64, 0.2);
+        }
+
+        .btn-create:active {
+            transform: translateY(0);
+        }
+
+        .btn-create svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
         /* Pagination Style */
         .pagination-wrapper {
             padding: 1.5rem 2rem;
@@ -407,23 +443,43 @@
                 font-size: 0.8125rem;
                 min-width: 36px;
             }
+
+            .btn-create {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.8125rem;
+            }
         }
     </style>
 @endpush
 
 @section('content')
     <div class="page-header">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div>
-                <h1>Kelola Anggota</h1>
-                <p>
-                    @if($admin->category === 'bpd')
-                        Lihat semua anggota HIPMI Jawa Barat (Read-Only)
-                    @else
-                        Kelola dan verifikasi pendaftaran anggota {{ $admin->domisili }}
-                    @endif
-                </p>
-            </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div>
+            <h1>Kelola Anggota</h1>
+            <p>
+                @if($admin->category === 'bpd')
+                    Lihat semua anggota HIPMI Jawa Barat (Read-Only)
+                @elseif($admin->category === 'super_admin')
+                    Kelola dan verifikasi pendaftaran anggota HIPMI Jawa Barat
+                @else
+                    Kelola dan verifikasi pendaftaran anggota {{ $admin->domisili }}
+                @endif
+            </p>
+        </div>
+        
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            {{-- ✨ BUTTON CREATE (Hanya untuk BPC dan Super Admin) --}}
+            @if($admin->category !== 'bpd')
+                <a href="{{ route('admin.anggota.create') }}" class="btn-create">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Tambah Anggota
+                </a>
+            @endif
+            
             @if($admin->category === 'bpd')
                 <span class="readonly-badge">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
@@ -435,6 +491,7 @@
             @endif
         </div>
     </div>
+</div>
 
     {{-- Success/Error Messages --}}
     @if(session('success'))
