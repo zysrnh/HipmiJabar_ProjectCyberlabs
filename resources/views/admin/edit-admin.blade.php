@@ -310,7 +310,8 @@ $activeMenu = 'info-admin';
         stroke-width: 2;
     }
 
-    #domisiliField {
+    #domisiliField,
+    #bidangField {
         display: none;
     }
 
@@ -470,9 +471,8 @@ $activeMenu = 'info-admin';
                         <span class="form-error">{{ $message }}</span>
                         @enderror
                     </div>
-                    <!-- ========================================== -->
-                    <!-- FORM EDIT ADMIN - Domisili Field -->
-                    <!-- ========================================== -->
+
+                    <!-- DOMISILI FIELD (BPC) -->
                     <div class="form-group full-width" id="domisiliField">
                         <label class="form-label required">Domisili</label>
                         <select
@@ -518,6 +518,33 @@ $activeMenu = 'info-admin';
                         <span class="form-help">Pilih domisili untuk admin BPC</span>
                         @error('domisili')
                         <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- BIDANG FIELD (BPD) -->
+                    <div class="form-group full-width" id="bidangField">
+                        <label class="form-label required">Bidang</label>
+                        <select 
+                            name="bidang" 
+                            class="form-select @error('bidang') error @enderror"
+                        >
+                            <option value="">Pilih Bidang</option>
+                            <option value="bidang_1" {{ old('bidang', $admin->bidang) == 'bidang_1' ? 'selected' : '' }}>Bidang 1</option>
+                            <option value="bidang_2" {{ old('bidang', $admin->bidang) == 'bidang_2' ? 'selected' : '' }}>Bidang 2</option>
+                            <option value="bidang_3" {{ old('bidang', $admin->bidang) == 'bidang_3' ? 'selected' : '' }}>Bidang 3</option>
+                            <option value="bidang_4" {{ old('bidang', $admin->bidang) == 'bidang_4' ? 'selected' : '' }}>Bidang 4</option>
+                            <option value="bidang_5" {{ old('bidang', $admin->bidang) == 'bidang_5' ? 'selected' : '' }}>Bidang 5</option>
+                            <option value="bidang_6" {{ old('bidang', $admin->bidang) == 'bidang_6' ? 'selected' : '' }}>Bidang 6</option>
+                            <option value="bidang_7" {{ old('bidang', $admin->bidang) == 'bidang_7' ? 'selected' : '' }}>Bidang 7</option>
+                            <option value="bidang_8" {{ old('bidang', $admin->bidang) == 'bidang_8' ? 'selected' : '' }}>Bidang 8</option>
+                            <option value="bidang_9" {{ old('bidang', $admin->bidang) == 'bidang_9' ? 'selected' : '' }}>Bidang 9</option>
+                            <option value="bidang_10" {{ old('bidang', $admin->bidang) == 'bidang_10' ? 'selected' : '' }}>Bidang 10</option>
+                            <option value="bidang_11" {{ old('bidang', $admin->bidang) == 'bidang_11' ? 'selected' : '' }}>Bidang 11</option>
+                            <option value="bidang_12" {{ old('bidang', $admin->bidang) == 'bidang_12' ? 'selected' : '' }}>Bidang 12</option>
+                        </select>
+                        <span class="form-help">Pilih bidang untuk admin BPD</span>
+                        @error('bidang')
+                            <span class="form-error">{{ $message }}</span>
                         @enderror
                     </div>
                 </div>
@@ -607,15 +634,27 @@ $activeMenu = 'info-admin';
 
     function toggleDomisili() {
         const categoryBPC = document.getElementById('category-bpc');
+        const categoryBPD = document.getElementById('category-bpd');
         const domisiliField = document.getElementById('domisiliField');
-
+        const bidangField = document.getElementById('bidangField');
+        
+        // Sembunyikan semua field dulu
+        domisiliField.style.display = 'none';
+        bidangField.style.display = 'none';
+        domisiliField.querySelector('select').required = false;
+        bidangField.querySelector('select').required = false;
+        domisiliField.querySelector('select').value = '';
+        bidangField.querySelector('select').value = '';
+        
+        // Tampilkan field sesuai kategori
         if (categoryBPC && categoryBPC.checked) {
+            // Jika BPC, tampilkan domisili
             domisiliField.style.display = 'flex';
             domisiliField.querySelector('select').required = true;
-        } else {
-            domisiliField.style.display = 'none';
-            domisiliField.querySelector('select').required = false;
-            domisiliField.querySelector('select').value = '';
+        } else if (categoryBPD && categoryBPD.checked) {
+            // Jika BPD, tampilkan bidang
+            bidangField.style.display = 'flex';
+            bidangField.querySelector('select').required = true;
         }
     }
 

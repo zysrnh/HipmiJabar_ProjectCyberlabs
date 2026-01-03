@@ -310,7 +310,8 @@
         stroke-width: 2;
     }
 
-    #domisiliField {
+    #domisiliField,
+    #bidangField {
         display: none;
     }
 
@@ -476,57 +477,82 @@
                         @enderror
                     </div>
 
-                   <!-- ========================================== -->
-<!-- FORM CREATE ADMIN - Domisili Field -->
-<!-- ========================================== -->
-<div class="form-group full-width" id="domisiliField">
-    <label class="form-label required">Domisili</label>
-    <select 
-        name="domisili" 
-        class="form-select @error('domisili') error @enderror"
-    >
-        <option value="">Pilih Domisili</option>
-        
-        {{-- KABUPATEN (18) --}}
-        <optgroup label="Kabupaten">
-            <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
-            <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
-            <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
-            <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
-            <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
-            <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
-            <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
-            <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
-            <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
-            <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
-            <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
-            <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
-            <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
-            <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
-            <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
-            <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
-            <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
-            <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
-        </optgroup>
-        
-        {{-- KOTA (9) --}}
-        <optgroup label="Kota">
-            <option value="Kota Bandung" {{ old('domisili') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
-            <option value="Kota Banjar" {{ old('domisili') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
-            <option value="Kota Bekasi" {{ old('domisili') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
-            <option value="Kota Bogor" {{ old('domisili') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
-            <option value="Kota Cimahi" {{ old('domisili') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
-            <option value="Kota Cirebon" {{ old('domisili') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
-            <option value="Kota Depok" {{ old('domisili') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
-            <option value="Kota Sukabumi" {{ old('domisili') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
-            <option value="Kota Tasikmalaya" {{ old('domisili') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
-        </optgroup>
-    </select>
-    <span class="form-help">Pilih domisili untuk admin BPC</span>
-    @error('domisili')
-        <span class="form-error">{{ $message }}</span>
-    @enderror
-</div>
+                    <!-- DOMISILI FIELD (BPC) -->
+                    <div class="form-group full-width" id="domisiliField">
+                        <label class="form-label required">Domisili</label>
+                        <select 
+                            name="domisili" 
+                            class="form-select @error('domisili') error @enderror"
+                        >
+                            <option value="">Pilih Domisili</option>
+                            
+                            {{-- KABUPATEN (18) --}}
+                            <optgroup label="Kabupaten">
+                                <option value="Bandung" {{ old('domisili') == 'Bandung' ? 'selected' : '' }}>Kabupaten Bandung</option>
+                                <option value="Bandung Barat" {{ old('domisili') == 'Bandung Barat' ? 'selected' : '' }}>Kabupaten Bandung Barat</option>
+                                <option value="Bekasi" {{ old('domisili') == 'Bekasi' ? 'selected' : '' }}>Kabupaten Bekasi</option>
+                                <option value="Bogor" {{ old('domisili') == 'Bogor' ? 'selected' : '' }}>Kabupaten Bogor</option>
+                                <option value="Ciamis" {{ old('domisili') == 'Ciamis' ? 'selected' : '' }}>Kabupaten Ciamis</option>
+                                <option value="Cianjur" {{ old('domisili') == 'Cianjur' ? 'selected' : '' }}>Kabupaten Cianjur</option>
+                                <option value="Cirebon" {{ old('domisili') == 'Cirebon' ? 'selected' : '' }}>Kabupaten Cirebon</option>
+                                <option value="Garut" {{ old('domisili') == 'Garut' ? 'selected' : '' }}>Kabupaten Garut</option>
+                                <option value="Indramayu" {{ old('domisili') == 'Indramayu' ? 'selected' : '' }}>Kabupaten Indramayu</option>
+                                <option value="Karawang" {{ old('domisili') == 'Karawang' ? 'selected' : '' }}>Kabupaten Karawang</option>
+                                <option value="Kuningan" {{ old('domisili') == 'Kuningan' ? 'selected' : '' }}>Kabupaten Kuningan</option>
+                                <option value="Majalengka" {{ old('domisili') == 'Majalengka' ? 'selected' : '' }}>Kabupaten Majalengka</option>
+                                <option value="Pangandaran" {{ old('domisili') == 'Pangandaran' ? 'selected' : '' }}>Kabupaten Pangandaran</option>
+                                <option value="Purwakarta" {{ old('domisili') == 'Purwakarta' ? 'selected' : '' }}>Kabupaten Purwakarta</option>
+                                <option value="Subang" {{ old('domisili') == 'Subang' ? 'selected' : '' }}>Kabupaten Subang</option>
+                                <option value="Sukabumi" {{ old('domisili') == 'Sukabumi' ? 'selected' : '' }}>Kabupaten Sukabumi</option>
+                                <option value="Sumedang" {{ old('domisili') == 'Sumedang' ? 'selected' : '' }}>Kabupaten Sumedang</option>
+                                <option value="Tasikmalaya" {{ old('domisili') == 'Tasikmalaya' ? 'selected' : '' }}>Kabupaten Tasikmalaya</option>
+                            </optgroup>
+                            
+                            {{-- KOTA (9) --}}
+                            <optgroup label="Kota">
+                                <option value="Kota Bandung" {{ old('domisili') == 'Kota Bandung' ? 'selected' : '' }}>Kota Bandung</option>
+                                <option value="Kota Banjar" {{ old('domisili') == 'Kota Banjar' ? 'selected' : '' }}>Kota Banjar</option>
+                                <option value="Kota Bekasi" {{ old('domisili') == 'Kota Bekasi' ? 'selected' : '' }}>Kota Bekasi</option>
+                                <option value="Kota Bogor" {{ old('domisili') == 'Kota Bogor' ? 'selected' : '' }}>Kota Bogor</option>
+                                <option value="Kota Cimahi" {{ old('domisili') == 'Kota Cimahi' ? 'selected' : '' }}>Kota Cimahi</option>
+                                <option value="Kota Cirebon" {{ old('domisili') == 'Kota Cirebon' ? 'selected' : '' }}>Kota Cirebon</option>
+                                <option value="Kota Depok" {{ old('domisili') == 'Kota Depok' ? 'selected' : '' }}>Kota Depok</option>
+                                <option value="Kota Sukabumi" {{ old('domisili') == 'Kota Sukabumi' ? 'selected' : '' }}>Kota Sukabumi</option>
+                                <option value="Kota Tasikmalaya" {{ old('domisili') == 'Kota Tasikmalaya' ? 'selected' : '' }}>Kota Tasikmalaya</option>
+                            </optgroup>
+                        </select>
+                        <span class="form-help">Pilih domisili untuk admin BPC</span>
+                        @error('domisili')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <!-- BIDANG FIELD (BPD) -->
+                    <div class="form-group full-width" id="bidangField">
+                        <label class="form-label required">Bidang</label>
+                        <select 
+                            name="bidang" 
+                            class="form-select @error('bidang') error @enderror"
+                        >
+                            <option value="">Pilih Bidang</option>
+                            <option value="bidang_1" {{ old('bidang') == 'bidang_1' ? 'selected' : '' }}>Bidang 1</option>
+                            <option value="bidang_2" {{ old('bidang') == 'bidang_2' ? 'selected' : '' }}>Bidang 2</option>
+                            <option value="bidang_3" {{ old('bidang') == 'bidang_3' ? 'selected' : '' }}>Bidang 3</option>
+                            <option value="bidang_4" {{ old('bidang') == 'bidang_4' ? 'selected' : '' }}>Bidang 4</option>
+                            <option value="bidang_5" {{ old('bidang') == 'bidang_5' ? 'selected' : '' }}>Bidang 5</option>
+                            <option value="bidang_6" {{ old('bidang') == 'bidang_6' ? 'selected' : '' }}>Bidang 6</option>
+                            <option value="bidang_7" {{ old('bidang') == 'bidang_7' ? 'selected' : '' }}>Bidang 7</option>
+                            <option value="bidang_8" {{ old('bidang') == 'bidang_8' ? 'selected' : '' }}>Bidang 8</option>
+                            <option value="bidang_9" {{ old('bidang') == 'bidang_9' ? 'selected' : '' }}>Bidang 9</option>
+                            <option value="bidang_10" {{ old('bidang') == 'bidang_10' ? 'selected' : '' }}>Bidang 10</option>
+                            <option value="bidang_11" {{ old('bidang') == 'bidang_11' ? 'selected' : '' }}>Bidang 11</option>
+                            <option value="bidang_12" {{ old('bidang') == 'bidang_12' ? 'selected' : '' }}>Bidang 12</option>
+                        </select>
+                        <span class="form-help">Pilih bidang untuk admin BPD</span>
+                        @error('bidang')
+                            <span class="form-error">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -617,15 +643,27 @@
 
     function toggleDomisili() {
         const categoryBPC = document.getElementById('category-bpc');
+        const categoryBPD = document.getElementById('category-bpd');
         const domisiliField = document.getElementById('domisiliField');
+        const bidangField = document.getElementById('bidangField');
         
+        // Sembunyikan semua field dulu
+        domisiliField.style.display = 'none';
+        bidangField.style.display = 'none';
+        domisiliField.querySelector('select').required = false;
+        bidangField.querySelector('select').required = false;
+        domisiliField.querySelector('select').value = '';
+        bidangField.querySelector('select').value = '';
+        
+        // Tampilkan field sesuai kategori
         if (categoryBPC && categoryBPC.checked) {
+            // Jika BPC, tampilkan domisili
             domisiliField.style.display = 'flex';
             domisiliField.querySelector('select').required = true;
-        } else {
-            domisiliField.style.display = 'none';
-            domisiliField.querySelector('select').required = false;
-            domisiliField.querySelector('select').value = '';
+        } else if (categoryBPD && categoryBPD.checked) {
+            // Jika BPD, tampilkan bidang
+            bidangField.style.display = 'flex';
+            bidangField.querySelector('select').required = true;
         }
     }
 

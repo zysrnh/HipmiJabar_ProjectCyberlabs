@@ -18,7 +18,8 @@ class Admin extends Authenticatable
         'photo',
         'password',
         'category',
-        'domisili', 
+        'domisili',
+        'bidang', // ✅ TAMBAHAN BARU
     ];
 
     protected $hidden = [
@@ -31,6 +32,36 @@ class Admin extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * ✅ TAMBAHAN: List semua bidang (1-12)
+     */
+    public static function getBidangList(): array
+    {
+        return [
+            'bidang_1' => 'Bidang 1',
+            'bidang_2' => 'Bidang 2',
+            'bidang_3' => 'Bidang 3',
+            'bidang_4' => 'Bidang 4',
+            'bidang_5' => 'Bidang 5',
+            'bidang_6' => 'Bidang 6',
+            'bidang_7' => 'Bidang 7',
+            'bidang_8' => 'Bidang 8',
+            'bidang_9' => 'Bidang 9',
+            'bidang_10' => 'Bidang 10',
+            'bidang_11' => 'Bidang 11',
+            'bidang_12' => 'Bidang 12',
+        ];
+    }
+
+    /**
+     * ✅ TAMBAHAN: Get nama bidang yang readable
+     */
+    public function getBidangNameAttribute(): ?string
+    {
+        $bidangList = self::getBidangList();
+        return $bidangList[$this->bidang] ?? null;
     }
 
     public function isSuperAdmin(): bool

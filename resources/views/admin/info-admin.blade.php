@@ -76,12 +76,36 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 
     .table-title {
         font-size: 1.125rem;
         font-weight: 700;
         color: #0a2540;
+    }
+
+    .table-filters {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .filter-select {
+        padding: 0.625rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-family: 'Montserrat', sans-serif;
+        background: white;
+        cursor: pointer;
+        min-width: 150px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: #ffd700;
     }
 
     .search-box {
@@ -200,13 +224,13 @@
     }
 
     .badge-super_admin {
-    background: linear-gradient(135deg, #0a2540 0%, #1a3a5a 100%);
-    color: #ffd700;
-    border: 2px solid #ffd700;
-    font-weight: 800;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-}
+        background: linear-gradient(135deg, #0a2540 0%, #1a3a5a 100%);
+        color: #ffd700;
+        border: 2px solid #ffd700;
+        font-weight: 800;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
 
     .domisili-text {
         font-size: 0.875rem;
@@ -430,6 +454,15 @@
             align-items: flex-start;
         }
 
+        .table-filters {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .filter-select {
+            width: 100%;
+        }
+
         .table-title {
             font-size: 1rem;
         }
@@ -540,12 +573,40 @@
 <div class="admin-table-container">
     <div class="table-header">
         <h3 class="table-title">Daftar Admin ({{ $admins->total() }})</h3>
-        <div class="search-box">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input type="text" class="search-input" placeholder="Cari admin...">
+        
+        <div class="table-filters">
+            <!-- Filter Kategori -->
+            <select class="filter-select" id="filterCategory" onchange="filterTable()">
+                <option value="">Semua Kategori</option>
+                <option value="super_admin" {{ request('category') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                <option value="bpd" {{ request('category') == 'bpd' ? 'selected' : '' }}>BPD</option>
+                <option value="bpc" {{ request('category') == 'bpc' ? 'selected' : '' }}>BPC</option>
+            </select>
+
+            <!-- Filter Bidang (Hanya untuk BPD) -->
+            <select class="filter-select" id="filterBidang" onchange="filterTable()" style="display: none;">
+                <option value="">Semua Bidang</option>
+                <option value="bidang_1" {{ request('bidang') == 'bidang_1' ? 'selected' : '' }}>Bidang 1</option>
+                <option value="bidang_2" {{ request('bidang') == 'bidang_2' ? 'selected' : '' }}>Bidang 2</option>
+                <option value="bidang_3" {{ request('bidang') == 'bidang_3' ? 'selected' : '' }}>Bidang 3</option>
+                <option value="bidang_4" {{ request('bidang') == 'bidang_4' ? 'selected' : '' }}>Bidang 4</option>
+                <option value="bidang_5" {{ request('bidang') == 'bidang_5' ? 'selected' : '' }}>Bidang 5</option>
+                <option value="bidang_6" {{ request('bidang') == 'bidang_6' ? 'selected' : '' }}>Bidang 6</option>
+                <option value="bidang_7" {{ request('bidang') == 'bidang_7' ? 'selected' : '' }}>Bidang 7</option>
+                <option value="bidang_8" {{ request('bidang') == 'bidang_8' ? 'selected' : '' }}>Bidang 8</option>
+                <option value="bidang_9" {{ request('bidang') == 'bidang_9' ? 'selected' : '' }}>Bidang 9</option>
+                <option value="bidang_10" {{ request('bidang') == 'bidang_10' ? 'selected' : '' }}>Bidang 10</option>
+                <option value="bidang_11" {{ request('bidang') == 'bidang_11' ? 'selected' : '' }}>Bidang 11</option>
+                <option value="bidang_12" {{ request('bidang') == 'bidang_12' ? 'selected' : '' }}>Bidang 12</option>
+            </select>
+
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Cari admin..." id="searchInput" onkeyup="searchTable()">
+            </div>
         </div>
     </div>
 
@@ -555,7 +616,7 @@
                 <th>Admin</th>
                 <th>Username</th>
                 <th>Kategori</th>
-                <th>Domisili</th>
+                <th>Domisili/Bidang</th>
                 <th>Terdaftar</th>
                 <th>Aksi</th>
             </tr>
@@ -588,7 +649,13 @@
                 </td>
                 <td>
                     <span class="domisili-text">
-                        {{ $adminItem->domisili ?? '-' }}
+                        @if($adminItem->category === 'bpc')
+                            {{ $adminItem->domisili ?? '-' }}
+                        @elseif($adminItem->category === 'bpd')
+                            {{ $adminItem->bidang_name ?? '-' }}
+                        @else
+                            -
+                        @endif
                     </span>
                 </td>
                 <td>{{ $adminItem->created_at->format('d M Y') }}</td>
@@ -674,5 +741,68 @@ document.getElementById('deleteModal').addEventListener('click', function(e) {
         closeDeleteModal();
     }
 });
+
+// Toggle Bidang Filter berdasarkan kategori
+document.getElementById('filterCategory').addEventListener('change', function() {
+    const bidangFilter = document.getElementById('filterBidang');
+    if (this.value === 'bpd') {
+        bidangFilter.style.display = 'block';
+    } else {
+        bidangFilter.style.display = 'none';
+        bidangFilter.value = '';
+    }
+});
+
+// Jalankan saat halaman load
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryFilter = document.getElementById('filterCategory');
+    const bidangFilter = document.getElementById('filterBidang');
+    
+    if (categoryFilter.value === 'bpd') {
+        bidangFilter.style.display = 'block';
+    }
+});
+
+// Filter Table Function
+function filterTable() {
+    const category = document.getElementById('filterCategory').value;
+    const bidang = document.getElementById('filterBidang').value;
+    
+    let url = new URL(window.location.href);
+    url.searchParams.set('category', category);
+    url.searchParams.set('bidang', bidang);
+    
+    // Hapus parameter kosong
+    if (!category) url.searchParams.delete('category');
+    if (!bidang) url.searchParams.delete('bidang');
+    
+    window.location.href = url.toString();
+}
+
+// Search Table Function (Client-side)
+function searchTable() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const table = document.querySelector('.admin-table tbody');
+    const rows = table.getElementsByTagName('tr');
+    
+    for (let i = 0; i < rows.length; i++) {
+        const name = rows[i].querySelector('.admin-name-table');
+        const email = rows[i].querySelector('.admin-email-table');
+        const username = rows[i].cells[1];
+        
+        if (name || email || username) {
+            const nameText = name ? name.textContent.toLowerCase() : '';
+            const emailText = email ? email.textContent.toLowerCase() : '';
+            const usernameText = username ? username.textContent.toLowerCase() : '';
+            
+            if (nameText.indexOf(filter) > -1 || emailText.indexOf(filter) > -1 || usernameText.indexOf(filter) > -1) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+}
 </script>
 @endpush

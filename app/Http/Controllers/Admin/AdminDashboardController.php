@@ -115,7 +115,7 @@ class AdminDashboardController extends Controller
         ));
     }
     
-    public function infoAdmin(): View
+    public function infoAdmin(Request $request): View
     {
         $admin = Auth::guard('admin')->user();
         
@@ -124,7 +124,19 @@ class AdminDashboardController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
         
-        $admins = Admin::latest()->paginate(10);
+        $query = Admin::query();
+        
+        // Filter berdasarkan kategori
+        if ($request->has('category') && $request->category != '') {
+            $query->where('category', $request->category);
+        }
+        
+        // Filter berdasarkan bidang (hanya untuk BPD)
+        if ($request->has('bidang') && $request->bidang != '') {
+            $query->where('bidang', $request->bidang);
+        }
+        
+        $admins = $query->latest()->paginate(15);
         
         return view('admin.info-admin', compact('admin', 'admins'));
     }
@@ -181,6 +193,7 @@ class AdminDashboardController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
         
+        // ✅ VALIDASI dengan tambahan field BIDANG
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:admins',
@@ -188,10 +201,13 @@ class AdminDashboardController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'category' => 'required|in:bpc,bpd,super_admin',
             'domisili' => 'required_if:category,bpc|nullable|string|max:255',
+            'bidang' => 'required_if:category,bpd|nullable|string|max:255', // ✅ TAMBAHAN
         ], [
             'domisili.required_if' => 'Domisili wajib diisi untuk BPC.',
+            'bidang.required_if' => 'Bidang wajib diisi untuk BPD.', // ✅ TAMBAHAN
         ]);
 
+        // ✅ CREATE dengan tambahan field BIDANG
         Admin::create([
             'name' => $validated['name'],
             'username' => $validated['username'],
@@ -199,6 +215,7 @@ class AdminDashboardController extends Controller
             'password' => Hash::make($validated['password']),
             'category' => $validated['category'],
             'domisili' => $validated['category'] === 'bpc' ? $validated['domisili'] : null,
+            'bidang' => $validated['category'] === 'bpd' ? $validated['bidang'] : null, // ✅ TAMBAHAN
         ]);
 
         return redirect()->route('admin.info-admin')->with('success', 'Admin berhasil ditambahkan!');
@@ -255,6 +272,7 @@ class AdminDashboardController extends Controller
             abort(403, 'Anda tidak memiliki akses untuk melakukan aksi ini.');
         }
         
+        // ✅ VALIDASI dengan tambahan field BIDANG
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:admins,username,' . $admin->id,
@@ -262,16 +280,20 @@ class AdminDashboardController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'category' => 'required|in:bpc,bpd,super_admin',
             'domisili' => 'required_if:category,bpc|nullable|string|max:255',
+            'bidang' => 'required_if:category,bpd|nullable|string|max:255', // ✅ TAMBAHAN
         ], [
             'domisili.required_if' => 'Domisili wajib diisi untuk BPC.',
+            'bidang.required_if' => 'Bidang wajib diisi untuk BPD.', // ✅ TAMBAHAN
         ]);
 
+        // ✅ UPDATE dengan tambahan field BIDANG
         $admin->update([
             'name' => $validated['name'],
             'username' => $validated['username'],
             'email' => $validated['email'],
             'category' => $validated['category'],
             'domisili' => $validated['category'] === 'bpc' ? $validated['domisili'] : null,
+            'bidang' => $validated['category'] === 'bpd' ? $validated['bidang'] : null, // ✅ TAMBAHAN
         ]);
 
         if ($request->filled('password')) {
