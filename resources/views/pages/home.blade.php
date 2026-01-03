@@ -246,7 +246,37 @@
         box-shadow: 0 4px 8px rgba(4, 41, 59, 0.3);
     }
 
-    /* Responsive */
+    /* ============ BADGE BIDANG KEGIATAN ============ */
+    .kegiatan-badge-home {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, #0a2540 0%, #1a4068 100%);
+        color: #ffd700;
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 5;
+        transition: all 0.3s ease;
+    }
+
+    .events-hover:hover .kegiatan-badge-home,
+    .events-banner-card:hover .kegiatan-badge-home {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Pastikan card memiliki position relative */
+    .events-banner-card-lastest,
+    .events-banner-card {
+        position: relative;
+    }
+
+    /* ================== RESPONSIVE ================== */
     @media (max-width: 1024px) {
         .buku-informasi-home {
             padding: 50px 30px;
@@ -300,6 +330,14 @@
 
         .buku-card p {
             font-size: 12px;
+        }
+
+        /* Responsive untuk badge kegiatan */
+        .kegiatan-badge-home {
+            font-size: 0.65rem;
+            padding: 0.4rem 0.8rem;
+            top: 0.75rem;
+            right: 0.75rem;
         }
     }
 </style>
@@ -367,18 +405,19 @@
 
     {{-- Hidden Data untuk JavaScript --}}
     <script id="kegiatan-data" type="application/json">
-        @php
-        $kegiatanArray = $kegiatanBerita->map(function($item) {
-            return [
-                'judul' => $item->judul,
-                'slug' => $item->slug,
-                'gambar_url' => $item->gambar_url ?? asset('images/hipmi-logo.png'),
-                'tanggal_format' => $item->tanggal_format ?? $item->tanggal_publish->format('d M Y'),
-            ];
-        })->toArray();
-        @endphp
-        {!! json_encode($kegiatanArray) !!}
-    </script>
+    @php
+    $kegiatanArray = $kegiatanBerita->map(function($item) {
+        return [
+            'judul' => $item->judul,
+            'slug' => $item->slug,
+            'gambar_url' => $item->gambar_url ?? asset('images/hipmi-logo.png'),
+            'tanggal_format' => $item->tanggal_format ?? $item->tanggal_publish->format('d M Y'),
+            'bidang_name' => $item->bidang_name, // ← TAMBAHKAN INI
+        ];
+    })->toArray();
+    @endphp
+    {!! json_encode($kegiatanArray) !!}
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -413,42 +452,48 @@
                 }
 
                 return `
-                    <div class="events-lastest">
-                        <a class="events-hover" href="/informasi-kegiatan/${featured.slug}" style="text-decoration: none; color: white;">
-                            <div class="events-banner-card-lastest">
-                                <img src="${featured.gambar_url}" 
-                                     class="events-banner-bg" 
-                                     alt="${escapeHtml(featured.judul)}" 
-                                     onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
-                                <div class="events-overlay"></div>
-                                <div class="events-banner-content">
-                                    <h2>${truncate(escapeHtml(featured.judul), 80)}</h2>
-                                    <p class="events-date">${escapeHtml(featured.tanggal_format)}</p>
-                                    <span class="events-btn-more">Lihat Lebih Banyak</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+    <div class="events-lastest">
+        <a class="events-hover" href="/informasi-kegiatan/${featured.slug}" style="text-decoration: none; color: white;">
+            <div class="events-banner-card-lastest">
+                <img src="${featured.gambar_url}" 
+                     class="events-banner-bg" 
+                     alt="${escapeHtml(featured.judul)}" 
+                     onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
+                
+                <span class="kegiatan-badge-home">${escapeHtml(featured.bidang_name)}</span>
+                
+                <div class="events-overlay"></div>
+                <div class="events-banner-content">
+                    <h2>${truncate(escapeHtml(featured.judul), 80)}</h2>
+                    <p class="events-date">${escapeHtml(featured.tanggal_format)}</p>
+                    <span class="events-btn-more">Lihat Lebih Banyak</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
-                    <div class="events-others">
-                        ${others.map(item => `
-                            <a href="/informasi-kegiatan/${item.slug}" style="text-decoration: none; color: white;">
-                                <div class="events-banner-card">
-                                    <img src="${item.gambar_url}" 
-                                         class="events-banner-bg" 
-                                         alt="${escapeHtml(item.judul)}" 
-                                         onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
-                                    <div class="events-overlay"></div>
-                                    <div class="events-banner-content">
-                                        <h2>${truncate(escapeHtml(item.judul), 60)}</h2>
-                                        <p class="events-date">${escapeHtml(item.tanggal_format)}</p>
-                                        <span class="events-btn-more">Lihat Lebih Banyak</span>
-                                    </div>
-                                </div>
-                            </a>
-                        `).join('')}
+    <div class="events-others">
+        ${others.map(item => `
+            <a href="/informasi-kegiatan/${item.slug}" style="text-decoration: none; color: white;">
+                <div class="events-banner-card">
+                    <img src="${item.gambar_url}" 
+                         class="events-banner-bg" 
+                         alt="${escapeHtml(item.judul)}" 
+                         onerror="this.src='{{ asset('images/hipmi-logo.png') }}'">
+                    
+                    <span class="kegiatan-badge-home">${escapeHtml(item.bidang_name)}</span>
+                    
+                    <div class="events-overlay"></div>
+                    <div class="events-banner-content">
+                        <h2>${truncate(escapeHtml(item.judul), 60)}</h2>
+                        <p class="events-date">${escapeHtml(item.tanggal_format)}</p>
+                        <span class="events-btn-more">Lihat Lebih Banyak</span>
                     </div>
-                `;
+                </div>
+            </a>
+        `).join('')}
+    </div>
+`;
             }
 
             // Helper functions
