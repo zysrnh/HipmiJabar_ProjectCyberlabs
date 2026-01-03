@@ -135,4 +135,31 @@ class Katalog extends Model
     {
         return in_array($this->status, ['pending', 'rejected']);
     }
+    // Di App\Models\Katalog.php
+public function admin()
+{
+    return $this->belongsTo(Admin::class, 'approved_by');
+}
+
+public function createdBy()
+{
+    if ($this->isSubmittedByAnggota()) {
+        return $this->anggota;
+    }
+    // Untuk katalog admin, cari admin yang approve (atau bisa pakai created_by field)
+    return $this->admin;
+}
+
+public function getCreatorNameAttribute()
+{
+    if ($this->isSubmittedByAnggota() && $this->anggota) {
+        return $this->anggota->nama_usaha;
+    }
+    
+    if ($this->admin) {
+        return $this->admin->username; // atau ->name
+    }
+    
+    return 'Admin';
+}
 }

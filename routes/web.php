@@ -68,6 +68,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // E-Katalog CRUD (BPD only)
         Route::resource('katalog', AdminKatalogController::class);
 
+        // ✅ TAMBAHKAN 2 BARIS INI (approve & reject)
+        Route::post('katalog/{katalog}/approve', [AdminKatalogController::class, 'approve'])->name('katalog.approve');
+        Route::post('katalog/{katalog}/reject', [AdminKatalogController::class, 'reject'])->name('katalog.reject');
+
         // Misi CRUD (BPD only)
         Route::resource('misi', MisiController::class);
 
@@ -185,8 +189,8 @@ Route::middleware('auth:anggota')->group(function () {
     Route::post('/profile-anggota/delete-detail-image', [AnggotaController::class, 'deleteDetailImage'])->name('profile-anggota.delete-detail-image');
     Route::post('/profile-anggota/change-admin-password', [AnggotaController::class, 'changeAdminPassword'])
         ->name('profile-anggota.change-admin-password');
-    
-     // ✅ E-Katalog Management untuk Anggota (GUNAKAN AnggotaKatalogController)
+
+    // ✅ E-Katalog Management untuk Anggota (GUNAKAN AnggotaKatalogController)
     Route::prefix('profile-anggota/katalog')->name('profile-anggota.katalog.')->group(function () {
         Route::get('/', [AnggotaKatalogController::class, 'index'])->name('index');
         Route::get('/create', [AnggotaKatalogController::class, 'create'])->name('create');

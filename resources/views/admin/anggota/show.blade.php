@@ -739,16 +739,6 @@ $admin = auth()->guard('admin')->user();
                 </button>
                 @endif
             </div>
-
-            @if($anggota->initial_password)
-            <div class="password-status initial">
-                ⚠️ Password belum diubah oleh anggota
-            </div>
-            @else
-            <div class="password-status changed">
-                ✓ Password sudah diubah oleh anggota
-            </div>
-            @endif
         </div>
 
         @if($admin->isSuperAdmin() || $admin->category === 'bpc')
