@@ -705,62 +705,234 @@
             @endif
         </div>
 
-        {{-- Credentials Card --}}
-        <div class="credentials-card">
-            <div class="credentials-title">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                Login Credentials Anggota
-            </div>
+    {{-- Credentials Card --}}
+<div class="credentials-card">
+    <div class="credentials-title">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        Login Credentials Anggota
+    </div>
 
-            <div class="credential-item">
-                <div class="credential-label">Email / Username</div>
-                <div class="credential-value">
-                    <span id="email-value">{{ $anggota->email }}</span>
-                    <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->email }}', 'email')">
-                        <i class="fa fa-copy"></i> Copy
-                    </button>
-                </div>
-            </div>
+    <div class="credential-item">
+        <div class="credential-label">Email / Username</div>
+        <div class="credential-value">
+            <span id="email-value">{{ $anggota->email }}</span>
+            <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->email }}', 'email')">
+                <i class="fa fa-copy"></i> Copy
+            </button>
+        </div>
+    </div>
 
-            <div class="credential-item">
-                <div class="credential-label">Password</div>
-                <div class="credential-value">
-                    <span id="password-value" class="password-hidden">••••••••••••</span>
-                    <button class="btn-credential" onclick="togglePassword()">
-                        <i class="fa fa-eye" id="eye-icon"></i> <span id="toggle-text">Show</span>
-                    </button>
-                    @if($anggota->initial_password)
-                        <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->initial_password }}', 'password')">
-                            <i class="fa fa-copy"></i> Copy
-                        </button>
-                    @endif
-                </div>
-
-                @if($anggota->initial_password)
-                    <div class="password-status initial">
-                        ⚠️ Password belum diubah oleh anggota
-                    </div>
-                @else
-                    <div class="password-status changed">
-                        ✓ Password sudah diubah oleh anggota
-                    </div>
-                @endif
-            </div>
-
-            @if($admin->isSuperAdmin() || $admin->category === 'bpc')
-                <div class="credential-actions">
-                    <form action="{{ route('admin.anggota.reset-password', $anggota) }}" method="POST" onsubmit="return confirm('Reset password anggota ini? Password baru akan digenerate secara otomatis.')">
-                        @csrf
-                        <button type="submit" class="btn-credential">
-                            <i class="fa fa-refresh"></i> Reset Password
-                        </button>
-                    </form>
-                </div>
+    <div class="credential-item">
+        <div class="credential-label">Password</div>
+        <div class="credential-value">
+            <span id="password-value" class="password-hidden">••••••••••••</span>
+            <button class="btn-credential" onclick="togglePassword()">
+                <i class="fa fa-eye" id="eye-icon"></i> <span id="toggle-text">Show</span>
+            </button>
+            @if($anggota->initial_password)
+                <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->initial_password }}', 'password')">
+                    <i class="fa fa-copy"></i> Copy
+                </button>
             @endif
         </div>
+
+        @if($anggota->initial_password)
+            <div class="password-status initial">
+                ⚠️ Password belum diubah oleh anggota
+            </div>
+        @else
+            <div class="password-status changed">
+                ✓ Password sudah diubah oleh anggota
+            </div>
+        @endif
+    </div>
+
+    @if($admin->isSuperAdmin() || $admin->category === 'bpc')
+        <div class="credential-actions">
+            <form action="{{ route('admin.anggota.reset-password', $anggota) }}" method="POST" onsubmit="return confirm('Reset password anggota ini? Password baru akan digenerate secara otomatis.')">
+                @csrf
+                <button type="submit" class="btn-credential btn-reset">
+                    <i class="fa fa-refresh"></i> Reset Password
+                </button>
+            </form>
+        </div>
+    @endif
+</div>
+
+<style>
+.credentials-card {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.credentials-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.credentials-title svg {
+    color: #64748b;
+}
+
+.credential-item {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #f7f7f7;
+}
+
+.credential-item:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.credential-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+}
+
+.credential-value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.credential-value span {
+    font-size: 15px;
+    font-weight: 500;
+    color: #334155;
+    padding: 12px 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+    flex: 1;
+    min-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.credential-value span:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.password-hidden {
+    letter-spacing: 4px;
+    font-size: 20px !important;
+}
+
+.btn-credential {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 18px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-credential:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #334155;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.btn-credential:active {
+    transform: translateY(0);
+}
+
+.btn-credential i {
+    font-size: 13px;
+}
+
+.btn-reset {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+}
+
+.btn-reset:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.password-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 14px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.password-status.initial {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.password-status.changed {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.credential-actions {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.credential-actions form {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .credential-value {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .credential-value span {
+        min-width: 100%;
+    }
+    
+    .btn-credential {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
 
         {{-- Tabs Container --}}
         <div class="tabs-container">
@@ -894,16 +1066,26 @@
                             <div class="field-value field-value-number">{{ $anggota->no_nota_pendirian }}</div>
                         </div>
 
-                        <div class="field-group">
-                            <div class="field-label">Profile Perusahaan</div>
-                            <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
-                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                </svg>
-                                Lihat PDF
-                            </a>
-                        </div>
+                       <div class="field-group">
+    <div class="field-label">Profile Perusahaan</div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+            </svg>
+            Lihat PDF
+        </a>
+        <a href="{{ $anggota->profile_perusahaan_url }}" download class="file-link" style="background: #10b981; color: white; padding: 8px 14px; border-radius: 8px;">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download PDF
+        </a>
+    </div>
+</div>
                     </div>
 
                     <div class="images-grid">
@@ -1038,44 +1220,51 @@
         }
 
         function togglePassword() {
-            const passwordEl = document.getElementById('password-value');
-            const eyeIcon = document.getElementById('eye-icon');
-            const toggleText = document.getElementById('toggle-text');
+    const passwordValue = document.getElementById('password-value');
+    const eyeIcon = document.getElementById('eye-icon');
+    const toggleText = document.getElementById('toggle-text');
+    
+    if (passwordValue.classList.contains('password-hidden')) {
+        passwordValue.textContent = '{{ $anggota->initial_password ?? "Password sudah diubah" }}';
+        passwordValue.classList.remove('password-hidden');
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+        toggleText.textContent = 'Hide';
+    } else {
+        passwordValue.textContent = '••••••••••••';
+        passwordValue.classList.add('password-hidden');
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+        toggleText.textContent = 'Show';
+    }
+}
 
-            if (!actualPassword) {
-                alert('Password sudah diubah oleh anggota dan tidak dapat ditampilkan');
-                return;
-            }
-
-            passwordVisible = !passwordVisible;
-
-            if (passwordVisible) {
-                passwordEl.textContent = actualPassword;
-                passwordEl.classList.remove('password-hidden');
-                eyeIcon.className = 'fa fa-eye-slash';
-                toggleText.textContent = 'Hide';
-            } else {
-                passwordEl.textContent = '••••••••••••';
-                passwordEl.classList.add('password-hidden');
-                eyeIcon.className = 'fa fa-eye';
-                toggleText.textContent = 'Show';
-            }
-        }
-
-        function copyToClipboard(text, type) {
-            if (!text || text === 'Password sudah diubah') {
-                alert('Password sudah diubah oleh anggota dan tidak dapat dicopy');
-                return;
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
-                const typeName = type === 'email' ? 'Email' : 'Password';
-                alert(`${typeName} berhasil dicopy!`);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                alert('Gagal copy. Silakan copy manual.');
-            });
-        }
+function copyToClipboard(text, type) {
+    navigator.clipboard.writeText(text).then(() => {
+        const notification = document.createElement('div');
+        notification.textContent = `${type === 'email' ? 'Email' : 'Password'} copied!`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: #334155;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            animation: slideIn 0.3s ease;
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 2000);
+    });
+}
 
         function showApproveModal() {
             document.getElementById('approveModal').classList.add('active');
