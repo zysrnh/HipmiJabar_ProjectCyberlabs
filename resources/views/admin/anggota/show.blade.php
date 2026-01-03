@@ -105,6 +105,16 @@
             stroke-width: 2;
         }
 
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #d97706;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
         .btn-approve {
             background: #10b981;
             color: white;
@@ -114,15 +124,16 @@
             background: #059669;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
-        .btn-promote {
-    background: #2563eb;
-    color: white;
-}
 
-.btn-promote:hover {
-    background: #1e40af;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
+        .btn-promote {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-promote:hover {
+            background: #1e40af;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
 
         .btn-reject {
             background: #ef4444;
@@ -183,6 +194,98 @@
         .status-badge-large.rejected {
             background: #fee2e2;
             color: #dc2626;
+        }
+
+        /* Credentials Card */
+        .credentials-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .credentials-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .credential-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .credential-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .credential-value {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+            flex-wrap: wrap;
+        }
+
+        .password-hidden {
+            letter-spacing: 3px;
+        }
+
+        .credential-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-credential {
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-credential:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .password-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .password-status.changed {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .password-status.initial {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
         }
 
         /* Tabs Styling */
@@ -322,6 +425,19 @@
         .file-link:hover {
             color: #1e40af;
             transform: translateX(4px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            opacity: 0.5;
         }
 
         /* Modal */
@@ -497,56 +613,67 @@
                     </div>
                 </div>
                 <div class="detail-actions">
-    <a href="{{ route('admin.anggota.index') }}" class="btn btn-back">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-        Kembali
-    </a>
+                    <a href="{{ route('admin.anggota.index') }}" class="btn btn-back">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M19 12H5M12 19l-7-7 7-7" />
+                        </svg>
+                        Kembali
+                    </a>
 
-    @if($admin->isSuperAdmin() && $anggota->status === 'approved')
-        <a href="{{ route('admin.anggota.promote', $anggota) }}" class="btn btn-promote">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="8.5" cy="7" r="4" />
-                <polyline points="17 11 19 13 23 9" />
-            </svg>
-            Promosikan ke Admin
-        </a>
-    @endif
+                    {{-- Tombol Edit (Super Admin & BPC) --}}
+                    @if($admin->isSuperAdmin() || $admin->category === 'bpc')
+                        <a href="{{ route('admin.anggota.edit', $anggota) }}" class="btn btn-edit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Edit
+                        </a>
+                    @endif
 
-    @if($admin->category === 'bpc' && $anggota->status === 'pending')
-        <button onclick="showApproveModal()" class="btn btn-approve">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Setujui
-        </button>
-        <button onclick="showRejectModal()" class="btn btn-reject">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-            Tolak
-        </button>
-    @endif
+                    @if($admin->isSuperAdmin() && $anggota->status === 'approved')
+                        <a href="{{ route('admin.anggota.promote', $anggota) }}" class="btn btn-promote">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="8.5" cy="7" r="4" />
+                                <polyline points="17 11 19 13 23 9" />
+                            </svg>
+                            Promosikan ke Admin
+                        </a>
+                    @endif
 
-    @if($admin->isSuperAdmin() && $anggota->status === 'pending')
-        <button onclick="showApproveModal()" class="btn btn-approve">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <polyline points="20 6 9 17 4 12" />
-            </svg>
-            Setujui
-        </button>
-        <button onclick="showRejectModal()" class="btn btn-reject">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-            Tolak
-        </button>
-    @endif
-</div>
+                    @if($admin->category === 'bpc' && $anggota->status === 'pending')
+                        <button onclick="showApproveModal()" class="btn btn-approve">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Setujui
+                        </button>
+                        <button onclick="showRejectModal()" class="btn btn-reject">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Tolak
+                        </button>
+                    @endif
+
+                    @if($admin->isSuperAdmin() && $anggota->status === 'pending')
+                        <button onclick="showApproveModal()" class="btn btn-approve">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Setujui
+                        </button>
+                        <button onclick="showRejectModal()" class="btn btn-reject">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                            Tolak
+                        </button>
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -578,6 +705,63 @@
             @endif
         </div>
 
+        {{-- Credentials Card --}}
+        <div class="credentials-card">
+            <div class="credentials-title">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Login Credentials Anggota
+            </div>
+
+            <div class="credential-item">
+                <div class="credential-label">Email / Username</div>
+                <div class="credential-value">
+                    <span id="email-value">{{ $anggota->email }}</span>
+                    <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->email }}', 'email')">
+                        <i class="fa fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <div class="credential-item">
+                <div class="credential-label">Password</div>
+                <div class="credential-value">
+                    <span id="password-value" class="password-hidden">••••••••••••</span>
+                    <button class="btn-credential" onclick="togglePassword()">
+                        <i class="fa fa-eye" id="eye-icon"></i> <span id="toggle-text">Show</span>
+                    </button>
+                    @if($anggota->initial_password)
+                        <button class="btn-credential" onclick="copyToClipboard('{{ $anggota->initial_password }}', 'password')">
+                            <i class="fa fa-copy"></i> Copy
+                        </button>
+                    @endif
+                </div>
+
+                @if($anggota->initial_password)
+                    <div class="password-status initial">
+                        ⚠️ Password belum diubah oleh anggota
+                    </div>
+                @else
+                    <div class="password-status changed">
+                        ✓ Password sudah diubah oleh anggota
+                    </div>
+                @endif
+            </div>
+
+            @if($admin->isSuperAdmin() || $admin->category === 'bpc')
+                <div class="credential-actions">
+                    <form action="{{ route('admin.anggota.reset-password', $anggota) }}" method="POST" onsubmit="return confirm('Reset password anggota ini? Password baru akan digenerate secara otomatis.')">
+                        @csrf
+                        <button type="submit" class="btn-credential">
+                            <i class="fa fa-refresh"></i> Reset Password
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+
         {{-- Tabs Container --}}
         <div class="tabs-container">
             <div class="tabs-header">
@@ -589,6 +773,9 @@
                 </button>
                 <button class="tab-button" onclick="switchTab('organisasi')">
                     Informasi Organisasi
+                </button>
+                <button class="tab-button" onclick="switchTab('detail-buku')">
+                    Detail Buku
                 </button>
             </div>
 
@@ -683,8 +870,7 @@
                             <div class="field-value">{{ $anggota->brand_usaha }}</div>
                         </div>
 
-                        <div class="field-group">
-                            <div class="field-label">Jumlah Karyawan</div>
+                         <div class="field-label">Jumlah Karyawan</div>
                             <div class="field-value">{{ $anggota->jumlah_karyawan }} orang</div>
                         </div>
 
@@ -750,6 +936,51 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Tab Detail Buku --}}
+                <div class="tab-panel" id="tab-detail-buku">
+                    @if($anggota->detail_image_1 || $anggota->detail_image_2 || $anggota->detail_image_3 || $anggota->deskripsi_detail)
+                        @if($anggota->deskripsi_detail)
+                            <div class="field-group" style="margin-bottom: 2rem;">
+                                <div class="field-label">Deskripsi Detail Buku</div>
+                                <div class="field-value" style="white-space: pre-line;">{{ $anggota->deskripsi_detail }}</div>
+                            </div>
+                        @endif
+
+                        <div class="images-grid">
+                            @if($anggota->detail_image_1)
+                                <div class="field-group">
+                                    <div class="field-label">Gambar Detail 1</div>
+                                    <img src="{{ $anggota->detail_image_1_url }}" alt="Detail 1" class="image-preview">
+                                </div>
+                            @endif
+
+                            @if($anggota->detail_image_2)
+                                <div class="field-group">
+                                    <div class="field-label">Gambar Detail 2</div>
+                                    <img src="{{ $anggota->detail_image_2_url }}" alt="Detail 2" class="image-preview">
+                                </div>
+                            @endif
+
+                            @if($anggota->detail_image_3)
+                                <div class="field-group">
+                                    <div class="field-label">Gambar Detail 3</div>
+                                    <img src="{{ $anggota->detail_image_3_url }}" alt="Detail 3" class="image-preview">
+                                </div>
+                            @endif
+                        </div>
+                    @else
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                            <p style="margin: 0; font-size: 1rem; font-weight: 500;">Belum ada detail buku</p>
+                            <p style="margin: 0.5rem 0 0; font-size: 0.875rem;">Anggota belum mengunggah gambar detail buku</p>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
@@ -791,8 +1022,10 @@
 
 @push('scripts')
     <script>
+        let passwordVisible = false;
+        const actualPassword = @json($anggota->initial_password ?? null);
+
         function switchTab(tabName) {
-            // Remove active class from all tabs and panels
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -800,9 +1033,48 @@
                 panel.classList.remove('active');
             });
 
-            // Add active class to clicked tab and corresponding panel
             event.target.classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        function togglePassword() {
+            const passwordEl = document.getElementById('password-value');
+            const eyeIcon = document.getElementById('eye-icon');
+            const toggleText = document.getElementById('toggle-text');
+
+            if (!actualPassword) {
+                alert('Password sudah diubah oleh anggota dan tidak dapat ditampilkan');
+                return;
+            }
+
+            passwordVisible = !passwordVisible;
+
+            if (passwordVisible) {
+                passwordEl.textContent = actualPassword;
+                passwordEl.classList.remove('password-hidden');
+                eyeIcon.className = 'fa fa-eye-slash';
+                toggleText.textContent = 'Hide';
+            } else {
+                passwordEl.textContent = '••••••••••••';
+                passwordEl.classList.add('password-hidden');
+                eyeIcon.className = 'fa fa-eye';
+                toggleText.textContent = 'Show';
+            }
+        }
+
+        function copyToClipboard(text, type) {
+            if (!text || text === 'Password sudah diubah') {
+                alert('Password sudah diubah oleh anggota dan tidak dapat dicopy');
+                return;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const typeName = type === 'email' ? 'Email' : 'Password';
+                alert(`${typeName} berhasil dicopy!`);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Gagal copy. Silakan copy manual.');
+            });
         }
 
         function showApproveModal() {
@@ -817,7 +1089,6 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // Close modal on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', function (e) {
                 if (e.target === this) {

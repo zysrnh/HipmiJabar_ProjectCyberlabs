@@ -88,6 +88,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/create', [AnggotaManagementController::class, 'create'])->name('create');
             Route::post('/store', [AnggotaManagementController::class, 'storeByAdmin'])->name('store');
 
+            Route::get('/{anggota}/edit', [AnggotaManagementController::class, 'edit'])->name('edit');
+            Route::put('/{anggota}', [AnggotaManagementController::class, 'update'])->name('update');
+            Route::post('/{anggota}/reset-password', [AnggotaManagementController::class, 'resetPassword'])->name('reset-password');
+            Route::delete('/{anggota}/delete-detail-image', [AnggotaManagementController::class, 'deleteDetailImage'])->name('delete-detail-image');
+
             Route::get('/{anggota}', [AnggotaManagementController::class, 'show'])->name('show');
             Route::get('/{anggota}/readonly', [AnggotaManagementController::class, 'showReadOnly'])->name('show-readonly');
             Route::post('/{anggota}/approve', [AnggotaManagementController::class, 'approve'])->name('approve');

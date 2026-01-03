@@ -517,4 +517,239 @@ class AnggotaManagementController extends Controller
                 ->withInput();
         }
     }
+/**
+     * ✨ NEW: Tampilkan form edit anggota
+     */
+    public function edit(Anggota $anggota)
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // BPC hanya bisa edit anggota di domisilinya
+        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit anggota ini.');
+        }
+
+        // BPD tidak boleh edit
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk mengedit data anggota.');
+        }
+
+        // Untuk Super Admin, tampilkan dropdown domisili
+        $domisiliList = null;
+        if ($admin->isSuperAdmin()) {
+            $domisiliList = Admin::where('category', 'bpc')
+                ->whereNotNull('domisili')
+                ->orderBy('domisili')
+                ->pluck('domisili')
+                ->unique()
+                ->values();
+        }
+
+        return view('admin.anggota.edit', compact('anggota', 'admin', 'domisiliList'));
+    }
+
+    /**
+     * ✨ NEW: Update data anggota
+     */
+    public function update(Request $request, Anggota $anggota)
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // BPC hanya bisa edit anggota di domisilinya
+        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit anggota ini.');
+        }
+
+        // BPD tidak boleh edit
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk mengedit data anggota.');
+        }
+
+        $validator = Validator::make($request->all(), [
+            // Data Pribadi
+            'nama_usaha' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'agama' => 'required|string|max:255',
+            'nomor_telepon' => 'required|string|max:20',
+            'domisili' => 'required|string|max:255',
+            'alamat_domisili' => 'required|string',
+            'kode_pos' => 'required|string|max:10',
+            'email' => 'required|email|max:255|unique:anggota,email,' . $anggota->id,
+            'nomor_ktp' => 'required|string|size:16',
+            'foto_ktp' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'foto_diri' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+
+            // Profile Perusahaan
+            'nama_usaha_perusahaan' => 'required|string|max:255',
+            'legalitas_usaha' => 'required|in:PT,CV,PT Perorangan',
+            'jabatan_usaha' => 'required|string|max:255',
+            'alamat_kantor' => 'required|string',
+            'bidang_usaha' => 'required|string',
+            'brand_usaha' => 'required|string|max:255',
+            'jumlah_karyawan' => 'required|integer|min:0',
+            'nomor_ktp_perusahaan' => 'required|string|size:16',
+            'usia_perusahaan' => 'required|string',
+            'omset_perusahaan' => 'required|string',
+            'npwp_perusahaan' => 'required|string|max:255',
+            'no_nota_pendirian' => 'required|string|max:255',
+            'profile_perusahaan' => 'nullable|mimes:pdf|max:5120',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+
+            // Detail Buku
+            'detail_image_1' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'detail_image_2' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'detail_image_3' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'deskripsi_detail' => 'nullable|string',
+
+            // Organisasi
+            'sfc_hipmi' => 'required|string|max:255',
+            'referensi_hipmi' => 'required|in:Ya,Tidak',
+            'organisasi_lain' => 'required|in:Ya,Tidak',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            $data = $request->except(['foto_ktp', 'foto_diri', 'profile_perusahaan', 'logo_perusahaan', 'detail_image_1', 'detail_image_2', 'detail_image_3']);
+
+            // Handle foto KTP
+            if ($request->hasFile('foto_ktp')) {
+                if ($anggota->foto_ktp) {
+                    Storage::disk('public')->delete($anggota->foto_ktp);
+                }
+                $data['foto_ktp'] = $request->file('foto_ktp')->store('anggota/ktp', 'public');
+            }
+
+            // Handle foto diri
+            if ($request->hasFile('foto_diri')) {
+                if ($anggota->foto_diri) {
+                    Storage::disk('public')->delete($anggota->foto_diri);
+                }
+                $data['foto_diri'] = $request->file('foto_diri')->store('anggota/foto', 'public');
+            }
+
+            // Handle profile perusahaan
+            if ($request->hasFile('profile_perusahaan')) {
+                if ($anggota->profile_perusahaan) {
+                    Storage::disk('public')->delete($anggota->profile_perusahaan);
+                }
+                $data['profile_perusahaan'] = $request->file('profile_perusahaan')->store('anggota/profile', 'public');
+            }
+
+            // Handle logo perusahaan
+            if ($request->hasFile('logo_perusahaan')) {
+                if ($anggota->logo_perusahaan) {
+                    Storage::disk('public')->delete($anggota->logo_perusahaan);
+                }
+                $data['logo_perusahaan'] = $request->file('logo_perusahaan')->store('anggota/logo', 'public');
+            }
+
+            // Handle detail images
+            if ($request->hasFile('detail_image_1')) {
+                if ($anggota->detail_image_1) {
+                    Storage::disk('public')->delete($anggota->detail_image_1);
+                }
+                $data['detail_image_1'] = $request->file('detail_image_1')->store('anggota/detail', 'public');
+            }
+
+            if ($request->hasFile('detail_image_2')) {
+                if ($anggota->detail_image_2) {
+                    Storage::disk('public')->delete($anggota->detail_image_2);
+                }
+                $data['detail_image_2'] = $request->file('detail_image_2')->store('anggota/detail', 'public');
+            }
+
+            if ($request->hasFile('detail_image_3')) {
+                if ($anggota->detail_image_3) {
+                    Storage::disk('public')->delete($anggota->detail_image_3);
+                }
+                $data['detail_image_3'] = $request->file('detail_image_3')->store('anggota/detail', 'public');
+            }
+
+            // Update data
+            $anggota->update($data);
+
+            return redirect()
+                ->route('admin.anggota.show', $anggota)
+                ->with('success', "Data anggota {$anggota->nama_usaha} berhasil diperbarui!");
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * ✨ NEW: Reset password anggota
+     */
+    public function resetPassword(Anggota $anggota)
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // Hanya Super Admin atau BPC yang bisa reset password
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk reset password.');
+        }
+
+        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+            abort(403, 'Anda tidak memiliki akses untuk reset password anggota ini.');
+        }
+
+        // Generate password baru
+        $newPassword = Str::random(12);
+
+        $anggota->update([
+            'password' => Hash::make($newPassword),
+            'initial_password' => $newPassword,
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Password berhasil direset!')
+            ->with('show_password', true)
+            ->with('generated_password', $newPassword)
+            ->with('user_email', $anggota->email);
+    }
+
+    /**
+     * ✨ NEW: Hapus gambar detail
+     */
+    public function deleteDetailImage(Request $request, Anggota $anggota)
+    {
+        $admin = auth()->guard('admin')->user();
+
+        // Validasi akses
+        if ($admin->category === 'bpd') {
+            abort(403, 'BPD tidak memiliki akses untuk menghapus gambar.');
+        }
+
+        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus gambar anggota ini.');
+        }
+
+        $imageField = $request->input('image_field');
+
+        if (!in_array($imageField, ['detail_image_1', 'detail_image_2', 'detail_image_3'])) {
+            return back()->with('error', 'Invalid image field.');
+        }
+
+        try {
+            if ($anggota->$imageField) {
+                Storage::disk('public')->delete($anggota->$imageField);
+                $anggota->update([$imageField => null]);
+                return back()->with('success', 'Gambar berhasil dihapus!');
+            }
+
+            return back()->with('error', 'Gambar tidak ditemukan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
