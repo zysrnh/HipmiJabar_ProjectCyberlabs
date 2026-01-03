@@ -251,7 +251,7 @@ $activeMenu = 'kegiatan';
                     <option value="bidang_{{ $i }}" {{ request('bidang') == "bidang_$i" ? 'selected' : '' }}>
                     Bidang {{ $i }}
                     </option>
-                    @endfor
+                @endfor
             </select>
         </form>
         @else
@@ -260,17 +260,6 @@ $activeMenu = 'kegiatan';
             📌 {{ $admin->bidang_name }}
         </div>
         @endif
-
-        <form action="{{ route('admin.kegiatan.index') }}" method="GET">
-            <select name="bidang" class="filter-select" onchange="this.form.submit()">
-                <option value="">Semua Bidang</option>
-                @for($i = 1; $i <= 10; $i++)
-                    <option value="Bidang {{ $i }}" {{ request('bidang') == "Bidang $i" ? 'selected' : '' }}>
-                    Bidang {{ $i }}
-                    </option>
-                    @endfor
-            </select>
-        </form>
     </div>
 
     <a href="{{ route('admin.kegiatan.create') }}" class="btn-add">

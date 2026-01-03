@@ -9,59 +9,72 @@
 </section>
 
 <section class="search-katalog">
-    <!-- Search Box -->
-    <form action="{{ route('informasi-kegiatan') }}" method="GET" class="search-box">
-        <input type="text" name="search" placeholder="Cari kegiatan" value="{{ request('search') }}" style="font-family: 'Montserrat', sans-serif;">
-        <button type="submit" style="background: none; border: none; cursor: pointer;">
-            <i class="fa fa-search"></i>
-        </button>
-    </form>
+    <!-- Search Box - UPDATED -->
+    <div class="search-wrapper">
+        <form action="{{ route('informasi-kegiatan') }}" method="GET" class="search-box-enhanced">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" name="search" placeholder="Cari kegiatan berdasarkan judul..." value="{{ request('search') }}" class="search-input">
+            <button type="submit" class="search-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
 
-    <!-- Filter Bidang dan Tanggal -->
-    <div class="filter-container">
+    <!-- Filter Section - UPDATED -->
+    <div class="filter-section">
         <form action="{{ route('informasi-kegiatan') }}" method="GET" class="filter-form">
-            <!-- Hidden search value -->
             <input type="hidden" name="search" value="{{ request('search') }}">
 
-            <div class="filter-group">
+            <div class="filter-grid">
                 <!-- Filter Bidang -->
-                <div class="filter-wrapper">
-                    <svg class="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
+                <div class="filter-item">
+                    <label class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        Bidang
+                    </label>
                     <select name="bidang" class="filter-select">
                         <option value="">Semua Bidang</option>
-                        @for($i = 1; $i <= 10; $i++)
-                            <option value="Bidang {{ $i }}" {{ request('bidang') == "Bidang $i" ? 'selected' : '' }}>
+                        @for($i = 1; $i <= 12; $i++)
+                            <option value="bidang_{{ $i }}" {{ request('bidang') == "bidang_$i" ? 'selected' : '' }}>
                             Bidang {{ $i }}
                             </option>
-                            @endfor
+                        @endfor
                     </select>
                 </div>
 
                 <!-- Filter Tanggal -->
-                <div class="filter-wrapper">
-                    <svg class="filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="filter-date" placeholder="Pilih Tanggal">
+                <div class="filter-item">
+                    <label class="filter-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        Tanggal
+                    </label>
+                    <input type="date" name="tanggal" value="{{ request('tanggal') }}" class="filter-date">
                 </div>
 
-                <!-- Tombol Reset Filter -->
+                <!-- Reset Button -->
                 @if(request('bidang') || request('tanggal') || request('search'))
-                <a href="{{ route('informasi-kegiatan') }}" class="reset-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                        <path d="M21 3v5h-5"></path>
-                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                        <path d="M3 21v-5h5"></path>
-                    </svg>
-                    Reset
-                </a>
+                <div class="filter-item filter-reset">
+                    <a href="{{ route('informasi-kegiatan') }}" class="reset-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                            <path d="M21 3v5h-5"></path>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                            <path d="M3 21v-5h5"></path>
+                        </svg>
+                        Reset Filter
+                    </a>
+                </div>
                 @endif
             </div>
         </form>
@@ -70,16 +83,20 @@
     <script>
         // Auto submit saat bidang atau tanggal dipilih
         const filterForm = document.querySelector('.filter-form');
-        const bidangSelect = filterForm.querySelector('select[name="bidang"]');
-        const tanggalInput = filterForm.querySelector('input[name="tanggal"]');
+        const bidangSelect = filterForm?.querySelector('select[name="bidang"]');
+        const tanggalInput = filterForm?.querySelector('input[name="tanggal"]');
 
-        bidangSelect.addEventListener('change', function() {
-            filterForm.submit();
-        });
+        if (bidangSelect) {
+            bidangSelect.addEventListener('change', function() {
+                filterForm.submit();
+            });
+        }
 
-        tanggalInput.addEventListener('change', function() {
-            filterForm.submit();
-        });
+        if (tanggalInput) {
+            tanggalInput.addEventListener('change', function() {
+                filterForm.submit();
+            });
+        }
     </script>
 </section>
 
@@ -124,136 +141,190 @@
 </section>
 
 <style>
-    /* Filter Container - Clean & Simple */
-    .filter-container {
-        margin-top: 1.5rem;
+    /* ========== UPDATED STYLES - SEARCH & FILTER ========== */
+    
+    .search-katalog {
+        max-width: 1200px;
+        margin: 0 auto 3rem;
+        padding: 0 2rem;
     }
 
-    .filter-form {
-        width: 100%;
+    /* Search Box Enhanced */
+    .search-wrapper {
+        margin-bottom: 1.5rem;
     }
 
-    .filter-group {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-
-    .filter-wrapper {
+    .search-box-enhanced {
         position: relative;
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .filter-icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #ffd700;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    /* Filter Select - Dark Elegant */
-    .filter-select {
-        width: 100%;
-        padding: 0.875rem 1rem 0.875rem 3rem;
-        border-radius: 8px;
-        border: none;
-        background: #0a2540;
-        color: white;
-        font-weight: 500;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.9375rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 20px;
-        padding-right: 3rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-select:hover {
-        background: #0d2f52;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transform: translateY(-1px);
-    }
-
-    .filter-select:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
-    }
-
-    .filter-select option {
-        background: #0a2540;
-        color: white;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(10, 37, 64, 0.12);
+        display: flex;
+        align-items: center;
         padding: 0.5rem;
+        transition: all 0.3s ease;
     }
 
-    /* Filter Date - Dark Elegant */
+    .search-box-enhanced:focus-within {
+        box-shadow: 0 12px 40px rgba(10, 37, 64, 0.18);
+        transform: translateY(-2px);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1.5rem;
+        color: #9ca3af;
+        transition: color 0.3s ease;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .search-box-enhanced:focus-within .search-icon {
+        color: #ffd700;
+    }
+
+    .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 1rem 1rem 1rem 3.5rem;
+        font-size: 1rem;
+        color: #1f2937;
+        font-family: 'Montserrat', sans-serif;
+        background: transparent;
+    }
+
+    .search-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .search-button {
+        background: linear-gradient(135deg, #0a2540 0%, #0d2f52 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(10, 37, 64, 0.3);
+    }
+
+    .search-button:hover {
+        background: linear-gradient(135deg, #0d2f52 0%, #0a2540 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(10, 37, 64, 0.4);
+    }
+
+    /* Filter Section */
+    .filter-section {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(10, 37, 64, 0.08);
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        align-items: end;
+    }
+
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.25rem;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .filter-label svg {
+        color: #ffd700;
+    }
+
+    .filter-select,
     .filter-date {
         width: 100%;
-        padding: 0.875rem 1rem 0.875rem 3rem;
-        border-radius: 8px;
-        border: none;
-        background: #0a2540;
-        color: white;
+        padding: 0.875rem 1rem;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        background: #f9fafb;
+        color: #1f2937;
         font-weight: 500;
-        font-family: 'Montserrat', sans-serif;
         font-size: 0.9375rem;
+        font-family: 'Montserrat', sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230a2540' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-color: #f9fafb;
+        padding-right: 2.5rem;
+    }
+
+    .filter-select:hover,
+    .filter-date:hover {
+        border-color: #ffd700;
+        background: white;
+    }
+
+    .filter-select:focus,
+    .filter-date:focus {
+        outline: none;
+        border-color: #0a2540;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(10, 37, 64, 0.1);
     }
 
     .filter-date::-webkit-calendar-picker-indicator {
-        filter: invert(1);
         cursor: pointer;
+        opacity: 0.7;
     }
 
-    .filter-date:hover {
-        background: #0d2f52;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        transform: translateY(-1px);
+    .filter-reset {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
-    .filter-date:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
-    }
-
-    /* Reset Button - Compact & Clear */
     .reset-btn {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-        padding: 0.875rem 1.25rem;
-        background: #ef4444;
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
-        border-radius: 8px;
+        border-radius: 10px;
         text-decoration: none;
         font-weight: 600;
-        font-family: 'Montserrat', sans-serif;
         font-size: 0.9375rem;
-        white-space: nowrap;
+        font-family: 'Montserrat', sans-serif;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        margin-top: 1.875rem;
     }
 
     .reset-btn:hover {
-        background: #dc2626;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-
-    .reset-btn:active {
-        transform: translateY(0);
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
     }
 
     .reset-btn svg {
@@ -264,6 +335,42 @@
         transform: rotate(180deg);
     }
 
+    /* Responsive - Search & Filter */
+    @media (max-width: 768px) {
+        .search-katalog {
+            padding: 0 1rem;
+        }
+
+        .search-box-enhanced {
+            flex-direction: column;
+            padding: 0.75rem;
+            gap: 0.75rem;
+        }
+
+        .search-input {
+            padding: 0.875rem 1rem;
+        }
+
+        .search-icon {
+            display: none;
+        }
+
+        .search-button {
+            width: 100%;
+        }
+
+        .filter-section {
+            padding: 1.5rem;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+
+    /* ========== ORIGINAL STYLES - CARDS & OTHERS ========== */
+    
     /* Fix thumbnail landscape aspect ratio */
     .informasi-kegiatan-card-image {
         width: 100%;
@@ -322,35 +429,6 @@
 
     .info-kegiatan-btn-more {
         margin-top: auto;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .filter-group {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.75rem;
-        }
-
-        .filter-wrapper {
-            min-width: 100%;
-            width: 100%;
-        }
-
-        .reset-btn {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .filter-select,
-        .filter-date {
-            font-size: 0.875rem;
-            padding: 0.75rem 0.875rem 0.75rem 2.75rem;
-        }
-
-        .filter-icon {
-            left: 0.875rem;
-        }
     }
 </style>
 @endsection
