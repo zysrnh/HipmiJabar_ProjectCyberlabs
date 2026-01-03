@@ -29,7 +29,7 @@
                         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
-                    <span>Diterbitkan oleh <strong>{{ $kegiatan->bidang }}</strong></span>
+                   <span>Diterbitkan oleh <strong>{{ $kegiatan->bidang_name }}</strong></span>
                 </div>
             </div>
 
@@ -90,66 +90,72 @@
         
         <div class="berita-detail-right">
             {{-- Kegiatan Populer --}}
-            <div class="sidebar-section">
-                <h1 class="berita-badge">Kegiatan Populer</h1>
-                
-                @forelse($kegiatanPopuler as $item)
-                <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
-                    <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
-                        <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
-                        <div class="image-overlay">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </div>
-                    </a>
-                    <div class="berita-detail-right-item-content">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                                <span class="berita-home-date" style="margin-bottom: 0;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
-                                <span class="bidang-badge" style="margin-bottom: 0;">{{ $item->bidang }}</span>
-                            </div>
-                            <h3>{{ $item->judul }}</h3>
-                            <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan populer</p>
-                @endforelse
+<div class="sidebar-section">
+    <h1 class="berita-badge">Kegiatan Populer</h1>
+    
+    @forelse($kegiatanPopuler as $item)
+    <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
+        <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image" style="position: relative;">
+            <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+            
+            {{-- Badge Bidang di pojok kanan atas --}}
+            <span class="bidang-badge" style="position: absolute; top: 0.5rem; right: 0.5rem; margin-bottom: 0;">
+                {{ $item->bidang_name }}
+            </span>
+            
+            <div class="image-overlay">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
             </div>
+        </a>
+        <div class="berita-detail-right-item-content">
+            <div>
+                <span class="berita-home-date" style="margin-bottom: 0.5rem; display: block;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
+                <h3>{{ $item->judul }}</h3>
+                <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
+            </div>
+        </div>
+    </div>
+    @empty
+    <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan populer</p>
+    @endforelse
+</div>
 
-            {{-- Kegiatan Lainnya --}}
-            <div class="sidebar-section">
-                <h1 class="berita-badge">Kegiatan Lainnya</h1>
-                
-                @forelse($kegiatanLainnya as $item)
-                <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
-                    <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image">
-                        <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
-                        <div class="image-overlay">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </div>
-                    </a>
-                    <div class="berita-detail-right-item-content">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                                <span class="berita-home-date" style="margin-bottom: 0;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
-                                <span class="bidang-badge" style="margin-bottom: 0;">{{ $item->bidang }}</span>
-                            </div>
-                            <h3>{{ $item->judul }}</h3>
-                            <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan lainnya</p>
-                @endforelse
+{{-- Kegiatan Lainnya --}}
+<div class="sidebar-section">
+    <h1 class="berita-badge">Kegiatan Lainnya</h1>
+    
+    @forelse($kegiatanLainnya as $item)
+    <div class="berita-detail-right-item" style="margin-bottom: 2rem;">
+        <a href="{{ route('detail-kegiatan', $item->slug) }}" class="berita-detail-right-item-image" style="position: relative;">
+            <img src="{{ asset('storage/' . $item->gambar) }}" alt="{{ $item->judul }}">
+            
+            {{-- Badge Bidang di pojok kanan atas --}}
+            <span class="bidang-badge" style="position: absolute; top: 0.5rem; right: 0.5rem; margin-bottom: 0;">
+                {{ $item->bidang_name }}
+            </span>
+            
+            <div class="image-overlay">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
             </div>
+        </a>
+        <div class="berita-detail-right-item-content">
+            <div>
+                <span class="berita-home-date" style="margin-bottom: 0.5rem; display: block;">{{ $item->tanggal_publish->format('F d, Y') }}</span>
+                <h3>{{ $item->judul }}</h3>
+                <p>{{ Str::limit(strip_tags($item->konten), 100, '...') }}</p>
+            </div>
+        </div>
+    </div>
+    @empty
+    <p style="text-align: center; color: #6b7280; padding: 1rem;">Belum ada kegiatan lainnya</p>
+    @endforelse
+</div>
         </div>
     </section>
 

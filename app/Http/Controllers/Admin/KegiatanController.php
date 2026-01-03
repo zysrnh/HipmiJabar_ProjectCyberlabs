@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -12,7 +13,14 @@ class KegiatanController extends Controller
 {
     public function index(Request $request)
     {
+        $admin = Auth::guard('admin')->user();
+
         $query = Kegiatan::query()->orderBy('tanggal_publish', 'desc');
+
+        // ✅ Filter berdasarkan bidang admin (kecuali Super Admin)
+        if ($admin->category === 'bpd' && $admin->bidang) {
+            $query->where('bidang', $admin->bidang);
+        }
 
         if ($request->filled('bidang')) {
             $query->where('bidang', $request->bidang);
@@ -24,23 +32,25 @@ class KegiatanController extends Controller
 
         $kegiatan = $query->paginate(10);
 
-        return view('admin.kegiatan.index', compact('kegiatan'));
+        return view('admin.kegiatan.index', compact('kegiatan', 'admin')); // ✅ TAMBAHKAN 'admin'
     }
-
     public function create()
     {
-        return view('admin.kegiatan.create');
+        $admin = Auth::guard('admin')->user();
+        return view('admin.kegiatan.create', compact('admin'));
     }
 
     public function store(Request $request)
     {
+        $admin = Auth::guard('admin')->user();
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'konten' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'gambar_dokumentasi.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'tanggal_publish' => 'required|date',
-            'bidang' => 'required|string',
+            'bidang' => $admin->isSuperAdmin() ? 'required|string' : 'nullable|string',
             'is_active' => 'boolean',
             'is_populer' => 'boolean',
         ], [
@@ -48,6 +58,11 @@ class KegiatanController extends Controller
             'gambar_dokumentasi.*.mimes' => 'Format gambar dokumentasi harus JPG, JPEG, atau PNG',
             'gambar_dokumentasi.*.max' => 'Ukuran gambar dokumentasi maksimal 2MB',
         ]);
+
+        // ✅ Auto-set bidang untuk BPD, manual untuk Super Admin
+        if ($admin->category === 'bpd') {
+            $validated['bidang'] = $admin->bidang;
+        }
 
         // Upload gambar utama
         if ($request->hasFile('gambar')) {
@@ -79,11 +94,25 @@ class KegiatanController extends Controller
 
     public function edit(Kegiatan $kegiatan)
     {
-        return view('admin.kegiatan.edit', compact('kegiatan'));
+        $admin = Auth::guard('admin')->user();
+
+        // ✅ Cek apakah admin BPD hanya bisa edit kegiatan bidangnya
+        if ($admin->category === 'bpd' && $kegiatan->bidang !== $admin->bidang) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit kegiatan bidang lain.');
+        }
+
+        return view('admin.kegiatan.edit', compact('kegiatan', 'admin'));
     }
 
     public function update(Request $request, Kegiatan $kegiatan)
     {
+        $admin = Auth::guard('admin')->user();
+
+        // ✅ Cek akses
+        if ($admin->category === 'bpd' && $kegiatan->bidang !== $admin->bidang) {
+            abort(403, 'Anda tidak memiliki akses untuk mengedit kegiatan bidang lain.');
+        }
+
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'konten' => 'required|string',
@@ -91,10 +120,15 @@ class KegiatanController extends Controller
             'gambar_dokumentasi.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'hapus_dokumentasi' => 'nullable|array',
             'tanggal_publish' => 'required|date',
-            'bidang' => 'required|string',
+            'bidang' => $admin->isSuperAdmin() ? 'required|string' : 'nullable|string',
             'is_active' => 'boolean',
             'is_populer' => 'boolean',
         ]);
+
+        // ✅ Bidang tetap untuk BPD
+        if ($admin->category === 'bpd') {
+            $validated['bidang'] = $admin->bidang;
+        }
 
         // Upload gambar utama baru jika ada
         if ($request->hasFile('gambar')) {
@@ -110,14 +144,14 @@ class KegiatanController extends Controller
 
         // Kelola gambar dokumentasi
         $existingDokumentasi = $kegiatan->gambar_dokumentasi ?? [];
-        
+
         // Hapus gambar yang dipilih untuk dihapus
         if ($request->filled('hapus_dokumentasi')) {
             foreach ($request->hapus_dokumentasi as $pathToDelete) {
                 if (Storage::disk('public')->exists($pathToDelete)) {
                     Storage::disk('public')->delete($pathToDelete);
                 }
-                $existingDokumentasi = array_filter($existingDokumentasi, function($path) use ($pathToDelete) {
+                $existingDokumentasi = array_filter($existingDokumentasi, function ($path) use ($pathToDelete) {
                     return $path !== $pathToDelete;
                 });
             }
@@ -144,6 +178,13 @@ class KegiatanController extends Controller
 
     public function destroy(Kegiatan $kegiatan)
     {
+        $admin = Auth::guard('admin')->user();
+
+        // ✅ Cek akses
+        if ($admin->category === 'bpd' && $kegiatan->bidang !== $admin->bidang) {
+            abort(403, 'Anda tidak memiliki akses untuk menghapus kegiatan bidang lain.');
+        }
+
         // Hapus gambar utama
         if ($kegiatan->gambar && Storage::disk('public')->exists($kegiatan->gambar)) {
             Storage::disk('public')->delete($kegiatan->gambar);

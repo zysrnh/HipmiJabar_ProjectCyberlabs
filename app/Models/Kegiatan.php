@@ -87,4 +87,12 @@ class Kegiatan extends Model
             return asset('storage/' . $path);
         }, $this->gambar_dokumentasi);
     }
+    public function getBidangNameAttribute(): string
+{
+    // Hapus prefix 'bidang_' dan ambil angkanya
+    $bidangNumber = str_replace('bidang_', '', $this->bidang);
+    
+    // Return dengan format "Bidang X" (title case)
+    return 'Bidang ' . $bidangNumber;
+}
 }

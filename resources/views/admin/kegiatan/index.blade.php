@@ -242,19 +242,33 @@ $activeMenu = 'kegiatan';
 
 <div class="action-bar">
     <div class="filter-group">
-        <form action="{{ route('admin.kegiatan.index') }}" method="GET" class="search-box">
-            <input type="text" name="search" placeholder="Cari kegiatan..." value="{{ request('search') }}">
-            <button type="submit">Cari</button>
+        @if($admin->isSuperAdmin())
+        {{-- Super Admin bisa filter semua bidang --}}
+        <form action="{{ route('admin.kegiatan.index') }}" method="GET">
+            <select name="bidang" class="filter-select" onchange="this.form.submit()">
+                <option value="">Semua Bidang</option>
+                @for($i = 1; $i <= 12; $i++)
+                    <option value="bidang_{{ $i }}" {{ request('bidang') == "bidang_$i" ? 'selected' : '' }}>
+                    Bidang {{ $i }}
+                    </option>
+                    @endfor
+            </select>
         </form>
+        @else
+        {{-- BPD hanya lihat bidangnya --}}
+        <div style="padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 8px; background: #f3f4f6; font-size: 0.9375rem; color: #374151; font-weight: 500;">
+            📌 {{ $admin->bidang_name }}
+        </div>
+        @endif
 
         <form action="{{ route('admin.kegiatan.index') }}" method="GET">
             <select name="bidang" class="filter-select" onchange="this.form.submit()">
                 <option value="">Semua Bidang</option>
                 @for($i = 1; $i <= 10; $i++)
                     <option value="Bidang {{ $i }}" {{ request('bidang') == "Bidang $i" ? 'selected' : '' }}>
-                        Bidang {{ $i }}
+                    Bidang {{ $i }}
                     </option>
-                @endfor
+                    @endfor
             </select>
         </form>
     </div>
@@ -292,7 +306,7 @@ $activeMenu = 'kegiatan';
                     </div>
                 </td>
                 <td>
-                    <span class="badge badge-bidang">{{ $item->bidang }}</span>
+                    <span class="badge badge-bidang">{{ $item->bidang_name }}</span>
                 </td>
                 <td>{{ $item->tanggal_publish->format('d M Y') }}</td>
                 <td>
@@ -305,7 +319,7 @@ $activeMenu = 'kegiatan';
                 <td>
                     <div class="action-buttons">
                         <a href="{{ route('admin.kegiatan.edit', $item->id) }}" class="btn-edit">Edit</a>
-                        <form action="{{ route('admin.kegiatan.destroy', $item->id) }}" method="POST" 
+                        <form action="{{ route('admin.kegiatan.destroy', $item->id) }}" method="POST"
                             onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?')">
                             @csrf
                             @method('DELETE')

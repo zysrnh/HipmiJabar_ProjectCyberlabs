@@ -19,7 +19,7 @@ class Admin extends Authenticatable
         'password',
         'category',
         'domisili',
-        'bidang', // ✅ TAMBAHAN BARU
+        'bidang',
     ];
 
     protected $hidden = [
@@ -35,33 +35,42 @@ class Admin extends Authenticatable
     }
 
     /**
-     * ✅ TAMBAHAN: List semua bidang (1-12)
+     * ✅ List semua bidang (1-12)
      */
     public static function getBidangList(): array
     {
         return [
-            'bidang_1' => 'Bidang 1',
-            'bidang_2' => 'Bidang 2',
-            'bidang_3' => 'Bidang 3',
-            'bidang_4' => 'Bidang 4',
-            'bidang_5' => 'Bidang 5',
-            'bidang_6' => 'Bidang 6',
-            'bidang_7' => 'Bidang 7',
-            'bidang_8' => 'Bidang 8',
-            'bidang_9' => 'Bidang 9',
-            'bidang_10' => 'Bidang 10',
-            'bidang_11' => 'Bidang 11',
-            'bidang_12' => 'Bidang 12',
+            'bidang_1' => 'BIDANG 1',
+            'bidang_2' => 'BIDANG 2',
+            'bidang_3' => 'BIDANG 3',
+            'bidang_4' => 'BIDANG 4',
+            'bidang_5' => 'BIDANG 5',
+            'bidang_6' => 'BIDANG 6',
+            'bidang_7' => 'BIDANG 7',
+            'bidang_8' => 'BIDANG 8',
+            'bidang_9' => 'BIDANG 9',
+            'bidang_10' => 'BIDANG 10',
+            'bidang_11' => 'BIDANG 11',
+            'bidang_12' => 'BIDANG 12',
         ];
     }
 
     /**
-     * ✅ TAMBAHAN: Get nama bidang yang readable
+     * ✅ Get nama bidang yang readable
+     * bidang_1 → BIDANG 1
+     * bidang_12 → BIDANG 12
      */
     public function getBidangNameAttribute(): ?string
     {
-        $bidangList = self::getBidangList();
-        return $bidangList[$this->bidang] ?? null;
+        if (!$this->bidang) {
+            return null;
+        }
+        
+        // Hapus prefix 'bidang_' dan ambil angkanya
+        $bidangNumber = str_replace('bidang_', '', $this->bidang);
+        
+        // Return dengan format "BIDANG X" (uppercase)
+        return 'BIDANG ' . strtoupper($bidangNumber);
     }
 
     public function isSuperAdmin(): bool

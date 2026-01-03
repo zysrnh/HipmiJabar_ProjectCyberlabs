@@ -364,18 +364,33 @@ $activeMenu = 'kegiatan';
             <label class="form-label">
                 Bidang <span class="required">*</span>
             </label>
+
+            @if($admin->isSuperAdmin())
+            {{-- Super Admin bisa ubah bidang --}}
             <select name="bidang" class="form-select" required>
                 <option value="">Pilih Bidang</option>
-                @for($i = 1; $i <= 10; $i++)
-                    <option value="Bidang {{ $i }}" {{ old('bidang', $kegiatan->bidang) == "Bidang $i" ? 'selected' : '' }}>
+                @for($i = 1; $i <= 12; $i++)
+                    <option value="bidang_{{ $i }}" {{ old('bidang', $kegiatan->bidang) == "bidang_$i" ? 'selected' : '' }}>
                     Bidang {{ $i }}
                     </option>
                     @endfor
             </select>
+            @else
+            {{-- BPD tidak bisa ubah bidang --}}
+            <input type="text" class="form-input" value="{{ $admin->bidang_name }}" disabled>
+            <input type="hidden" name="bidang" value="{{ $admin->bidang }}">
+            @endif
+
             @error('bidang')
             <div class="error-message">{{ $message }}</div>
             @enderror
-            <div class="form-help">Pilih bidang kegiatan BPD</div>
+            <div class="form-help">
+                @if($admin->isSuperAdmin())
+                Ubah bidang kegiatan BPD (1-12)
+                @else
+                Bidang kegiatan tidak dapat diubah
+                @endif
+            </div>
         </div>
 
         <!-- Tambahkan di bagian form group konten -->
