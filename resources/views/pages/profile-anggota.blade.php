@@ -777,185 +777,193 @@
     @endif
 
     <div class="tabs-container">
-        <div class="tabs-header">
-            <button class="tab-button active" onclick="switchTab('pribadi')">Data Pribadi</button>
-            <button class="tab-button" onclick="switchTab('perusahaan')">Profil Perusahaan</button>
-            <button class="tab-button" onclick="switchTab('organisasi')">Informasi Organisasi</button>
-            @if($anggota->status === 'approved')
-            <button class="tab-button" onclick="switchTab('detail-buku')">Detail Buku Anggota</button>
-            @endif
-            @if($anggota->admin)
-            <button class="tab-button" onclick="switchTab('admin-account')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.25rem;">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
-                Admin Account
-            </button>
-            @endif
+    <div class="tabs-header">
+        <button class="tab-button active" onclick="switchTab('pribadi')">Data Pribadi</button>
+        <button class="tab-button" onclick="switchTab('perusahaan')">Profil Perusahaan</button>
+        <button class="tab-button" onclick="switchTab('organisasi')">Informasi Organisasi</button>
+        @if($anggota->status === 'approved')
+        <button class="tab-button" onclick="switchTab('detail-buku')">Detail Buku Anggota</button>
+        @endif
+        @if($anggota->admin)
+        <button class="tab-button" onclick="switchTab('admin-account')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.25rem;">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+            Admin Account
+        </button>
+        @endif
+        <!-- Tab E-Katalog (semua anggota bisa akses) -->
+        <button class="tab-button" onclick="switchTab('katalog')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 0.25rem;">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="9" y1="9" x2="15" y2="9"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+            E-Katalog Saya
+        </button>
+    </div>
+
+    <div class="tabs-content">
+        <!-- Tab Data Pribadi -->
+        <div class="tab-panel active" id="tab-pribadi">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <h3 style="margin: 0;">Informasi Pribadi</h3>
+                <button class="btn btn-primary" onclick="openModal('editProfileModal')">Edit Data Pribadi</button>
+            </div>
+            <div class="detail-grid">
+                <div class="field-group">
+                    <div class="field-label">Nama Lengkap</div>
+                    <div class="field-value">{{ $anggota->nama_usaha }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Jenis Kelamin</div>
+                    <div class="field-value">{{ $anggota->jenis_kelamin }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Tempat, Tanggal Lahir</div>
+                    <div class="field-value">{{ $anggota->tempat_lahir }}, {{ $anggota->tanggal_lahir->format('d M Y') }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Agama</div>
+                    <div class="field-value">{{ $anggota->agama }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Email</div>
+                    <div class="field-value">{{ $anggota->email }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Nomor Telepon</div>
+                    <div class="field-value">{{ $anggota->nomor_telepon }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Domisili</div>
+                    <div class="field-value">{{ $anggota->domisili }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Alamat Lengkap</div>
+                    <div class="field-value">{{ $anggota->alamat_domisili }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Kode Pos</div>
+                    <div class="field-value">{{ $anggota->kode_pos }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Nomor KTP</div>
+                    <div class="field-value">{{ $anggota->nomor_ktp }}</div>
+                </div>
+            </div>
+
+            <div class="images-grid">
+                <div class="field-group">
+                    <div class="field-label">Foto KTP</div>
+                    <img src="{{ $anggota->foto_ktp_url }}" alt="Foto KTP" class="image-preview">
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Foto Diri</div>
+                    <img src="{{ $anggota->foto_diri_url }}" alt="Foto Diri" class="image-preview">
+                </div>
+            </div>
         </div>
 
-        <div class="tabs-content">
-            <!-- Tab Data Pribadi -->
-            <div class="tab-panel active" id="tab-pribadi">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                    <h3 style="margin: 0;">Informasi Pribadi</h3>
-                    <button class="btn btn-primary" onclick="openModal('editProfileModal')">Edit Data Pribadi</button>
+        <!-- Tab Profil Perusahaan -->
+        <div class="tab-panel" id="tab-perusahaan">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <h3 style="margin: 0;">Informasi Perusahaan</h3>
+                <button class="btn btn-primary" onclick="openModal('editCompanyModal')">Edit Data Perusahaan</button>
+            </div>
+            <div class="detail-grid">
+                <div class="field-group">
+                    <div class="field-label">Nama Perusahaan</div>
+                    <div class="field-value">{{ $anggota->nama_usaha_perusahaan }}</div>
                 </div>
-                <div class="detail-grid">
-                    <div class="field-group">
-                        <div class="field-label">Nama Lengkap</div>
-                        <div class="field-value">{{ $anggota->nama_usaha }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Jenis Kelamin</div>
-                        <div class="field-value">{{ $anggota->jenis_kelamin }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Tempat, Tanggal Lahir</div>
-                        <div class="field-value">{{ $anggota->tempat_lahir }}, {{ $anggota->tanggal_lahir->format('d M Y') }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Agama</div>
-                        <div class="field-value">{{ $anggota->agama }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Email</div>
-                        <div class="field-value">{{ $anggota->email }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Nomor Telepon</div>
-                        <div class="field-value">{{ $anggota->nomor_telepon }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Domisili</div>
-                        <div class="field-value">{{ $anggota->domisili }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Alamat Lengkap</div>
-                        <div class="field-value">{{ $anggota->alamat_domisili }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Kode Pos</div>
-                        <div class="field-value">{{ $anggota->kode_pos }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Nomor KTP</div>
-                        <div class="field-value">{{ $anggota->nomor_ktp }}</div>
-                    </div>
+                <div class="field-group">
+                    <div class="field-label">Legalitas Usaha</div>
+                    <div class="field-value">{{ $anggota->legalitas_usaha }}</div>
                 </div>
-
-                <div class="images-grid">
-                    <div class="field-group">
-                        <div class="field-label">Foto KTP</div>
-                        <img src="{{ $anggota->foto_ktp_url }}" alt="Foto KTP" class="image-preview">
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Foto Diri</div>
-                        <img src="{{ $anggota->foto_diri_url }}" alt="Foto Diri" class="image-preview">
-                    </div>
+                <div class="field-group">
+                    <div class="field-label">Jabatan</div>
+                    <div class="field-value">{{ $anggota->jabatan_usaha }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Brand Usaha</div>
+                    <div class="field-value">{{ $anggota->brand_usaha }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Bidang Usaha</div>
+                    <div class="field-value">{{ $anggota->bidang_usaha }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Jumlah Karyawan</div>
+                    <div class="field-value">{{ $anggota->jumlah_karyawan }} orang</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Usia Perusahaan</div>
+                    <div class="field-value">{{ $anggota->usia_perusahaan }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Omset Per Tahun</div>
+                    <div class="field-value">{{ $anggota->omset_perusahaan }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">NPWP Perusahaan</div>
+                    <div class="field-value">{{ $anggota->npwp_perusahaan }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">No. Nota Pendirian</div>
+                    <div class="field-value">{{ $anggota->no_nota_pendirian }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Alamat Kantor</div>
+                    <div class="field-value">{{ $anggota->alamat_kantor }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Profile Perusahaan</div>
+                    <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        Lihat PDF
+                    </a>
                 </div>
             </div>
 
-            <!-- Tab Profil Perusahaan -->
-            <div class="tab-panel" id="tab-perusahaan">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-                    <h3 style="margin: 0;">Informasi Perusahaan</h3>
-                    <button class="btn btn-primary" onclick="openModal('editCompanyModal')">Edit Data Perusahaan</button>
-                </div>
-                <div class="detail-grid">
-                    <div class="field-group">
-                        <div class="field-label">Nama Perusahaan</div>
-                        <div class="field-value">{{ $anggota->nama_usaha_perusahaan }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Legalitas Usaha</div>
-                        <div class="field-value">{{ $anggota->legalitas_usaha }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Jabatan</div>
-                        <div class="field-value">{{ $anggota->jabatan_usaha }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Brand Usaha</div>
-                        <div class="field-value">{{ $anggota->brand_usaha }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Bidang Usaha</div>
-                        <div class="field-value">{{ $anggota->bidang_usaha }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Jumlah Karyawan</div>
-                        <div class="field-value">{{ $anggota->jumlah_karyawan }} orang</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Usia Perusahaan</div>
-                        <div class="field-value">{{ $anggota->usia_perusahaan }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Omset Per Tahun</div>
-                        <div class="field-value">{{ $anggota->omset_perusahaan }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">NPWP Perusahaan</div>
-                        <div class="field-value">{{ $anggota->npwp_perusahaan }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">No. Nota Pendirian</div>
-                        <div class="field-value">{{ $anggota->no_nota_pendirian }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Alamat Kantor</div>
-                        <div class="field-value">{{ $anggota->alamat_kantor }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Profile Perusahaan</div>
-                        <a href="{{ $anggota->profile_perusahaan_url }}" target="_blank" class="file-link">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                            </svg>
-                            Lihat PDF
-                        </a>
-                    </div>
-                </div>
-
-                <div class="images-grid">
-                    <div class="field-group">
-                        <div class="field-label">Logo Perusahaan</div>
-                        <img src="{{ $anggota->logo_perusahaan_url }}" alt="Logo" class="image-preview">
-                    </div>
+            <div class="images-grid">
+                <div class="field-group">
+                    <div class="field-label">Logo Perusahaan</div>
+                    <img src="{{ $anggota->logo_perusahaan_url }}" alt="Logo" class="image-preview">
                 </div>
             </div>
+        </div>
 
-            <!-- Tab Informasi Organisasi -->
-            <div class="tab-panel" id="tab-organisasi">
-                <div class="detail-grid">
-                    <div class="field-group">
-                        <div class="field-label">SFC HIPMI</div>
-                        <div class="field-value">{{ $anggota->sfc_hipmi }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Referensi Anggota HIPMI</div>
-                        <div class="field-value">{{ $anggota->referensi_hipmi }}</div>
-                    </div>
-                    <div class="field-group">
-                        <div class="field-label">Organisasi Lain</div>
-                        <div class="field-value">{{ $anggota->organisasi_lain }}</div>
-                    </div>
+        <!-- Tab Informasi Organisasi -->
+        <div class="tab-panel" id="tab-organisasi">
+            <div class="detail-grid">
+                <div class="field-group">
+                    <div class="field-label">SFC HIPMI</div>
+                    <div class="field-value">{{ $anggota->sfc_hipmi }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Referensi Anggota HIPMI</div>
+                    <div class="field-value">{{ $anggota->referensi_hipmi }}</div>
+                </div>
+                <div class="field-group">
+                    <div class="field-label">Organisasi Lain</div>
+                    <div class="field-value">{{ $anggota->organisasi_lain }}</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Tab Detail Buku Anggota -->
-            @if($anggota->status === 'approved')
-            <div class="tab-panel" id="tab-detail-buku">
-                <div style="margin-bottom: 1.5rem;">
-                    <h3 style="margin: 0 0 0.5rem 0;">Gambar Detail Buku Anggota</h3>
-                    <!-- ... rest of content ... -->
-                </div>
+        <!-- Tab Detail Buku Anggota -->
+        @if($anggota->status === 'approved')
+        <div class="tab-panel" id="tab-detail-buku">
+            <div style="margin-bottom: 1.5rem;">
+                <h3 style="margin: 0 0 0.5rem 0;">Gambar Detail Buku Anggota</h3>
+                <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">Upload dan kelola gambar detail untuk buku anggota Anda</p>
             </div>
-            @endif
 
+            <!-- ✅ FORM DIPINDAHKAN KE DALAM TAB INI -->
             <form action="{{ route('profile-anggota.upload-detail-images') }}" method="POST" enctype="multipart/form-data" id="detailImagesForm">
                 @csrf
 
@@ -1028,6 +1036,7 @@
                 </button>
             </form>
         </div>
+        @endif
 
         <!-- Tab Admin Account -->
         @if($anggota->admin)
@@ -1053,77 +1062,164 @@
                     </span>
                 </div>
 
-                @if($anggota->admin->category === 'bpc' && $anggota->admin->domisili)
-                <div class="credential-item">
-                    <span class="credential-label">Domisili</span>
-                    <span class="credential-value">{{ $anggota->admin->domisili }}</span>
+                <!-- Konten admin account lainnya... -->
+                <div style="margin-top: 1.5rem;">
+                    <h5 style="margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #6b7280; text-transform: uppercase;">Cara Login ke Dashboard Admin</h5>
+                    <ol style="margin: 0; padding-left: 1.5rem; color: #4b5563; font-size: 0.875rem; line-height: 1.8;">
+                        <li>Buka halaman login admin</li>
+                        <li>Masukkan <strong>username</strong> atau <strong>email</strong> admin Anda</li>
+                        <li>Masukkan <strong>password awal</strong> yang diberikan oleh admin pusat</li>
+                        <li>Klik tombol <strong>Login</strong></li>
+                        <li style="color: #d97706; font-weight: 600;">⚠️ Setelah login pertama kali, segera ubah password Anda untuk keamanan</li>
+                    </ol>
+
+                    <div style="background: #fef3c7; padding: 0.875rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #f59e0b;">
+                        <p style="margin: 0; font-size: 0.8125rem; color: #92400e; line-height: 1.5;">
+                            <strong>💡 Catatan:</strong> Password awal bersifat sementara dan hanya digunakan untuk login pertama kali. Demi keamanan akun Anda, pastikan untuk menggantinya segera setelah berhasil login.
+                        </p>
+                    </div>
+
+                    <a href="{{ route('admin.login') }}" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                            <polyline points="10 17 15 12 10 7" />
+                            <line x1="15" y1="12" x2="3" y2="12" />
+                        </svg>
+                        Login ke Dashboard Admin
+                    </a>
                 </div>
-                @endif
-
-                <div class="credential-item">
-                    <span class="credential-label">Nama Admin</span>
-                    <span class="credential-value">{{ $anggota->admin->name }}</span>
-                </div>
-            </div>
-
-            <div class="credential-box">
-                <h5>Kredensial Login Admin</h5>
-
-                <div class="credential-item">
-                    <span class="credential-label">Username</span>
-                    <span class="credential-value">
-                        {{ $anggota->admin->username }}
-                        <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->username }}', this)">Copy</button>
-                    </span>
-                </div>
-
-                <div class="credential-item">
-                    <span class="credential-label">Email</span>
-                    <span class="credential-value">
-                        {{ $anggota->admin->email }}
-                        <button class="btn-copy" style="padding: 0.375rem 0.75rem; font-size: 0.8125rem;" onclick="copyToClipboard('{{ $anggota->admin->email }}', this)">Copy</button>
-                    </span>
-                </div>
-                <button class="btn btn-primary" onclick="openModal('changeAdminPasswordModal')" style="width: 100%; margin-top: 0.75rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                    Ganti Password Admin
-                </button>
-            </div>
-
-            <div style="background: #eff6ff; padding: 1.25rem; border-radius: 10px; border: 2px solid #93c5fd; margin-top: 1.5rem;">
-                <h5 style="margin: 0 0 0.75rem 0; font-size: 0.9375rem; font-weight: 700; color: #1e40af;">
-                    📌 Cara Login ke Dashboard Admin
-                </h5>
-                <ol style="margin: 0; padding-left: 1.25rem; color: #1e3a8a; font-size: 0.875rem; line-height: 1.6;">
-                    <li><strong>Hubungi admin pusat</strong> untuk mendapatkan password awal Anda</li>
-                    <li>Buka halaman login admin</li>
-                    <li>Masukkan <strong>username</strong> atau <strong>email</strong> admin Anda</li>
-                    <li>Masukkan <strong>password awal</strong> yang diberikan oleh admin pusat</li>
-                    <li>Klik tombol <strong>Login</strong></li>
-                    <li style="color: #d97706; font-weight: 600;">⚠️ Setelah login pertama kali, segera ubah password Anda untuk keamanan</li>
-                </ol>
-
-                <div style="background: #fef3c7; padding: 0.875rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #f59e0b;">
-                    <p style="margin: 0; font-size: 0.8125rem; color: #92400e; line-height: 1.5;">
-                        <strong>💡 Catatan:</strong> Password awal bersifat sementara dan hanya digunakan untuk login pertama kali. Demi keamanan akun Anda, pastikan untuk menggantinya segera setelah berhasil login.
-                    </p>
-                </div>
-
-                <a href="{{ route('admin.login') }}" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                        <polyline points="10 17 15 12 10 7" />
-                        <line x1="15" y1="12" x2="3" y2="12" />
-                    </svg>
-                    Login ke Dashboard Admin
-                </a>
             </div>
         </div>
         @endif
-    </div>
+
+        <!-- Tab E-Katalog Saya -->
+        <div class="tab-panel" id="tab-katalog">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <h3 style="margin: 0 0 0.5rem 0;">E-Katalog Perusahaan Saya</h3>
+                    <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">Kelola katalog perusahaan yang akan ditampilkan di halaman E-Katalog</p>
+                </div>
+                @if($anggota->status === 'approved')
+                <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Tambah Katalog
+                </a>
+                @endif
+            </div>
+
+            @if($anggota->status !== 'approved')
+            <div style="background: #fef3c7; padding: 1.25rem; border-radius: 10px; border: 2px solid #fbbf24; text-align: center;">
+                <p style="margin: 0; color: #92400e; font-weight: 600;">
+                    ⚠️ Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
+                </p>
+            </div>
+            @else
+                @php
+                    $katalogs = $anggota->katalogs()->latest()->get();
+                @endphp
+
+                @if($katalogs->count() > 0)
+                <div style="display: grid; gap: 1rem;">
+                    @foreach($katalogs as $katalog)
+                    <div style="background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 1.5rem;">
+                        <div style="display: flex; gap: 1.5rem; align-items: start;">
+                            <!-- Logo -->
+                            <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}" 
+                                 style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #e5e7eb;">
+                            
+                            <!-- Info -->
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                                    <div>
+                                        <h4 style="margin: 0 0 0.25rem 0; font-size: 1.125rem; font-weight: 700; color: #0a2540;">
+                                            {{ $katalog->company_name }}
+                                        </h4>
+                                        <p style="margin: 0; color: #6b7280; font-size: 0.875rem;">{{ $katalog->business_field }}</p>
+                                    </div>
+                                    <span class="status-badge {{ $katalog->status }}">
+                                        @if($katalog->status === 'pending')
+                                            ⏳ Menunggu Verifikasi
+                                        @elseif($katalog->status === 'approved')
+                                            ✅ Disetujui
+                                        @else
+                                            ❌ Ditolak
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <div style="color: #4b5563; font-size: 0.875rem; margin-bottom: 1rem; line-height: 1.6;">
+                                    {{ Str::limit($katalog->description, 150) }}
+                                </div>
+
+                                @if($katalog->status === 'rejected' && $katalog->rejection_reason)
+                                <div style="background: #fee2e2; padding: 0.875rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #ef4444;">
+                                    <strong style="color: #991b1b; font-size: 0.875rem;">Alasan Penolakan:</strong>
+                                    <p style="margin: 0.25rem 0 0 0; color: #991b1b; font-size: 0.875rem;">{{ $katalog->rejection_reason }}</p>
+                                </div>
+                                @endif
+
+                                <!-- Action Buttons -->
+                                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                    @if($katalog->status === 'approved')
+                                        <a href="{{ route('e-katalog.detail', $katalog) }}" target="_blank" class="btn btn-primary" style="background: #3b82f6;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                            Lihat di E-Katalog
+                                        </a>
+                                    @endif
+
+                                    @if($katalog->canBeEdited())
+                                        <a href="{{ route('profile-anggota.katalog.edit', $katalog) }}" class="btn btn-primary" style="background: #10b981;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                            Edit
+                                        </a>
+
+                                        <form action="{{ route('profile-anggota.katalog.destroy', $katalog) }}" method="POST" 
+                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus katalog ini?')" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div style="text-align: center; padding: 3rem; background: #f9fafb; border-radius: 12px;">
+                    <svg viewBox="0 0 24 24" width="64" height="64" stroke="#d1d5db" fill="none" stroke-width="2" style="margin: 0 auto 1rem;">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="9" y1="9" x2="15" y2="9"/>
+                        <line x1="9" y1="15" x2="15" y2="15"/>
+                    </svg>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #6b7280;">Belum ada katalog</h4>
+                    <p style="margin: 0 0 1rem 0; color: #9ca3af; font-size: 0.875rem;">Tambahkan katalog perusahaan Anda untuk ditampilkan di halaman E-Katalog</p>
+                    <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
+                        Tambah Katalog Pertama
+                    </a>
+                </div>
+                @endif
+            @endif
+        </div>
+
+    </div> <!-- ✅ Penutup tabs-content -->
+</div> <!-- ✅ Penutup tabs-container -->
 </div>
 </div>
 
@@ -1366,8 +1462,12 @@
             panel.classList.remove('active');
         });
 
-        event.target.classList.add('active');
-        document.getElementById('tab-' + tabName).classList.add('active');
+        // Aktifkan tab-button yang sesuai
+        var tabBtn = Array.from(document.querySelectorAll('.tab-button')).find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("switchTab('" + tabName + "')"));
+        if(tabBtn) tabBtn.classList.add('active');
+        // Aktifkan panel yang sesuai
+        var tabPanel = document.getElementById('tab-' + tabName);
+        if(tabPanel) tabPanel.classList.add('active');
     }
 
     function openModal(modalId) {

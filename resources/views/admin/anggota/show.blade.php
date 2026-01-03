@@ -1206,7 +1206,7 @@ $admin = auth()->guard('admin')->user();
 @push('scripts')
 <script>
     let passwordVisible = false;
-    const actualPassword = @json($anggota - > initial_password ?? null);
+    const actualPassword = @json($anggota->initial_password ?? null);
 
     function switchTab(tabName) {
         document.querySelectorAll('.tab-button').forEach(btn => {

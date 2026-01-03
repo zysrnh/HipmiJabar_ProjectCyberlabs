@@ -20,7 +20,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\UmkmController;
 use App\Http\Controllers\KegiatanController; // ✅ Public Kegiatan Controller
 use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController; // ✅ Admin Kegiatan Controller
-
+use App\Http\Controllers\AnggotaKatalogController;
 
 // =====================================================
 // ADMIN ROUTES
@@ -185,6 +185,16 @@ Route::middleware('auth:anggota')->group(function () {
     Route::post('/profile-anggota/delete-detail-image', [AnggotaController::class, 'deleteDetailImage'])->name('profile-anggota.delete-detail-image');
     Route::post('/profile-anggota/change-admin-password', [AnggotaController::class, 'changeAdminPassword'])
         ->name('profile-anggota.change-admin-password');
+    
+     // ✅ E-Katalog Management untuk Anggota (GUNAKAN AnggotaKatalogController)
+    Route::prefix('profile-anggota/katalog')->name('profile-anggota.katalog.')->group(function () {
+        Route::get('/', [AnggotaKatalogController::class, 'index'])->name('index');
+        Route::get('/create', [AnggotaKatalogController::class, 'create'])->name('create');
+        Route::post('/store', [AnggotaKatalogController::class, 'store'])->name('store');
+        Route::get('/{katalog}/edit', [AnggotaKatalogController::class, 'edit'])->name('edit');
+        Route::put('/{katalog}', [AnggotaKatalogController::class, 'update'])->name('update');
+        Route::delete('/{katalog}', [AnggotaKatalogController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Buku Anggota Routes

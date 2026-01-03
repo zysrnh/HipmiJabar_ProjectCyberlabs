@@ -245,5 +245,23 @@ public function admin()
 
         return $badges[$this->status] ?? '<span class="badge badge-secondary">Tidak Diketahui</span>';
     }
-    
+    public function katalogs()
+{
+    return $this->hasMany(Katalog::class, 'anggota_id');
+}
+
+public function approvedKatalogs()
+{
+    return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'approved');
+}
+
+public function pendingKatalogs()
+{
+    return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'pending');
+}
+
+public function hasApprovedKatalog()
+{
+    return $this->katalogs()->where('status', 'approved')->exists();
+}
 }
