@@ -4,7 +4,6 @@
 
 @section('content')
 <style>
-    /* COPY SEMUA STYLE DARI create.blade.php */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
     * {
@@ -62,8 +61,7 @@
     }
 
     .form-group input,
-    .form-group textarea,
-    .form-group select {
+    .form-group textarea {
         width: 100%;
         padding: 0.75rem;
         border: 2px solid #e5e7eb;
@@ -74,8 +72,7 @@
     }
 
     .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
+    .form-group textarea:focus {
         outline: none;
         border-color: #2563eb;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
@@ -121,6 +118,7 @@
         background: #f9fafb;
         cursor: pointer;
         transition: all 0.2s;
+        margin-top: 1rem;
     }
 
     .upload-area:hover {
@@ -214,6 +212,102 @@
         margin: 0;
         color: #9ca3af;
         font-size: 0.8125rem;
+    }
+
+    .map-helper {
+        background: #f0f9ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 0.75rem;
+    }
+
+    .map-helper-title {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #1e40af;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .map-helper-steps {
+        font-size: 0.75rem;
+        color: #1e3a8a;
+        line-height: 1.6;
+    }
+
+    .map-helper-steps ol {
+        margin: 0.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .map-helper-steps li {
+        margin-bottom: 0.25rem;
+    }
+
+    .map-example {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: #6b7280;
+        overflow-x: auto;
+    }
+
+    .map-preview-container {
+        margin-top: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .map-preview-container iframe {
+        width: 100%;
+        height: 400px;
+        border: none;
+    }
+
+    .current-map-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #10b981;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .map-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+    }
+
+    .map-status.success {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .map-status.error {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .map-status svg {
+        width: 16px;
+        height: 16px;
     }
 
     .btn {
@@ -343,7 +437,7 @@
                     <img src="{{ $katalog->logo_url }}" alt="Current Logo">
                     <p>Logo saat ini</p>
                 </div>
-                <div class="upload-area" id="logoUploadArea" onclick="document.getElementById('logo').click()" style="margin-top: 1rem;">
+                <div class="upload-area" id="logoUploadArea" onclick="document.getElementById('logo').click()">
                     <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                         <circle cx="8.5" cy="8.5" r="1.5" />
@@ -375,7 +469,8 @@
                 <small style="margin-top: 1rem; display: block;">Upload gambar baru untuk mengganti gambar lama (hingga 3 gambar)</small>
                 <div class="images-upload-grid">
                     <div class="image-upload-box" id="imageBox1" onclick="document.getElementById('image1').click()">
-                        <div class="image-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <div class="image-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                                 <circle cx="8.5" cy="8.5" r="1.5" />
                                 <polyline points="21 15 16 10 5 21" />
@@ -384,6 +479,7 @@
                         </div>
                     </div>
                     <input type="file" id="image1" name="images[]" accept="image/*" style="display: none;" onchange="handleImagePreview(this, 'imageBox1')">
+
                     <div class="image-upload-box" id="imageBox2" onclick="document.getElementById('image2').click()">
                         <div class="image-placeholder">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -431,9 +527,56 @@
 
             <!-- Google Maps -->
             <div class="form-group">
-                <label>Link Google Maps (Opsional)</label>
-                <textarea name="map_embed_url" placeholder="Paste link Google Maps atau embed code dari Google Maps">{{ old('map_embed_url', $katalog->map_embed_url) }}</textarea>
-                <small>Cara: Buka Google Maps → Klik "Bagikan" → Salin link atau kode embed</small>
+                <label>Embed Google Maps (Opsional)</label>
+                
+                @if($katalog->map_embed_url)
+                    <div class="current-map-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Map Aktif
+                    </div>
+                    <div class="map-preview-container">
+                        <iframe src="{{ $katalog->map_embed_url }}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                @endif
+
+                <textarea 
+                    name="map_embed_url" 
+                    rows="4" 
+                    placeholder="Paste kode iframe embed dari Google Maps di sini..."
+                    oninput="handleMapInput(this.value)"
+                    style="margin-top: 0.75rem;">{{ old('map_embed_url', $katalog->map_embed_url) }}</textarea>
+                
+                <small>Paste langsung kode iframe dari Google Maps. Biarkan kosong jika tidak ingin mengubah.</small>
+                
+                <div id="mapStatus"></div>
+
+                <div class="map-helper">
+                    <div class="map-helper-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                        Cara mendapatkan kode embed:
+                    </div>
+                    <div class="map-helper-steps">
+                        <ol>
+                            <li>Buka <strong>Google Maps</strong> di browser</li>
+                            <li>Cari lokasi perusahaan Anda</li>
+                            <li>Klik tombol <strong>"Share"</strong> atau <strong>"Bagikan"</strong></li>
+                            <li>Pilih tab <strong>"Embed a map"</strong> atau <strong>"Sematkan peta"</strong></li>
+                            <li>Klik <strong>"Copy HTML"</strong></li>
+                            <li>Paste kode yang di-copy ke kolom di atas</li>
+                        </ol>
+                    </div>
+                    <div class="map-example">
+                        Contoh kode yang benar:<br>
+                        &lt;iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450"...&gt;&lt;/iframe&gt;
+                    </div>
+                </div>
             </div>
 
             <!-- Actions -->
@@ -453,30 +596,112 @@
         </form>
     </div>
 </div>
+
 <script>
-    function handleFileSelect(input, areaId, fileNameId) {
-        const area = document.getElementById(areaId);
-        const fileName = document.getElementById(fileNameId);
+function handleFileSelect(input, areaId, fileNameId) {
+    const area = document.getElementById(areaId);
+    const fileName = document.getElementById(fileNameId);
 
-        if (input.files && input.files[0]) {
-            area.classList.add('has-file');
-            fileName.textContent = '✓ ' + input.files[0].name;
+    if (input.files && input.files[0]) {
+        area.classList.add('has-file');
+        fileName.textContent = '✓ ' + input.files[0].name;
+    }
+}
+
+function handleImagePreview(input, boxId) {
+    const box = document.getElementById(boxId);
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            box.classList.add('has-image');
+            box.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function showMapStatus(type, message) {
+    const statusDiv = document.getElementById('mapStatus');
+    const icons = {
+        success: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>',
+        error: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>'
+    };
+    
+    statusDiv.innerHTML = `
+        <div class="map-status ${type}">
+            ${icons[type]}
+            <span>${message}</span>
+        </div>
+    `;
+}
+
+let debounceTimer;
+function handleMapInput(input) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        previewMap(input);
+    }, 500);
+}
+
+function previewMap(input) {
+    const previewContainer = document.getElementById('mapPreviewContainer');
+    const previewFrame = document.getElementById('mapPreviewFrame');
+    const placeholder = previewContainer.querySelector('.map-preview-placeholder');
+    
+    if (!input || input.trim() === '') {
+        previewContainer.classList.remove('show');
+        previewFrame.style.display = 'none';
+        placeholder.style.display = 'flex';
+        document.getElementById('mapStatus').innerHTML = '';
+        return;
+    }
+
+    const embedUrl = extractEmbedUrl(input);
+    
+    if (embedUrl) {
+        previewFrame.src = embedUrl;
+        previewFrame.style.display = 'block';
+        placeholder.style.display = 'none';
+        previewContainer.classList.add('show');
+        showMapStatus('success', '✓ Kode embed berhasil terdeteksi! Preview map ditampilkan.');
+        
+        previewFrame.onerror = function() {
+            previewFrame.style.display = 'none';
+            placeholder.style.display = 'flex';
+            showMapStatus('error', '✗ Gagal memuat preview map. Pastikan kode embed valid.');
+        };
+    } else {
+        previewContainer.classList.remove('show');
+        showMapStatus('error', '✗ Format tidak dikenali. Paste kode iframe dari Google Maps.');
+    }
+}
+
+function extractEmbedUrl(input) {
+    input = input.trim();
+    
+    if (!input.includes('<iframe') && !input.includes('iframe')) {
+        return null;
+    }
+
+    const srcMatch = input.match(/src=["\']([^"\']+)["\']/)
+    if (srcMatch) {
+        const url = srcMatch[1];
+        if (url.includes('google.com/maps/embed')) {
+            return url;
         }
     }
 
-    function handleImagePreview(input, boxId) {
-        const box = document.getElementById(boxId);
+    return null;
+}
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                box.classList.add('has-image');
-                box.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
+document.addEventListener('DOMContentLoaded', function() {
+    const mapInput = document.querySelector('textarea[name="map_embed_url"]');
+    if (mapInput && mapInput.value) {
+        previewMap(mapInput.value);
     }
+});
 </script>
 @endsection

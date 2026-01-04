@@ -37,6 +37,36 @@ class AnggotaKatalogController extends Controller
         return view('anggota.katalog.create');
     }
 
+    /**
+     * Ekstrak URL src dari iframe Google Maps embed
+     * Sama seperti method di AdminKatalogController
+     */
+    private function extractGoogleMapsEmbedUrl($input)
+    {
+        if (empty($input)) {
+            return null;
+        }
+
+        $input = trim($input);
+
+        // Cek apakah input mengandung iframe
+        if (strpos($input, '<iframe') === false && strpos($input, 'iframe') === false) {
+            return null;
+        }
+
+        // Extract src dari iframe
+        if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
+            $url = $matches[1];
+            
+            // Validasi bahwa ini adalah URL Google Maps embed
+            if (strpos($url, 'google.com/maps/embed') !== false) {
+                return $url;
+            }
+        }
+
+        return null;
+    }
+
     public function store(Request $request)
     {
         $anggota = Auth::guard('anggota')->user();
@@ -70,10 +100,10 @@ class AnggotaKatalogController extends Controller
                 }
             }
 
-            // Auto-extract Google Maps URL (copy dari AdminKatalogController)
+            // Ekstrak URL embed dari iframe
             $mapUrl = null;
             if ($request->filled('map_embed_url')) {
-                $mapUrl = $this->extractGoogleMapsUrl($request->map_embed_url);
+                $mapUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
             }
 
             Katalog::create([
@@ -176,9 +206,13 @@ class AnggotaKatalogController extends Controller
                 $data['images'] = $imagePaths;
             }
 
-            // Auto-extract Google Maps URL
+            // Update map embed URL
             if ($request->filled('map_embed_url')) {
-                $data['map_embed_url'] = $this->extractGoogleMapsUrl($request->map_embed_url);
+                $extractedUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
+                $data['map_embed_url'] = $extractedUrl;
+            } elseif ($request->has('map_embed_url') && empty($request->map_embed_url)) {
+                // Jika field kosong, hapus map
+                $data['map_embed_url'] = null;
             }
 
             // Reset ke pending kalau diupdate setelah rejected
@@ -224,49 +258,5 @@ class AnggotaKatalogController extends Controller
 
         return redirect()->route('profile-anggota.katalog.index')
             ->with('success', 'Katalog berhasil dihapus.');
-    }
-
-    // Helper function (sama seperti AdminKatalogController)
-    private function extractGoogleMapsUrl($input)
-    {
-        if (empty($input)) return null;
-
-        $input = trim($input);
-
-        if (strpos($input, 'maps/embed') !== false) {
-            if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
-                return $matches[1];
-            }
-            return $input;
-        }
-
-        if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
-            $url = $matches[1];
-            if (strpos($url, 'google.com/maps') !== false) {
-                return $url;
-            }
-        }
-
-        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $input, $matches)) {
-            $lat = $matches[1];
-            $lng = $matches[2];
-            return "https://www.google.com/maps?q={$lat},{$lng}&output=embed";
-        }
-
-        if (preg_match('/place_id[=:]([A-Za-z0-9_-]+)/', $input, $matches)) {
-            $placeId = $matches[1];
-            return "https://www.google.com/maps?q=place_id:{$placeId}&output=embed";
-        }
-
-        if (preg_match('/maps\/search\/([^\/\?&]+)/', $input, $matches)) {
-            $query = urldecode($matches[1]);
-            return "https://www.google.com/maps?q=" . urlencode($query) . "&output=embed";
-        }
-
-        if (strpos($input, 'google.com/maps') !== false || strpos($input, 'maps.app.goo.gl') !== false) {
-            return $input;
-        }
-
-        return null;
     }
 }

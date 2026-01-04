@@ -187,36 +187,35 @@
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         overflow: hidden;
-        display: none;
-    }
-
-    .map-preview-container.show {
-        display: block;
     }
 
     .map-preview-container iframe {
         width: 100%;
-        height: 300px;
+        height: 400px;
         border: none;
     }
 
     .map-helper {
-        background: #f3f4f6;
+        background: #f0f9ff;
+        border: 1px solid #bfdbfe;
         border-radius: 8px;
         padding: 1rem;
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
     }
 
     .map-helper-title {
         font-weight: 600;
         font-size: 0.875rem;
-        color: #374151;
+        color: #1e40af;
         margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .map-helper-steps {
         font-size: 0.75rem;
-        color: #6b7280;
+        color: #1e3a8a;
         line-height: 1.6;
     }
 
@@ -229,79 +228,29 @@
         margin-bottom: 0.25rem;
     }
 
-    .format-accepted {
-        display: inline-block;
-        background: #10b981;
-        color: white;
-        padding: 0.125rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.625rem;
-        font-weight: 600;
-        margin-left: 0.5rem;
-    }
-
-    .current-map-label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .current-map-label .badge {
-        background: #3b82f6;
-        color: white;
-        padding: 0.125rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.625rem;
-        font-weight: 600;
-    }
-
-    .map-preview-placeholder {
-        width: 100%;
-        height: 300px;
-        background: #f9fafb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        gap: 0.5rem;
-        color: #6b7280;
-    }
-
-    .map-preview-placeholder svg {
-        width: 48px;
-        height: 48px;
-        opacity: 0.5;
-    }
-
-    .map-status {
+    .current-map-badge {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.75rem;
-        margin-top: 0.5rem;
-        padding: 0.5rem;
+        background: #10b981;
+        color: white;
+        padding: 0.25rem 0.75rem;
         border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
     }
 
-    .map-status.success {
-        background: #d1fae5;
-        color: #065f46;
-    }
-
-    .map-status.warning {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .map-status.error {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
-    .map-status svg {
-        width: 16px;
-        height: 16px;
+    .map-example {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: #6b7280;
+        overflow-x: auto;
     }
 </style>
 @endpush
@@ -395,59 +344,58 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label">
-                Lokasi Google Maps
-                <span class="format-accepted">Semua format diterima!</span>
-            </label>
+            <label class="form-label">Embed Google Maps</label>
             
             @if($katalog->map_embed_url)
-                <div class="current-map-label">
-                    <div class="image-label">Map saat ini:</div>
-                    <span class="badge">Aktif</span>
+                <div class="current-map-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Map Aktif
                 </div>
-                <div class="map-preview-container show">
-                    <iframe src="{{ $katalog->map_embed_url }}" allowfullscreen loading="lazy"></iframe>
+                <div class="map-preview-container">
+                    <iframe src="{{ $katalog->map_embed_url }}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             @endif
 
             <textarea 
                 name="map_embed_url" 
                 class="form-textarea" 
-                rows="3" 
-                placeholder="Paste apapun dari Google Maps di sini..."
-                oninput="handleMapInput(this.value)"
-                style="margin-top: 0.75rem;">{{ old('map_embed_url', $katalog->map_embed_url) }}</textarea>
-            <div class="form-hint">✓ URL biasa, ✓ Link share, ✓ Kode embed, ✓ Iframe - semua otomatis diproses! Biarkan kosong jika tidak ingin mengubah.</div>
+                rows="4" 
+                placeholder="Paste kode iframe embed dari Google Maps di sini..."
+                style="margin-top: 0.75rem; font-family: monospace; font-size: 0.75rem;">{{ old('map_embed_url', $katalog->map_embed_url) }}</textarea>
             
-            <div id="mapStatus"></div>
-            
-            <div class="map-helper">
-                <div class="map-helper-title">📍 Cara mudah ambil link:</div>
-                <div class="map-helper-steps">
-                    <ol>
-                        <li>Buka Google Maps di browser</li>
-                        <li>Cari lokasi perusahaan</li>
-                        <li>Klik tombol <strong>"Share"</strong> atau <strong>"Bagikan"</strong></li>
-                        <li>Copy link yang muncul dan paste di sini</li>
-                    </ol>
-                    <strong>Atau:</strong> Langsung copy URL dari address bar browser!
-                </div>
-            </div>
-
-            <div class="map-preview-container" id="mapPreviewContainer">
-                <div class="map-preview-placeholder">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <p>Preview map baru akan muncul di sini</p>
-                </div>
-                <iframe id="mapPreviewFrame" src="" allowfullscreen loading="lazy" style="display: none;"></iframe>
-            </div>
+            <div class="form-hint">Paste langsung kode iframe dari Google Maps. Biarkan kosong jika tidak ingin mengubah.</div>
             
             @error('map_embed_url')
                 <div class="form-error">{{ $message }}</div>
             @enderror
+
+            <div class="map-helper">
+                <div class="map-helper-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4"/>
+                        <path d="M12 8h.01"/>
+                    </svg>
+                    Cara mendapatkan kode embed:
+                </div>
+                <div class="map-helper-steps">
+                    <ol>
+                        <li>Buka <strong>Google Maps</strong> di browser</li>
+                        <li>Cari lokasi perusahaan Anda</li>
+                        <li>Klik tombol <strong>"Share"</strong> atau <strong>"Bagikan"</strong></li>
+                        <li>Pilih tab <strong>"Embed a map"</strong> atau <strong>"Sematkan peta"</strong></li>
+                        <li>Klik <strong>"Copy HTML"</strong></li>
+                        <li>Paste kode yang di-copy ke kolom di atas</li>
+                    </ol>
+                </div>
+                <div class="map-example">
+                    Contoh kode yang benar:<br>
+                    &lt;iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450"...&gt;&lt;/iframe&gt;
+                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -497,132 +445,6 @@
             reader.readAsDataURL(files[i]);
         }
     }
-
-    function handleMapPaste(event) {
-        setTimeout(() => {
-            const input = event.target.value;
-            previewMap(input);
-        }, 100);
-    }
-
-    function showMapStatus(type, message) {
-        const statusDiv = document.getElementById('mapStatus');
-        const icons = {
-            success: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>',
-            warning: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>',
-            error: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>'
-        };
-        
-        statusDiv.innerHTML = `
-            <div class="map-status ${type}">
-                ${icons[type]}
-                <span>${message}</span>
-            </div>
-        `;
-    }
-
-    let debounceTimer;
-    function handleMapInput(input) {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            previewMap(input);
-        }, 500);
-    }
-
-    function previewMap(input) {
-        const previewContainer = document.getElementById('mapPreviewContainer');
-        const previewFrame = document.getElementById('mapPreviewFrame');
-        const placeholder = previewContainer.querySelector('.map-preview-placeholder');
-        
-        if (!input || input.trim() === '') {
-            previewContainer.classList.remove('show');
-            previewFrame.style.display = 'none';
-            placeholder.style.display = 'flex';
-            document.getElementById('mapStatus').innerHTML = '';
-            return;
-        }
-
-        let embedUrl = extractMapUrl(input);
-        
-        if (embedUrl) {
-            // Cek apakah URL bisa di-preview
-            if (embedUrl.includes('output=embed') || embedUrl.includes('maps/embed')) {
-                previewFrame.src = embedUrl;
-                previewFrame.style.display = 'block';
-                placeholder.style.display = 'none';
-                previewContainer.classList.add('show');
-                showMapStatus('success', '✓ Link berhasil dideteksi! Preview map ditampilkan.');
-                
-                // Handle iframe load error
-                previewFrame.onerror = function() {
-                    previewFrame.style.display = 'none';
-                    placeholder.style.display = 'flex';
-                    showMapStatus('warning', '⚠ Link valid tapi tidak bisa di-preview. Link akan tetap tersimpan dan berfungsi di halaman publik.');
-                };
-            } else {
-                // URL terdeteksi tapi tidak bisa di-preview (short URL, dll)
-                placeholder.style.display = 'flex';
-                previewFrame.style.display = 'none';
-                previewContainer.classList.add('show');
-                showMapStatus('warning', '⚠ Link terdeteksi tapi tidak bisa di-preview. Link akan diproses saat disimpan dan akan berfungsi di halaman publik.');
-            }
-        } else {
-            previewContainer.classList.remove('show');
-            showMapStatus('error', '✗ Format link tidak dikenali. Pastikan menggunakan link dari Google Maps.');
-        }
-    }
-
-    function extractMapUrl(input) {
-        // Jika sudah format embed yang benar
-        if (input.includes('maps/embed') || input.includes('output=embed')) {
-            return input;
-        }
-
-        // Extract dari iframe
-        const iframeMatch = input.match(/src=["']([^"']+)["']/);
-        if (iframeMatch) {
-            return iframeMatch[1];
-        }
-
-        // Extract koordinat dari URL biasa
-        const coordMatch = input.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-        if (coordMatch) {
-            const lat = coordMatch[1];
-            const lng = coordMatch[2];
-            // Gunakan format sederhana yang lebih reliable
-            return `https://www.google.com/maps?q=${lat},${lng}&output=embed`;
-        }
-
-        // Extract place_id
-        const placeMatch = input.match(/place_id[=:]([A-Za-z0-9_-]+)/);
-        if (placeMatch) {
-            const placeId = placeMatch[1];
-            return `https://www.google.com/maps?q=place_id:${placeId}&output=embed`;
-        }
-
-        // Extract dari search URL
-        const searchMatch = input.match(/maps\/search\/([^\/\?&]+)/);
-        if (searchMatch) {
-            const query = decodeURIComponent(searchMatch[1]);
-            return `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
-        }
-
-        // Detect short URL atau format lain yang valid
-        if (input.includes('maps.app.goo.gl') || input.includes('goo.gl/maps') || input.includes('google.com/maps')) {
-            return input; // Return untuk di-handle sebagai warning
-        }
-
-        return null;
-    }
-
-    // Preview on page load jika ada value
-    document.addEventListener('DOMContentLoaded', function() {
-        const mapInput = document.querySelector('textarea[name="map_embed_url"]');
-        if (mapInput && mapInput.value && !mapInput.value.includes('maps/embed')) {
-            // Jika bukan embed URL, coba extract dan preview
-            previewMap(mapInput.value);
-        }
-    });
 </script>
 @endpush
 @endsection

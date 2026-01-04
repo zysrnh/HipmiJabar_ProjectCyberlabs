@@ -74,7 +74,11 @@ class KatalogController extends Controller
         return view('admin.katalog.create');
     }
 
-    private function extractGoogleMapsUrl($input)
+    /**
+     * Ekstrak URL src dari iframe Google Maps embed
+     * Hanya menerima kode iframe embed lengkap
+     */
+    private function extractGoogleMapsEmbedUrl($input)
     {
         if (empty($input)) {
             return null;
@@ -82,38 +86,44 @@ class KatalogController extends Controller
 
         $input = trim($input);
 
-        if (strpos($input, 'maps/embed') !== false) {
-            if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
-                return $matches[1];
-            }
-            return $input;
+        // Cek apakah input mengandung iframe
+        if (strpos($input, '<iframe') === false && strpos($input, 'iframe') === false) {
+            return null;
         }
 
+        // Extract src dari iframe
         if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
             $url = $matches[1];
-            if (strpos($url, 'google.com/maps') !== false) {
+            
+            // Validasi bahwa ini adalah URL Google Maps embed
+            if (strpos($url, 'google.com/maps/embed') !== false) {
                 return $url;
             }
         }
 
-        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $input, $matches)) {
-            $lat = $matches[1];
-            $lng = $matches[2];
-            return "https://www.google.com/maps?q={$lat},{$lng}&output=embed";
+        return null;
+    }
+
+    /**
+     * Method helper yang sama untuk AnggotaKatalogController
+     */
+    public static function extractMapEmbedUrl($input)
+    {
+        if (empty($input)) {
+            return null;
         }
 
-        if (preg_match('/place_id[=:]([A-Za-z0-9_-]+)/', $input, $matches)) {
-            $placeId = $matches[1];
-            return "https://www.google.com/maps?q=place_id:{$placeId}&output=embed";
+        $input = trim($input);
+
+        if (strpos($input, '<iframe') === false && strpos($input, 'iframe') === false) {
+            return null;
         }
 
-        if (preg_match('/maps\/search\/([^\/\?&]+)/', $input, $matches)) {
-            $query = urldecode($matches[1]);
-            return "https://www.google.com/maps?q=" . urlencode($query) . "&output=embed";
-        }
-
-        if (strpos($input, 'google.com/maps') !== false || strpos($input, 'maps.app.goo.gl') !== false) {
-            return $input;
+        if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
+            $url = $matches[1];
+            if (strpos($url, 'google.com/maps/embed') !== false) {
+                return $url;
+            }
         }
 
         return null;
@@ -144,9 +154,10 @@ class KatalogController extends Controller
                 }
             }
 
+            // Ekstrak URL embed dari iframe
             $mapUrl = null;
             if ($request->filled('map_embed_url')) {
-                $mapUrl = $this->extractGoogleMapsUrl($request->map_embed_url);
+                $mapUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
             }
 
             $admin = Auth::guard('admin')->user();
@@ -219,6 +230,7 @@ class KatalogController extends Controller
         try {
             $data = $request->except(['logo', 'images']);
 
+            // Update logo
             if ($request->hasFile('logo')) {
                 if ($katalog->logo && Storage::disk('public')->exists($katalog->logo)) {
                     Storage::disk('public')->delete($katalog->logo);
@@ -226,6 +238,7 @@ class KatalogController extends Controller
                 $data['logo'] = $request->file('logo')->store('katalog/logos', 'public');
             }
 
+            // Update images
             if ($request->hasFile('images')) {
                 if ($katalog->images) {
                     foreach ($katalog->images as $oldImage) {
@@ -242,8 +255,13 @@ class KatalogController extends Controller
                 $data['images'] = $imagePaths;
             }
 
+            // Update map embed URL
             if ($request->filled('map_embed_url')) {
-                $data['map_embed_url'] = $this->extractGoogleMapsUrl($request->map_embed_url);
+                $extractedUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
+                $data['map_embed_url'] = $extractedUrl;
+            } elseif ($request->has('map_embed_url') && empty($request->map_embed_url)) {
+                // Jika field kosong, hapus map
+                $data['map_embed_url'] = null;
             }
 
             $data['is_active'] = $request->has('is_active');
