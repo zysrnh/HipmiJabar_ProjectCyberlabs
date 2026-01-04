@@ -11,34 +11,58 @@ use Illuminate\Support\Facades\Auth;
 class KatalogController extends Controller
 {
     /**
-     * Cek apakah admin bisa edit/hapus katalog ini
+     * Cek apakah admin bisa edit katalog ini
      */
-    private function canManageKatalog(Katalog $katalog)
+    private function canEditKatalog(Katalog $katalog)
     {
         $admin = Auth::guard('admin')->user();
         
-        // Super Admin bisa manage semua
+        // Super Admin bisa edit semua
         if ($admin->isSuperAdmin()) {
             return true;
         }
         
-        // Katalog dari anggota tidak bisa diedit/dihapus (hanya approve/reject)
+        // Katalog dari anggota tidak bisa diedit oleh siapapun kecuali Super Admin
         if ($katalog->isSubmittedByAnggota()) {
             return false;
         }
         
-        // Admin BPD hanya bisa manage katalog dari bidangnya sendiri
+        // Admin BPD hanya bisa edit katalog dari bidangnya sendiri
         if ($admin->isBPD()) {
-            // Cek apakah katalog dibuat oleh admin dengan bidang yang sama
             if ($katalog->admin && $katalog->admin->bidang === $admin->bidang) {
                 return true;
             }
             return false;
         }
         
-        // BPC bisa manage katalog yang dia buat sendiri
-        if ($admin->isBPC()) {
-            return $katalog->approved_by === $admin->id;
+        return false;
+    }
+
+    /**
+     * Cek apakah admin bisa hapus katalog ini
+     */
+    private function canDeleteKatalog(Katalog $katalog)
+    {
+        $admin = Auth::guard('admin')->user();
+        
+        // Super Admin bisa hapus semua katalog
+        if ($admin->isSuperAdmin()) {
+            return true;
+        }
+        
+        // BPD bisa hapus:
+        if ($admin->isBPD()) {
+            // 1. Katalog anggota yang belum approved
+            if ($katalog->isSubmittedByAnggota() && $katalog->status !== 'approved') {
+                return true;
+            }
+            // 2. Katalog admin dari bidangnya sendiri
+            if (!$katalog->isSubmittedByAnggota()) {
+                if ($katalog->admin && $katalog->admin->bidang === $admin->bidang) {
+                    return true;
+                }
+            }
+            return false;
         }
         
         return false;
@@ -197,8 +221,8 @@ class KatalogController extends Controller
 
     public function edit(Katalog $katalog)
     {
-        // ✅ Cek permission
-        if (!$this->canManageKatalog($katalog)) {
+        // ✅ Cek permission untuk edit
+        if (!$this->canEditKatalog($katalog)) {
             return redirect()->route('admin.katalog.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit katalog ini.');
         }
@@ -208,8 +232,8 @@ class KatalogController extends Controller
 
     public function update(Request $request, Katalog $katalog)
     {
-        // ✅ Cek permission
-        if (!$this->canManageKatalog($katalog)) {
+        // ✅ Cek permission untuk edit
+        if (!$this->canEditKatalog($katalog)) {
             return redirect()->route('admin.katalog.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit katalog ini.');
         }
@@ -279,22 +303,18 @@ class KatalogController extends Controller
 
     public function destroy(Katalog $katalog)
     {
-        // ✅ Cek permission
-        if (!$this->canManageKatalog($katalog)) {
+        // ✅ Cek permission untuk hapus
+        if (!$this->canDeleteKatalog($katalog)) {
             return redirect()->route('admin.katalog.index')
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus katalog ini.');
         }
 
-        // ✅ Katalog approved dari anggota tidak bisa dihapus
-        if ($katalog->isSubmittedByAnggota() && $katalog->status === 'approved') {
-            return redirect()->route('admin.katalog.index')
-                ->with('error', 'Katalog yang sudah disetujui tidak bisa dihapus.');
-        }
-
+        // Hapus file logo
         if ($katalog->logo && Storage::disk('public')->exists($katalog->logo)) {
             Storage::disk('public')->delete($katalog->logo);
         }
 
+        // Hapus file images
         if ($katalog->images) {
             foreach ($katalog->images as $image) {
                 if (Storage::disk('public')->exists($image)) {

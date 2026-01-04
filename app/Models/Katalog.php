@@ -44,12 +44,33 @@ class Katalog extends Model
         return $this->belongsTo(Admin::class, 'approved_by');
     }
 
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'approved_by');
+    }
+
     // Accessors
     public function getLogoUrlAttribute()
     {
-        if ($this->logo && Storage::disk('public')->exists($this->logo)) {
-            return Storage::url($this->logo);
+        if ($this->logo) {
+            // Jika logo sudah full URL (http/https)
+            if (filter_var($this->logo, FILTER_VALIDATE_URL)) {
+                return $this->logo;
+            }
+            
+            // Jika logo adalah path storage
+            if (Storage::disk('public')->exists($this->logo)) {
+                return asset('storage/' . $this->logo);
+            }
+            
+            // Jika path dengan awalan storage/ tapi tidak ada di disk
+            // (untuk backward compatibility)
+            if (strpos($this->logo, 'storage/') === 0) {
+                return asset($this->logo);
+            }
         }
+        
+        // Default fallback
         return asset('images/hipmi-logo.png');
     }
 
@@ -135,31 +156,26 @@ class Katalog extends Model
     {
         return in_array($this->status, ['pending', 'rejected']);
     }
-    // Di App\Models\Katalog.php
-public function admin()
-{
-    return $this->belongsTo(Admin::class, 'approved_by');
-}
 
-public function createdBy()
-{
-    if ($this->isSubmittedByAnggota()) {
-        return $this->anggota;
+    public function createdBy()
+    {
+        if ($this->isSubmittedByAnggota()) {
+            return $this->anggota;
+        }
+        // Untuk katalog admin, cari admin yang approve (atau bisa pakai created_by field)
+        return $this->admin;
     }
-    // Untuk katalog admin, cari admin yang approve (atau bisa pakai created_by field)
-    return $this->admin;
-}
 
-public function getCreatorNameAttribute()
-{
-    if ($this->isSubmittedByAnggota() && $this->anggota) {
-        return $this->anggota->nama_usaha;
+    public function getCreatorNameAttribute()
+    {
+        if ($this->isSubmittedByAnggota() && $this->anggota) {
+            return $this->anggota->nama_usaha;
+        }
+        
+        if ($this->admin) {
+            return $this->admin->username; // atau ->name
+        }
+        
+        return 'Admin';
     }
-    
-    if ($this->admin) {
-        return $this->admin->username; // atau ->name
-    }
-    
-    return 'Admin';
-}
 }

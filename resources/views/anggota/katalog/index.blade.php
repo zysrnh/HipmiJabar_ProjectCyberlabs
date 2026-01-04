@@ -4,11 +4,11 @@
 
 @section('content')
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
     * {
         box-sizing: border-box;
-        font-family: 'Montserrat', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     .katalog-container {
@@ -17,12 +17,50 @@
         padding: 20px;
     }
 
+    /* Back Button - Sharp & Professional */
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: white;
+        color: #475569;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border: 2px solid #e5e7eb;
+        border-left: 4px solid #64748b;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .back-button:hover {
+        background: #f8fafc;
+        border-color: #64748b;
+        transform: translateX(-4px);
+        box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
+    }
+
+    .back-button svg {
+        transition: transform 0.2s ease;
+    }
+
+    .back-button:hover svg {
+        transform: translateX(-4px);
+    }
+
+    /* Page Header */
     .page-header {
         background: white;
-        border-radius: 15px;
+        border-radius: 8px;
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 2px solid #f3f4f6;
+        border-left: 5px solid #3b82f6;
     }
 
     .page-header-content {
@@ -34,31 +72,53 @@
     }
 
     .page-header h1 {
-        font-size: 1.75rem;
+        font-size: 1.875rem;
         color: #0a2540;
         margin: 0 0 0.5rem 0;
-        font-weight: 700;
+        font-weight: 800;
+        letter-spacing: -0.025em;
     }
 
     .page-header p {
         color: #6b7280;
         font-size: 0.9375rem;
         margin: 0;
+        line-height: 1.6;
     }
 
+    /* Buttons - Sharp & Professional */
     .btn {
         padding: 0.75rem 1.5rem;
-        border-radius: 8px;
+        border-radius: 6px;
         border: none;
-        font-weight: 600;
+        font-weight: 700;
         cursor: pointer;
-        transition: all 0.2s;
-        font-size: 0.9375rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.875rem;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.625rem;
         justify-content: center;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 0;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: width 0.3s ease;
+    }
+
+    .btn:hover::before {
+        width: 100%;
     }
 
     .btn:hover {
@@ -68,250 +128,430 @@
     .btn-primary {
         background: #2563eb;
         color: white;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        border-left: 4px solid #1e40af;
     }
 
     .btn-primary:hover {
         background: #1e40af;
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
     }
 
     .btn-success {
         background: #10b981;
         color: white;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        border-left: 4px solid #059669;
     }
 
     .btn-success:hover {
         background: #059669;
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
     }
 
     .btn-danger {
         background: #ef4444;
         color: white;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        border-left: 4px solid #dc2626;
     }
 
     .btn-danger:hover {
         background: #dc2626;
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
     }
 
+    /* Stats Grid */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
         margin-bottom: 2rem;
     }
 
     .stat-card {
         background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 1.75rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         text-align: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid #f3f4f6;
+        border-left: 5px solid;
+        position: relative;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 5px;
+        height: 100%;
+        transition: width 0.3s ease;
+        opacity: 0.15;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        border-color: currentColor;
+    }
+
+    .stat-card:hover::before {
+        width: 100%;
     }
 
     .stat-card .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
+        font-size: 2.75rem;
+        font-weight: 800;
         color: #0a2540;
         margin: 0 0 0.5rem 0;
+        line-height: 1;
+        letter-spacing: -0.05em;
     }
 
     .stat-card .stat-label {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         color: #6b7280;
-        font-weight: 600;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    /* Individual stat card colors */
+    .stat-card:nth-child(1) {
+        border-left-color: #3b82f6;
+        color: #3b82f6;
+    }
+
+    .stat-card:nth-child(1)::before {
+        background: #3b82f6;
     }
 
     .stat-card.pending {
-        border-left: 4px solid #f59e0b;
+        border-left-color: #f59e0b;
+        color: #f59e0b;
+    }
+
+    .stat-card.pending::before {
+        background: #f59e0b;
+    }
+
+    .stat-card.pending .stat-number {
+        color: #d97706;
     }
 
     .stat-card.approved {
-        border-left: 4px solid #10b981;
+        border-left-color: #10b981;
+        color: #10b981;
+    }
+
+    .stat-card.approved::before {
+        background: #10b981;
+    }
+
+    .stat-card.approved .stat-number {
+        color: #059669;
     }
 
     .stat-card.rejected {
-        border-left: 4px solid #ef4444;
+        border-left-color: #ef4444;
+        color: #ef4444;
     }
 
+    .stat-card.rejected::before {
+        background: #ef4444;
+    }
+
+    .stat-card.rejected .stat-number {
+        color: #dc2626;
+    }
+
+    /* Katalog List */
     .katalog-list {
         display: grid;
         gap: 1.5rem;
     }
 
+    /* Katalog Card - Sharp Design */
     .katalog-card {
         background: white;
         border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .katalog-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
     }
 
     .katalog-card:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+        border-color: #cbd5e1;
     }
 
+    .katalog-card:hover::before {
+        transform: translateY(0);
+    }
+
+    /* Katalog Content Layout */
     .katalog-content {
-        display: flex;
-        gap: 1.5rem;
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 2rem;
         align-items: start;
     }
 
+    /* Katalog Logo */
     .katalog-logo {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 8px;
-        border: 2px solid #e5e7eb;
+        width: 140px;
+        height: 140px;
+        object-fit: contain;
+        background: #f9fafb;
+        padding: 16px;
+        border-radius: 6px;
+        border: 3px solid #e5e7eb;
         flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+    }
+
+    .katalog-card:hover .katalog-logo {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .katalog-info {
         flex: 1;
+        min-width: 0;
     }
 
     .katalog-header {
         display: flex;
         justify-content: space-between;
         align-items: start;
-        margin-bottom: 0.75rem;
-        gap: 1rem;
+        margin-bottom: 1rem;
+        gap: 1.5rem;
     }
 
     .katalog-title {
-        margin: 0 0 0.25rem 0;
-        font-size: 1.125rem;
+        margin: 0 0 0.5rem 0;
+        font-size: 1.375rem;
         font-weight: 700;
         color: #0a2540;
+        line-height: 1.3;
+        letter-spacing: -0.025em;
     }
 
     .katalog-field {
         margin: 0;
         color: #6b7280;
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
     }
 
+    /* Status Badge - Sharp & Elegant */
     .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
         padding: 0.5rem 1rem;
-        border-radius: 9999px;
-        font-weight: 600;
-        font-size: 0.875rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.8125rem;
         white-space: nowrap;
+        letter-spacing: 0.075em;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+        border-left: 4px solid;
+    }
+
+    .status-badge::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        transition: width 0.3s ease;
     }
 
     .status-badge.pending {
         background: #fef3c7;
-        color: #d97706;
+        color: #78350f;
+        border-left-color: #f59e0b;
+    }
+
+    .status-badge.pending::before {
+        background: #f59e0b;
     }
 
     .status-badge.approved {
         background: #d1fae5;
-        color: #059669;
+        color: #064e3b;
+        border-left-color: #10b981;
+    }
+
+    .status-badge.approved::before {
+        background: #10b981;
     }
 
     .status-badge.rejected {
         background: #fee2e2;
-        color: #dc2626;
+        color: #7f1d1d;
+        border-left-color: #ef4444;
+    }
+
+    .status-badge.rejected::before {
+        background: #ef4444;
     }
 
     .katalog-description {
         color: #4b5563;
-        font-size: 0.875rem;
-        margin-bottom: 1rem;
-        line-height: 1.6;
+        font-size: 0.9375rem;
+        margin-bottom: 1.25rem;
+        line-height: 1.7;
     }
 
+    /* Rejection Box */
     .rejection-box {
         background: #fee2e2;
-        padding: 0.875rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        border-left: 4px solid #ef4444;
+        padding: 1.125rem;
+        border-radius: 6px;
+        margin-bottom: 1.25rem;
+        border-left: 5px solid #ef4444;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
     }
 
     .rejection-box strong {
         color: #991b1b;
         font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .rejection-box p {
-        margin: 0.25rem 0 0 0;
-        color: #991b1b;
-        font-size: 0.875rem;
+        margin: 0.5rem 0 0 0;
+        color: #7f1d1d;
+        font-size: 0.9375rem;
+        line-height: 1.6;
     }
 
+    /* Actions */
     .katalog-actions {
         display: flex;
-        gap: 0.75rem;
+        gap: 0.875rem;
         flex-wrap: wrap;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f3f4f6;
     }
 
+    /* Alerts */
     .alert {
-        padding: 1rem 1.25rem;
-        border-radius: 10px;
+        padding: 1.125rem 1.5rem;
+        border-radius: 6px;
         margin-bottom: 1.5rem;
         font-size: 0.9375rem;
-        font-weight: 500;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-left: 5px solid;
     }
 
     .alert-success {
         background: #d1fae5;
-        color: #059669;
-        border: 1px solid #6ee7b7;
+        color: #065f46;
+        border-left-color: #10b981;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
     }
 
     .alert-error {
         background: #fee2e2;
-        color: #dc2626;
-        border: 1px solid #fca5a5;
+        color: #991b1b;
+        border-left-color: #ef4444;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
     }
 
     .alert-warning {
         background: #fef3c7;
-        color: #d97706;
-        border: 1px solid #fbbf24;
+        color: #92400e;
+        border-left-color: #f59e0b;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
     }
 
+    /* Empty State */
     .empty-state {
         text-align: center;
-        padding: 4rem 2rem;
+        padding: 5rem 2rem;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 2px dashed #cbd5e1;
     }
 
     .empty-state svg {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 1rem;
-        stroke: #d1d5db;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1.5rem;
+        stroke: #cbd5e1;
+        stroke-width: 1.5;
     }
 
     .empty-state h3 {
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.75rem 0;
         color: #6b7280;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+        font-weight: 700;
     }
 
     .empty-state p {
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 2rem 0;
         color: #9ca3af;
-        font-size: 0.9375rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
+    /* Pagination */
     .pagination {
         display: flex;
         justify-content: center;
         gap: 0.5rem;
-        margin-top: 2rem;
+        margin-top: 2.5rem;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
         .katalog-container {
             padding: 15px;
+            margin: 20px auto;
+        }
+
+        .page-header {
+            padding: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
         }
 
         .page-header-content {
@@ -319,42 +559,87 @@
             align-items: flex-start;
         }
 
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
         .katalog-content {
-            flex-direction: column;
+            grid-template-columns: 1fr;
+            text-align: center;
         }
 
         .katalog-logo {
             width: 100%;
+            max-width: 200px;
             height: 200px;
+            margin: 0 auto;
         }
 
         .katalog-header {
             flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
 
         .katalog-actions {
             width: 100%;
+            flex-direction: column;
         }
 
         .btn {
-            flex: 1;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-card .stat-number {
+            font-size: 2.25rem;
+        }
+
+        .back-button {
+            font-size: 0.75rem;
+            padding: 0.625rem 1rem;
         }
     }
 </style>
 
 <div class="katalog-container">
+    <!-- Back Button -->
+    <a href="{{ route('profile-anggota') }}" class="back-button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Kembali ke Profile
+    </a>
+
+    <!-- Alerts -->
     @if(session('success'))
     <div class="alert alert-success">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
         {{ session('success') }}
     </div>
     @endif
 
     @if(session('error'))
     <div class="alert alert-error">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
         {{ session('error') }}
     </div>
     @endif
 
+    <!-- Page Header -->
     <div class="page-header">
         <div class="page-header-content">
             <div>
@@ -363,7 +648,7 @@
             </div>
             @if(Auth::guard('anggota')->user()->status === 'approved')
             <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
@@ -373,13 +658,19 @@
         </div>
     </div>
 
+    <!-- Warning untuk anggota belum terverifikasi -->
     @if(Auth::guard('anggota')->user()->status !== 'approved')
     <div class="alert alert-warning">
-        ⚠️ Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
     </div>
     @endif
 
-    <!-- Stats -->
+    <!-- Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number">{{ $stats['total'] }}</div>
@@ -415,11 +706,11 @@
                         </div>
                         <span class="status-badge {{ $katalog->status }}">
                             @if($katalog->status === 'pending')
-                                ⏳ Menunggu Verifikasi
+                                Menunggu Verifikasi
                             @elseif($katalog->status === 'approved')
-                                ✅ Disetujui
+                                Disetujui
                             @else
-                                ❌ Ditolak
+                                Ditolak
                             @endif
                         </span>
                     </div>
@@ -438,7 +729,7 @@
                     <div class="katalog-actions">
                         @if($katalog->status === 'approved')
                             <a href="{{ route('e-katalog.detail', $katalog) }}" target="_blank" class="btn btn-primary">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                     <circle cx="12" cy="12" r="3"></circle>
                                 </svg>
@@ -448,7 +739,7 @@
 
                         @if($katalog->canBeEdited())
                             <a href="{{ route('profile-anggota.katalog.edit', $katalog) }}" class="btn btn-success">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
@@ -460,7 +751,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                     </svg>
@@ -476,11 +767,14 @@
     </div>
 
     <!-- Pagination -->
+    @if($katalogs->hasPages())
     <div class="pagination">
         {{ $katalogs->links() }}
     </div>
+    @endif
 
     @else
+    <!-- Empty State -->
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -488,10 +782,10 @@
             <line x1="9" y1="15" x2="15" y2="15"/>
         </svg>
         <h3>Belum ada katalog</h3>
-        <p>Tambahkan katalog perusahaan Anda untuk ditampilkan di E-Katalog HIPMI Jawa Barat</p>
+        <p>Tambahkan katalog perusahaan Anda untuk ditampilkan di E-Katalog HIPMI Jawa Barat dan jangkau lebih banyak pelanggan potensial</p>
         @if(Auth::guard('anggota')->user()->status === 'approved')
         <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
