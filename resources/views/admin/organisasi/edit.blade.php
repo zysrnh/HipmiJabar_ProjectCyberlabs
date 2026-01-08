@@ -187,7 +187,6 @@
         margin-top: 0.375rem;
     }
 
-    /* Tab Styles */
     .input-mode-tabs {
         display: flex;
         gap: 0.5rem;
@@ -227,7 +226,6 @@
         display: block;
     }
 
-    /* Anggota Card */
     .anggota-preview-card {
         background: #f0f9ff;
         border: 2px solid #0284c7;
@@ -292,6 +290,29 @@
         font-size: 0.875rem;
         color: #0c4a6e;
         line-height: 1.5;
+    }
+
+    .custom-kategori-wrapper {
+        display: none;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        border-radius: 6px;
+    }
+
+    .custom-kategori-wrapper.show {
+        display: block;
+    }
+
+    .custom-kategori-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 </style>
 @endpush
@@ -412,19 +433,46 @@
             </div>
 
             {{-- Kategori --}}
+            @php
+                $standardKategori = ['ketua_umum', 'wakil_ketua_umum', 'ketua_bidang', 'sekretaris_umum', 'wakil_sekretaris_umum'];
+                $isCustomKategori = !in_array($organisasi->kategori, $standardKategori);
+            @endphp
+
             <div class="form-group">
                 <label for="kategori" class="form-label required">Kategori Jabatan</label>
-                <select id="kategori" name="kategori" class="form-select @error('kategori') error @enderror" onchange="showKategoriInfo(this.value)">
+                <select id="kategori" name="kategori" class="form-select @error('kategori') error @enderror" onchange="handleKategoriChange(this.value)">
                     <option value="">Pilih Kategori</option>
                     <option value="ketua_umum" {{ old('kategori', $organisasi->kategori) == 'ketua_umum' ? 'selected' : '' }}>Ketua Umum</option>
                     <option value="wakil_ketua_umum" {{ old('kategori', $organisasi->kategori) == 'wakil_ketua_umum' ? 'selected' : '' }}>Wakil Ketua Umum</option>
                     <option value="ketua_bidang" {{ old('kategori', $organisasi->kategori) == 'ketua_bidang' ? 'selected' : '' }}>Ketua Bidang</option>
                     <option value="sekretaris_umum" {{ old('kategori', $organisasi->kategori) == 'sekretaris_umum' ? 'selected' : '' }}>Sekretaris Umum</option>
                     <option value="wakil_sekretaris_umum" {{ old('kategori', $organisasi->kategori) == 'wakil_sekretaris_umum' ? 'selected' : '' }}>Wakil Sekretaris Umum</option>
+                    <option value="lainnya" {{ $isCustomKategori || old('kategori') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                 </select>
                 @error('kategori')
                     <div class="error-message">{{ $message }}</div>
                 @enderror
+
+                {{-- Custom Kategori Input --}}
+                <div id="customKategoriWrapper" class="custom-kategori-wrapper {{ $isCustomKategori ? 'show' : '' }}">
+                    <label for="kategori_custom" class="custom-kategori-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Masukkan Kategori Jabatan Custom
+                    </label>
+                    <input type="text" id="kategori_custom" name="kategori_custom" 
+                           class="form-input @error('kategori_custom') error @enderror" 
+                           value="{{ old('kategori_custom', $isCustomKategori ? $organisasi->kategori : '') }}" 
+                           placeholder="Contoh: Bendahara, Koordinator Acara, dll">
+                    <div class="form-helper" style="color: #92400e;">
+                        Kategori ini akan dibuat baru dan bisa digunakan untuk posisi yang tidak ada di pilihan standar
+                    </div>
+                    @error('kategori_custom')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
                 
                 {{-- Info Box untuk setiap kategori --}}
                 <div id="kategoriInfo" class="info-box" style="display: none;">
@@ -478,27 +526,22 @@
 
 @push('scripts')
 <script>
-    // Switch between tabs
     function switchTab(mode) {
-        // Update tab buttons
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.classList.remove('active');
         });
         event.target.closest('.tab-button').classList.add('active');
 
-        // Update sections
         document.querySelectorAll('.input-section').forEach(section => {
             section.classList.remove('active');
         });
 
         if (mode === 'anggota') {
             document.getElementById('anggotaSection').classList.add('active');
-            // Clear manual input
             document.getElementById('nama_manual').value = '';
             document.getElementById('imagePreview').style.display = 'none';
         } else {
             document.getElementById('manualSection').classList.add('active');
-            // Clear anggota selection (except current)
             const currentAnggotaId = '{{ $organisasi->anggota_id }}';
             if (!currentAnggotaId) {
                 document.getElementById('anggota_id').value = '';
@@ -507,7 +550,6 @@
         }
     }
 
-    // Preview selected anggota
     function showAnggotaPreview(select) {
         const previewCard = document.getElementById('anggotaPreviewCard');
         
@@ -527,7 +569,6 @@
         }
     }
 
-    // Preview uploaded image
     function previewImage(event) {
         const preview = document.getElementById('preview');
         const previewContainer = document.getElementById('imagePreview');
@@ -543,7 +584,20 @@
         }
     }
 
-    // Show kategori info
+    function handleKategoriChange(kategori) {
+        const customWrapper = document.getElementById('customKategoriWrapper');
+        const infoBox = document.getElementById('kategoriInfo');
+        
+        if (kategori === 'lainnya') {
+            customWrapper.classList.add('show');
+            infoBox.style.display = 'none';
+        } else {
+            customWrapper.classList.remove('show');
+            document.getElementById('kategori_custom').value = '';
+            showKategoriInfo(kategori);
+        }
+    }
+
     function showKategoriInfo(kategori) {
         const infoBox = document.getElementById('kategoriInfo');
         const title = document.getElementById('kategoriTitle');
@@ -581,11 +635,10 @@
         }
     }
 
-    // Show info on page load if kategori already selected
     document.addEventListener('DOMContentLoaded', function() {
         const kategoriSelect = document.getElementById('kategori');
         if (kategoriSelect.value) {
-            showKategoriInfo(kategoriSelect.value);
+            handleKategoriChange(kategoriSelect.value);
         }
     });
 </script>

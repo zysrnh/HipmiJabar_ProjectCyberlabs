@@ -8,20 +8,24 @@
     <p>Struktur Organisasi BPD HIPMI Jawa Barat</p>
 </section>
 <section class="organisasi">
-    {{-- Ketua Umum --}}
+   {{-- Ketua Umum - TAMPILKAN SEMUA --}}
     @php
-    $ketuaUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('ketua_umum')->ordered()->first();
+    $ketuaUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('ketua_umum')->ordered()->get();
     @endphp
-    @if($ketuaUmum)
-    <div class="organisasi-layout1">
+    @if($ketuaUmum->count() > 0)
+    <div class="organisasi-layout2">
         <div class="green-accent" style="align-self: center;"></div>
         <h2 class="org-heading">Ketua Umum</h2>
-        <div class="organisasi-card" onclick="showModal({{ $ketuaUmum->id }})">
-            <img src="{{ $ketuaUmum->foto_url }}" alt="{{ $ketuaUmum->nama }}">
-            <div class="container">
-                <h4><b>{{ Str::limit($ketuaUmum->nama, 20, '...') }}</b></h4>
-                <p>{{ $ketuaUmum->jabatan }}</p>
+        <div class="organisasi-layout2-content">
+            @foreach($ketuaUmum as $ketum)
+            <div class="organisasi-card" onclick="showModal({{ $ketum->id }})">
+                <img src="{{ $ketum->foto_url }}" alt="{{ $ketum->nama }}">
+                <div class="container">
+                    <h4><b>{{ Str::limit($ketum->nama, 20, '...') }}</b></h4>
+                    <p>{{ $ketum->jabatan }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
     </div>
     @endif
@@ -87,26 +91,54 @@
     @endif
 
     {{-- Wakil Sekretaris Umum --}}
-    @php
-    $wakilSekretarisUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('wakil_sekretaris_umum')->ordered()->get();
-    @endphp
-    @if($wakilSekretarisUmum->count() > 0)
-    <div class="organisasi-layout2">
-        <div class="green-accent" style="align-self: center; background-color: #4287f5"></div>
-        <h2 class="org-heading">Wakil Sekretaris Umum</h2>
-        <div class="organisasi-layout2-content">
-            @foreach($wakilSekretarisUmum as $wakilSekretaris)
-            <div class="organisasi-card" onclick="showModal({{ $wakilSekretaris->id }})">
-                <img src="{{ $wakilSekretaris->foto_url }}" alt="{{ $wakilSekretaris->nama }}">
-                <div class="container">
-                    <h4><b>{{ Str::limit($wakilSekretaris->nama, 20, '...') }}</b></h4>
-                    <p>{{ $wakilSekretaris->jabatan }}</p>
-                </div>
+@php
+$wakilSekretarisUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('wakil_sekretaris_umum')->ordered()->get();
+@endphp
+@if($wakilSekretarisUmum->count() > 0)
+<div class="organisasi-layout2">
+    <div class="green-accent" style="align-self: center; background-color: #4287f5"></div>
+    <h2 class="org-heading">Wakil Sekretaris Umum</h2>
+    <div class="organisasi-layout2-content">
+        @foreach($wakilSekretarisUmum as $wakilSekretaris)
+        <div class="organisasi-card" onclick="showModal({{ $wakilSekretaris->id }})">
+            <img src="{{ $wakilSekretaris->foto_url }}" alt="{{ $wakilSekretaris->nama }}">
+            <div class="container">
+                <h4><b>{{ Str::limit($wakilSekretaris->nama, 20, '...') }}</b></h4>
+                <p>{{ $wakilSekretaris->jabatan }}</p>
             </div>
-            @endforeach
         </div>
+        @endforeach
     </div>
-    @endif
+</div>
+@endif
+
+{{-- KATEGORI CUSTOM - TAMBAHIN INI --}}
+@php
+$customKategori = \App\Models\Organisasi::with('anggota')
+    ->aktif()
+    ->customKategori()
+    ->ordered()
+    ->get()
+    ->groupBy('kategori');
+@endphp
+
+@foreach($customKategori as $kategoriName => $items)
+<div class="organisasi-layout2">
+    <div class="green-accent" style="align-self: center; background-color: #8b5cf6"></div>
+    <h2 class="org-heading">{{ Str::title($kategoriName) }}</h2>
+    <div class="organisasi-layout2-content">
+        @foreach($items as $item)
+        <div class="organisasi-card" onclick="showModal({{ $item->id }})">
+            <img src="{{ $item->foto_url }}" alt="{{ $item->nama }}">
+            <div class="container">
+                <h4><b>{{ Str::limit($item->nama, 20, '...') }}</b></h4>
+                <p>{{ $item->jabatan }}</p>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+@endforeach
 </section>
 
 {{-- Modal Popup --}}

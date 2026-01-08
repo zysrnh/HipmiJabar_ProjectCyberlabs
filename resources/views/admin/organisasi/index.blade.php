@@ -162,7 +162,18 @@
         border-radius: 6px;
         font-size: 0.75rem;
         font-weight: 600;
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kategori-badge.custom {
+        background: #f3e8ff;
+        color: #6b21a8;
+        border: 1px dashed #a855f7;
+    }
+
+    .kategori-badge.standard {
         background: #dbeafe;
         color: #1e40af;
     }
@@ -232,6 +243,11 @@
         color: #065f46;
         border: 1px solid #6ee7b7;
     }
+
+    .custom-icon {
+        display: inline-block;
+        font-size: 0.75rem;
+    }
 </style>
 @endpush
 
@@ -258,6 +274,10 @@
     <div class="stat-item">
         <div class="stat-label">Ketua Bidang</div>
         <div class="stat-value">{{ $organisasi->where('kategori', 'ketua_bidang')->count() }}</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-label">Kategori Custom</div>
+        <div class="stat-value">{{ $organisasi->filter(fn($item) => $item->is_custom_kategori)->count() }}</div>
     </div>
 </div>
 
@@ -319,7 +339,14 @@
                         </div>
                     </td>
                     <td>
-                        <span class="kategori-badge">{{ $item->kategori_label }}</span>
+                        <span class="kategori-badge {{ $item->is_custom_kategori ? 'custom' : 'standard' }}">
+                            @if($item->is_custom_kategori)
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="12" height="12">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                </svg>
+                            @endif
+                            {{ $item->kategori_label }}
+                        </span>
                     </td>
                     <td>
                         <span class="badge {{ $item->aktif ? 'badge-active' : 'badge-inactive' }}">

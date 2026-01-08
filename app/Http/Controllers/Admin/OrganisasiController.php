@@ -43,7 +43,8 @@ class OrganisasiController extends Controller
             'anggota_id' => 'nullable|exists:anggota,id',
             'nama' => 'required_without:anggota_id|nullable|string|max:255',
             'jabatan' => 'required|string|max:255',
-            'kategori' => 'required|in:ketua_umum,wakil_ketua_umum,ketua_bidang,sekretaris_umum,wakil_sekretaris_umum',
+            'kategori' => 'required|string|max:255',
+            'kategori_custom' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'urutan' => 'nullable|integer|min:0',
             'aktif' => 'nullable|boolean'
@@ -55,12 +56,20 @@ class OrganisasiController extends Controller
             $validated['nama'] = $anggota->nama_usaha;
         }
 
+        // Handle kategori custom
+        if ($request->kategori === 'lainnya' && $request->kategori_custom) {
+            $validated['kategori'] = $request->kategori_custom;
+        }
+
         // Set default aktif
         $validated['aktif'] = $request->has('aktif') ? 1 : 0;
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('organisasi', 'public');
         }
+
+        // Remove kategori_custom dari data yang disimpan
+        unset($validated['kategori_custom']);
 
         Organisasi::create($validated);
 
@@ -94,7 +103,8 @@ class OrganisasiController extends Controller
             'anggota_id' => 'nullable|exists:anggota,id',
             'nama' => 'required_without:anggota_id|nullable|string|max:255',
             'jabatan' => 'required|string|max:255',
-            'kategori' => 'required|in:ketua_umum,wakil_ketua_umum,ketua_bidang,sekretaris_umum,wakil_sekretaris_umum',
+            'kategori' => 'required|string|max:255',
+            'kategori_custom' => 'nullable|string|max:255',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'urutan' => 'nullable|integer|min:0',
             'aktif' => 'nullable|boolean'
@@ -104,6 +114,11 @@ class OrganisasiController extends Controller
         if ($request->anggota_id) {
             $anggota = Anggota::find($request->anggota_id);
             $validated['nama'] = $anggota->nama_usaha;
+        }
+
+        // Handle kategori custom
+        if ($request->kategori === 'lainnya' && $request->kategori_custom) {
+            $validated['kategori'] = $request->kategori_custom;
         }
 
         // Set default aktif
@@ -116,6 +131,9 @@ class OrganisasiController extends Controller
             }
             $validated['foto'] = $request->file('foto')->store('organisasi', 'public');
         }
+
+        // Remove kategori_custom dari data yang disimpan
+        unset($validated['kategori_custom']);
 
         $organisasi->update($validated);
 

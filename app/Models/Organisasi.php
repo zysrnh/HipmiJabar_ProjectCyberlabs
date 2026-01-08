@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Organisasi extends Model
 {
@@ -59,7 +60,8 @@ class Organisasi extends Model
 
     public function getKategoriLabelAttribute()
     {
-        $labels = [
+        // Standard kategori labels
+        $standardLabels = [
             'ketua_umum' => 'Ketua Umum',
             'wakil_ketua_umum' => 'Wakil Ketua Umum',
             'ketua_bidang' => 'Ketua Bidang',
@@ -67,7 +69,22 @@ class Organisasi extends Model
             'wakil_sekretaris_umum' => 'Wakil Sekretaris Umum',
         ];
 
-        return $labels[$this->kategori] ?? $this->kategori;
+        // Jika kategori ada di standard list, return label nya
+        if (isset($standardLabels[$this->kategori])) {
+            return $standardLabels[$this->kategori];
+        }
+
+        // Jika kategori custom, capitalize first letter tiap kata
+        return Str::title($this->kategori);
+    }
+
+    /**
+     * Check apakah kategori ini adalah kategori custom (bukan standard)
+     */
+    public function getIsCustomKategoriAttribute()
+    {
+        $standardKategori = ['ketua_umum', 'wakil_ketua_umum', 'ketua_bidang', 'sekretaris_umum', 'wakil_sekretaris_umum'];
+        return !in_array($this->kategori, $standardKategori);
     }
 
     /**
@@ -123,6 +140,34 @@ class Organisasi extends Model
         return $query->orderBy('urutan', 'asc')->orderBy('created_at', 'asc');
     }
 
+    /**
+     * Scope untuk kategori standard saja
+     */
+    public function scopeStandardKategori($query)
+    {
+        return $query->whereIn('kategori', [
+            'ketua_umum', 
+            'wakil_ketua_umum', 
+            'ketua_bidang', 
+            'sekretaris_umum', 
+            'wakil_sekretaris_umum'
+        ]);
+    }
+
+    /**
+     * Scope untuk kategori custom saja
+     */
+    public function scopeCustomKategori($query)
+    {
+        return $query->whereNotIn('kategori', [
+            'ketua_umum', 
+            'wakil_ketua_umum', 
+            'ketua_bidang', 
+            'sekretaris_umum', 
+            'wakil_sekretaris_umum'
+        ]);
+    }
+
     // =====================================================
     // HELPER METHODS
     // =====================================================
@@ -149,5 +194,22 @@ class Organisasi extends Model
     public function hasProfilePerusahaan()
     {
         return $this->anggota && !empty($this->anggota->profile_perusahaan);
+    }
+
+    /**
+     * Get warna badge berdasarkan kategori
+     */
+    public function getKategoriColorAttribute()
+    {
+        $colors = [
+            'ketua_umum' => '#10b981', // green
+            'wakil_ketua_umum' => '#3b82f6', // blue
+            'ketua_bidang' => '#ef4444', // red
+            'sekretaris_umum' => '#10b981', // green
+            'wakil_sekretaris_umum' => '#3b82f6', // blue
+        ];
+
+        // Return color jika standard kategori, otherwise return purple untuk custom
+        return $colors[$this->kategori] ?? '#8b5cf6'; // purple untuk custom
     }
 }
