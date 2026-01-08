@@ -21,9 +21,22 @@
     color: #04293B;
 }
 
+/* Card Default (untuk Ketua Umum) */
 .organisasi-card {
     width: auto;
     padding: 50px;
+    text-align: center;
+    border: 1px solid #04293B;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+/* Card Kecil (untuk semua posisi selain Ketua Umum) */
+.organisasi-card-small {
+    width: auto;
+    padding: 35px;
     text-align: center;
     border: 1px solid #04293B;
     border-radius: 8px;
@@ -36,11 +49,13 @@
     margin-bottom: 50px;
 }
 
-.organisasi-card:hover {
+.organisasi-card:hover,
+.organisasi-card-small:hover {
     transform: translateY(-5px);
     cursor: pointer;
 }
 
+/* Image Ketua Umum (Besar) */
 .organisasi-card img {
     width: 200px;
     height: 200px;
@@ -50,16 +65,29 @@
     border-radius: 10px;
 }
 
-.organisasi-card h4 {
+/* Image Posisi Lainnya (Lebih Kecil) */
+.organisasi-card-small img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: #04293B 1px solid;
+    border-radius: 10px;
+}
+
+.organisasi-card h4,
+.organisasi-card-small h4 {
     font-size: 20px;
     margin-bottom: 10px;
 }
 
-.organisasi-card p {
+.organisasi-card p,
+.organisasi-card-small p {
     font-size: 16px;
 }
 
-.organisasi-card .container {
+.organisasi-card .container,
+.organisasi-card-small .container {
     padding: 0 10px;
 }
 
@@ -67,12 +95,81 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 100px;
+    width: 100%;
+    max-width: 1400px;
 }
 
 .organisasi-layout2-content {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+}
+
+/* Center ketika cuma 1 item (Ketua Umum) */
+.organisasi-layout2-content.center-single {
+    display: flex;
+    justify-content: center;
+}
+
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.pagination-btn {
+    background: #04293B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #063a52;
+    transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #04293B;
+    font-weight: 600;
+    padding: 0 15px;
+}
+
+.pagination-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.pagination-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pagination-dot.active {
+    background: #04293B;
+    width: 30px;
+    border-radius: 5px;
 }
 
 @media (max-width: 1024px) {
@@ -88,16 +185,29 @@
         padding: 20px;
     }
 
-    .organisasi-card img {
-        height: 200px;
-        margin-bottom: 5px;
+    .organisasi-card-small {
+        padding: 18px;
     }
 
-    .organisasi-card h4 {
+    .organisasi-card img {
+        width: 160px;
+        height: 160px;
+        margin-bottom: 15px;
+    }
+
+    .organisasi-card-small img {
+        width: 130px;
+        height: 130px;
+        margin-bottom: 12px;
+    }
+
+    .organisasi-card h4,
+    .organisasi-card-small h4 {
         font-size: 15px;
     }
 
-    .organisasi-card p {
+    .organisasi-card p,
+    .organisasi-card-small p {
         font-size: 14px;
     }
 
@@ -112,6 +222,10 @@
         gap: 10px;
     }
 
+    .pagination-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
 }
 
 /* Modal Styles */

@@ -8,7 +8,7 @@
     <p>Struktur Organisasi BPD HIPMI Jawa Barat</p>
 </section>
 <section class="organisasi">
-   {{-- Ketua Umum - TAMPILKAN SEMUA --}}
+   {{-- Ketua Umum - BESAR --}}
     @php
     $ketuaUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('ketua_umum')->ordered()->get();
     @endphp
@@ -16,7 +16,7 @@
     <div class="organisasi-layout2">
         <div class="green-accent" style="align-self: center;"></div>
         <h2 class="org-heading">Ketua Umum</h2>
-        <div class="organisasi-layout2-content">
+        <div class="organisasi-layout2-content {{ $ketuaUmum->count() === 1 ? 'center-single' : '' }}">
             @foreach($ketuaUmum as $ketum)
             <div class="organisasi-card" onclick="showModal({{ $ketum->id }})">
                 <img src="{{ $ketum->foto_url }}" alt="{{ $ketum->nama }}">
@@ -30,27 +30,29 @@
     </div>
     @endif
 
-    {{-- Wakil Ketua Umum --}}
+   {{-- Wakil Ketua Umum - KECIL --}}
     @php
     $wakilKetuaUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('wakil_ketua_umum')->ordered()->get();
     @endphp
     @if($wakilKetuaUmum->count() > 0)
-    <div class="organisasi-layout1">
+    <div class="organisasi-layout2">
         <div class="green-accent" style="align-self: center; background-color: #4287f5"></div>
         <h2 class="org-heading">Wakil Ketua Umum</h2>
-        @foreach($wakilKetuaUmum as $wakil)
-        <div class="organisasi-card" onclick="showModal({{ $wakil->id }})">
-            <img src="{{ $wakil->foto_url }}" alt="{{ $wakil->nama }}">
-            <div class="container">
-                <h4><b>{{ Str::limit($wakil->nama, 20, '...') }}</b></h4>
-                <p>{{ $wakil->jabatan }}</p>
+        <div class="organisasi-layout2-content">
+            @foreach($wakilKetuaUmum as $wakil)
+            <div class="organisasi-card-small" onclick="showModal({{ $wakil->id }})">
+                <img src="{{ $wakil->foto_url }}" alt="{{ $wakil->nama }}">
+                <div class="container">
+                    <h4><b>{{ Str::limit($wakil->nama, 20, '...') }}</b></h4>
+                    <p>{{ $wakil->jabatan }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
     @endif
 
-    {{-- Ketua Bidang --}}
+    {{-- Ketua Bidang - KECIL --}}
     @php
     $ketuaBidang = \App\Models\Organisasi::with('anggota')->aktif()->kategori('ketua_bidang')->ordered()->get();
     @endphp
@@ -60,7 +62,7 @@
         <h2 class="org-heading">Ketua Bidang - Bidang</h2>
         <div class="organisasi-layout2-content">
             @foreach($ketuaBidang as $bidang)
-            <div class="organisasi-card" onclick="showModal({{ $bidang->id }})">
+            <div class="organisasi-card-small" onclick="showModal({{ $bidang->id }})">
                 <img src="{{ $bidang->foto_url }}" alt="{{ $bidang->nama }}">
                 <div class="container">
                     <h4><b>{{ Str::limit($bidang->nama, 20, '...') }}</b></h4>
@@ -72,7 +74,7 @@
     </div>
     @endif
 
-    {{-- Sekretaris Umum --}}
+    {{-- Sekretaris Umum - KECIL --}}
     @php
     $sekretarisUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('sekretaris_umum')->ordered()->first();
     @endphp
@@ -80,7 +82,7 @@
     <div class="organisasi-layout1">
         <div class="green-accent" style="align-self: center;"></div>
         <h2 class="org-heading">Sekretaris Umum</h2>
-        <div class="organisasi-card" onclick="showModal({{ $sekretarisUmum->id }})">
+        <div class="organisasi-card-small" onclick="showModal({{ $sekretarisUmum->id }})">
             <img src="{{ $sekretarisUmum->foto_url }}" alt="{{ $sekretarisUmum->nama }}">
             <div class="container">
                 <h4><b>{{ Str::limit($sekretarisUmum->nama, 20, '...') }}</b></h4>
@@ -90,55 +92,55 @@
     </div>
     @endif
 
-    {{-- Wakil Sekretaris Umum --}}
-@php
-$wakilSekretarisUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('wakil_sekretaris_umum')->ordered()->get();
-@endphp
-@if($wakilSekretarisUmum->count() > 0)
-<div class="organisasi-layout2">
-    <div class="green-accent" style="align-self: center; background-color: #4287f5"></div>
-    <h2 class="org-heading">Wakil Sekretaris Umum</h2>
-    <div class="organisasi-layout2-content">
-        @foreach($wakilSekretarisUmum as $wakilSekretaris)
-        <div class="organisasi-card" onclick="showModal({{ $wakilSekretaris->id }})">
-            <img src="{{ $wakilSekretaris->foto_url }}" alt="{{ $wakilSekretaris->nama }}">
-            <div class="container">
-                <h4><b>{{ Str::limit($wakilSekretaris->nama, 20, '...') }}</b></h4>
-                <p>{{ $wakilSekretaris->jabatan }}</p>
+    {{-- Wakil Sekretaris Umum - KECIL --}}
+    @php
+    $wakilSekretarisUmum = \App\Models\Organisasi::with('anggota')->aktif()->kategori('wakil_sekretaris_umum')->ordered()->get();
+    @endphp
+    @if($wakilSekretarisUmum->count() > 0)
+    <div class="organisasi-layout2">
+        <div class="green-accent" style="align-self: center; background-color: #4287f5"></div>
+        <h2 class="org-heading">Wakil Sekretaris Umum</h2>
+        <div class="organisasi-layout2-content">
+            @foreach($wakilSekretarisUmum as $wakilSekretaris)
+            <div class="organisasi-card-small" onclick="showModal({{ $wakilSekretaris->id }})">
+                <img src="{{ $wakilSekretaris->foto_url }}" alt="{{ $wakilSekretaris->nama }}">
+                <div class="container">
+                    <h4><b>{{ Str::limit($wakilSekretaris->nama, 20, '...') }}</b></h4>
+                    <p>{{ $wakilSekretaris->jabatan }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
-</div>
-@endif
+    @endif
 
-{{-- KATEGORI CUSTOM - TAMBAHIN INI --}}
-@php
-$customKategori = \App\Models\Organisasi::with('anggota')
-    ->aktif()
-    ->customKategori()
-    ->ordered()
-    ->get()
-    ->groupBy('kategori');
-@endphp
+    {{-- KATEGORI CUSTOM - KECIL --}}
+    @php
+    $customKategori = \App\Models\Organisasi::with('anggota')
+        ->aktif()
+        ->customKategori()
+        ->ordered()
+        ->get()
+        ->groupBy('kategori');
+    @endphp
 
-@foreach($customKategori as $kategoriName => $items)
-<div class="organisasi-layout2">
-    <div class="green-accent" style="align-self: center; background-color: #8b5cf6"></div>
-    <h2 class="org-heading">{{ Str::title($kategoriName) }}</h2>
-    <div class="organisasi-layout2-content">
-        @foreach($items as $item)
-        <div class="organisasi-card" onclick="showModal({{ $item->id }})">
-            <img src="{{ $item->foto_url }}" alt="{{ $item->nama }}">
-            <div class="container">
-                <h4><b>{{ Str::limit($item->nama, 20, '...') }}</b></h4>
-                <p>{{ $item->jabatan }}</p>
+    @foreach($customKategori as $kategoriName => $items)
+    <div class="organisasi-layout2">
+        <div class="green-accent" style="align-self: center; background-color: #8b5cf6"></div>
+        <h2 class="org-heading">{{ Str::title($kategoriName) }}</h2>
+        <div class="organisasi-layout2-content">
+            @foreach($items as $item)
+            <div class="organisasi-card-small" onclick="showModal({{ $item->id }})">
+                <img src="{{ $item->foto_url }}" alt="{{ $item->nama }}">
+                <div class="container">
+                    <h4><b>{{ Str::limit($item->nama, 20, '...') }}</b></h4>
+                    <p>{{ $item->jabatan }}</p>
+                </div>
             </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
-</div>
-@endforeach
+    @endforeach
 </section>
 
 {{-- Modal Popup --}}
@@ -151,9 +153,7 @@ $customKategori = \App\Models\Organisasi::with('anggota')
             </svg>
         </button>
 
-        {{-- Left Side: Photo & Name --}}
         <div class="modal-left">
-            {{-- Header dengan Logo --}}
             <div class="modal-header">
                 <div class="modal-header-content">
                     <img src="{{ asset('images/hipmi-logo.png') }}" alt="HIPMI Logo" class="modal-logo">
@@ -164,7 +164,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
                 </div>
             </div>
 
-            {{-- Photo --}}
             <div class="modal-photo-container">
                 <div class="modal-photo-circle">
                     <img id="modalPhoto" class="modal-photo" src="" alt="">
@@ -172,11 +171,9 @@ $customKategori = \App\Models\Organisasi::with('anggota')
             </div>
         </div>
 
-        {{-- Right Side: Detail Information --}}
         <div class="modal-right">
             <h3 class="modal-right-title">Informasi Detail</h3>
             <div id="modalDetails" class="modal-details">
-                {{-- Nama --}}
                 <div class="detail-section" id="namaSection">
                     <h3 class="detail-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -187,7 +184,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
                     <p id="modalNama" class="detail-text"></p>
                 </div>
 
-                {{-- Jabatan --}}
                 <div class="detail-section" id="jabatanSection">
                     <h3 class="detail-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -198,7 +194,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
                     <p id="modalJabatan" class="detail-text"></p>
                 </div>
 
-                {{-- Nama Perusahaan --}}
                 <div class="detail-section" id="namaPerusahaanSection" style="display: none;">
                     <h3 class="detail-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -210,7 +205,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
                     <p id="modalNamaPerusahaan" class="detail-text"></p>
                 </div>
 
-                {{-- Bidang Usaha --}}
                 <div class="detail-section" id="bidangUsahaSection" style="display: none;">
                     <h3 class="detail-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -221,7 +215,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
                     <p id="modalBidangUsaha" class="detail-text"></p>
                 </div>
 
-                {{-- Kontak --}}
                 <div class="detail-section" id="kontakSection" style="display: none;">
                     <h3 class="detail-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -235,336 +228,7 @@ $customKategori = \App\Models\Organisasi::with('anggota')
         </div>
     </div>
 </div>
-<style>
-    /* Modal Overlay */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(5px);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
 
-    .modal-overlay.active {
-        display: flex;
-    }
-
-    /* Modal Content - Full Navy */
-    .modal-content-landscape {
-        background: #0a3d62;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 1000px;
-        max-height: 85vh;
-        display: flex;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Left Side - Full Navy Blue */
-    .modal-left {
-        width: 420px;
-        background: #0a3d62 !important;
-        padding: 50px 35px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .modal-left * {
-        background: transparent !important;
-    }
-
-    .modal-left::before,
-    .modal-left::after {
-        display: none !important;
-    }
-
-    /* Right Side - Navy Blue */
-    .modal-right {
-        flex: 1;
-        padding: 50px 45px;
-        overflow-y: auto;
-        background: #0a3d62;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .modal-right-title {
-        font-size: 24px;
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 35px;
-        padding-bottom: 18px;
-        border-bottom: 4px solid #f39c12;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-    }
-
-    /* Header Logo */
-    .modal-header {
-        width: 100%;
-        margin-bottom: 50px;
-        position: relative;
-        z-index: 1;
-        background: transparent !important;
-    }
-
-    .modal-header::before,
-    .modal-header::after {
-        content: none !important;
-        display: none !important;
-    }
-
-    .modal-header-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 18px;
-        padding: 0;
-        background: transparent !important;
-        border: none;
-        box-shadow: none;
-    }
-
-    .modal-header-content::before,
-    .modal-header-content::after {
-        content: none !important;
-        display: none !important;
-    }
-
-    .modal-logo {
-        width: 55px;
-        height: 55px;
-        object-fit: contain;
-        filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.4));
-    }
-
-    .modal-header-text {
-        color: white;
-        line-height: 1.2;
-    }
-
-    .modal-org-name {
-        font-size: 26px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-        color: white;
-    }
-
-    .modal-org-region {
-        font-size: 14px;
-        opacity: 0.95;
-        letter-spacing: 1.8px;
-        font-weight: 600;
-        color: #f39c12;
-    }
-
-    /* Photo Container */
-    .modal-photo-container {
-        position: relative;
-        z-index: 1;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        flex: 1;
-        align-items: center;
-        margin: 0;
-        background: transparent !important;
-    }
-
-    .modal-photo-container::before,
-    .modal-photo-container::after {
-        content: none !important;
-        display: none !important;
-    }
-
-    .modal-photo-circle {
-        position: relative;
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 7px solid #f39c12;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-        background: transparent !important;
-    }
-
-    .modal-photo-circle::before,
-    .modal-photo-circle::after {
-        content: none !important;
-        display: none !important;
-    }
-
-    .modal-photo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    /* Detail Sections */
-    .modal-details {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-    }
-
-    .detail-section {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 22px 28px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        border-left: 4px solid #f39c12;
-        backdrop-filter: blur(10px);
-    }
-
-    .detail-section:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        border-left-width: 6px;
-        background: rgba(255, 255, 255, 0.12);
-    }
-
-    .detail-title {
-        font-size: 13px;
-        font-weight: 800;
-        color: #f39c12;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .detail-title svg {
-        color: #f39c12;
-        width: 16px;
-        height: 16px;
-    }
-
-    .detail-text {
-        font-size: 17px;
-        color: #ffffff;
-        line-height: 1.7;
-        margin: 0;
-        font-weight: 400;
-    }
-
-    .detail-text p {
-        margin: 8px 0;
-        color: #ffffff;
-    }
-
-    .detail-text strong {
-        color: #f39c12;
-        font-weight: 700;
-    }
-
-    /* Close Button */
-    .modal-close {
-        position: absolute;
-        top: 25px;
-        right: 25px;
-        background: #f39c12;
-        border: none;
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        z-index: 10;
-        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35);
-    }
-
-    .modal-close:hover {
-        background: #e67e22;
-        transform: rotate(90deg) scale(1.1);
-        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.45);
-    }
-
-    .modal-close svg {
-        width: 24px;
-        height: 24px;
-        color: #0a3d62;
-        stroke-width: 3;
-    }
-
-    /* Scrollbar */
-    .modal-right::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    .modal-right::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 10px;
-    }
-
-    .modal-right::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #f39c12 0%, #e67e22 100%);
-        border-radius: 10px;
-    }
-
-    .modal-right::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #e67e22 0%, #d35400 100%);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .modal-content-landscape {
-            flex-direction: column;
-            width: 95%;
-            max-height: 90vh;
-        }
-
-        .modal-left {
-            width: 100%;
-            padding: 35px 25px;
-            min-height: auto;
-        }
-
-        .modal-photo-circle {
-            width: 170px;
-            height: 170px;
-        }
-
-        .modal-right {
-            padding: 30px 25px;
-        }
-
-        .modal-right-title {
-            font-size: 20px;
-            margin-bottom: 25px;
-        }
-
-        .modal-org-name {
-            font-size: 22px;
-        }
-
-        .modal-org-region {
-            font-size: 12px;
-        }
-
-        .detail-section {
-            padding: 18px 22px;
-        }
-    }
-</style>
 <script>
     function showModal(organisasiId) {
         document.getElementById('modalOverlay').classList.add('active');
@@ -575,7 +239,6 @@ $customKategori = \App\Models\Organisasi::with('anggota')
             .then(data => {
                 if (data.success) {
                     const org = data.data;
-
                     document.getElementById('modalPhoto').src = org.foto_url;
                     document.getElementById('modalNama').textContent = org.nama;
                     document.getElementById('modalJabatan').textContent = org.jabatan;

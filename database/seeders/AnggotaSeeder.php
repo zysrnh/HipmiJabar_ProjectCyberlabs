@@ -61,6 +61,9 @@ class AnggotaSeeder extends Seeder
         $omsetPerusahaan = ['< 300 juta', '300 juta - 2,5 miliar', '2,5 miliar - 50 miliar', '> 50 miliar'];
         $agama = ['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'];
 
+        // Foto yang sudah ada di storage
+        $fotoReal = 'anggota/foto/download.jpeg';
+
         // Buat dummy data untuk setiap domisili (2-5 anggota per domisili)
         foreach ($domisiliList as $domisili) {
             $jumlahAnggota = rand(2, 5);
@@ -82,8 +85,8 @@ class AnggotaSeeder extends Seeder
                     'kode_pos' => rand(40000, 49999),
                     'email' => strtolower(str_replace(' ', '', $namaUsaha)) . rand(1, 999) . '@example.com',
                     'nomor_ktp' => $this->generateKTP(),
-                    'foto_ktp' => 'anggota/ktp/dummy-ktp-' . rand(1, 100) . '.jpg',
-                    'foto_diri' => 'anggota/foto/dummy-foto-' . rand(1, 100) . '.jpg',
+                    'foto_ktp' => $fotoReal, // Gunakan foto real
+                    'foto_diri' => $fotoReal, // Gunakan foto real
                     
                     // Profile Perusahaan
                     'nama_usaha_perusahaan' => $legalitasUsaha[array_rand($legalitasUsaha)] . ' ' . $this->generateNamaPerusahaan(),
@@ -98,8 +101,8 @@ class AnggotaSeeder extends Seeder
                     'omset_perusahaan' => $omsetPerusahaan[array_rand($omsetPerusahaan)],
                     'npwp_perusahaan' => $this->generateNPWP(),
                     'no_nota_pendirian' => 'AHU-' . rand(1000000, 9999999) . '.AH.01.01',
-                    'profile_perusahaan' => 'anggota/profile/dummy-profile-' . rand(1, 100) . '.pdf',
-                    'logo_perusahaan' => 'anggota/logo/dummy-logo-' . rand(1, 100) . '.png',
+                    'profile_perusahaan' => $fotoReal, // Gunakan foto real untuk dummy
+                    'logo_perusahaan' => $fotoReal, // Gunakan foto real untuk dummy
                     
                     // Organisasi
                     'sfc_hipmi' => ['Teknologi & Inovasi', 'Ekonomi Kreatif', 'UMKM', 'Industri', 'Perdagangan'][rand(0, 4)],
