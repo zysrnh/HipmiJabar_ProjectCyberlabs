@@ -18,8 +18,8 @@ use App\Http\Controllers\AnggotaAuthController;
 use App\Http\Controllers\BukuAnggotaController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\UmkmController;
-use App\Http\Controllers\KegiatanController; // ✅ Public Kegiatan Controller
-use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController; // ✅ Admin Kegiatan Controller
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController;
 use App\Http\Controllers\AnggotaKatalogController;
 
 // =====================================================
@@ -143,7 +143,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/strategic-plan/{strategicPlan}', [StrategicPlanController::class, 'show'])
     ->name('strategic-plan.detail');
 
-// ✅ Kegiatan Public Routes (DITAMBAHKAN)
+// ✅ Kegiatan Public Routes
 Route::get('/informasi-kegiatan', [KegiatanController::class, 'index'])->name('informasi-kegiatan');
 Route::get('/informasi-kegiatan/{slug}', [KegiatanController::class, 'show'])->name('detail-kegiatan');
 
@@ -155,8 +155,13 @@ Route::get('/e-katalog/{katalog}', [KatalogController::class, 'show'])->name('e-
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita-detail');
 
-// Other Public Pages
-Route::view('/organisasi', 'pages.organisasi')->name('organisasi');
+// ✅ TAMBAHKAN BARIS INI - Organisasi Public Routes
+Route::get('/organisasi', function () {
+    return view('pages.organisasi');
+})->name('organisasi');
+
+// ✅ TAMBAHKAN BARIS INI - Route untuk AJAX get detail organisasi
+Route::get('/organisasi/{organisasi}', [OrganisasiController::class, 'show'])->name('organisasi.show');
 
 // UMKM Registration
 Route::get('/umkm', [UmkmController::class, 'create'])->name('umkm');
@@ -190,7 +195,7 @@ Route::middleware('auth:anggota')->group(function () {
     Route::post('/profile-anggota/change-admin-password', [AnggotaController::class, 'changeAdminPassword'])
         ->name('profile-anggota.change-admin-password');
 
-    // ✅ E-Katalog Management untuk Anggota (GUNAKAN AnggotaKatalogController)
+    // ✅ E-Katalog Management untuk Anggota
     Route::prefix('profile-anggota/katalog')->name('profile-anggota.katalog.')->group(function () {
         Route::get('/', [AnggotaKatalogController::class, 'index'])->name('index');
         Route::get('/create', [AnggotaKatalogController::class, 'create'])->name('create');

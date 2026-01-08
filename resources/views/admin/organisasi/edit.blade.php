@@ -186,6 +186,113 @@
         color: #6b7280;
         margin-top: 0.375rem;
     }
+
+    /* Tab Styles */
+    .input-mode-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.5rem;
+    }
+
+    .tab-button {
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        border: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #6b7280;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .tab-button:hover {
+        color: #0a2540;
+    }
+
+    .tab-button.active {
+        color: #0a2540;
+        border-bottom-color: #0a2540;
+    }
+
+    .input-section {
+        display: none;
+    }
+
+    .input-section.active {
+        display: block;
+    }
+
+    /* Anggota Card */
+    .anggota-preview-card {
+        background: #f0f9ff;
+        border: 2px solid #0284c7;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        display: none;
+    }
+
+    .anggota-preview-card.show {
+        display: block;
+    }
+
+    .anggota-preview-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .anggota-preview-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #0284c7;
+    }
+
+    .anggota-preview-info h4 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #075985;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .anggota-preview-info p {
+        font-size: 0.75rem;
+        color: #0c4a6e;
+        margin: 0;
+    }
+
+    .info-box {
+        padding: 1rem;
+        background: #f0f9ff;
+        border-left: 4px solid #0284c7;
+        border-radius: 6px;
+        margin-top: 1rem;
+    }
+
+    .info-box-content {
+        display: flex;
+        align-items: start;
+        gap: 0.75rem;
+    }
+
+    .info-box-title {
+        font-weight: 600;
+        color: #075985;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-box-desc {
+        font-size: 0.875rem;
+        color: #0c4a6e;
+        line-height: 1.5;
+    }
 </style>
 @endpush
 
@@ -195,15 +302,106 @@
             @csrf
             @method('PUT')
 
-            <div class="form-group">
-                <label for="nama" class="form-label required">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" class="form-input @error('nama') error @enderror" 
-                       value="{{ old('nama', $organisasi->nama) }}" placeholder="Masukkan nama lengkap">
-                @error('nama')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
+            {{-- Tab Mode Input --}}
+            <div class="input-mode-tabs">
+                <button type="button" class="tab-button {{ $organisasi->anggota_id ? 'active' : '' }}" onclick="switchTab('anggota')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style="display: inline; vertical-align: middle;">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <line x1="20" y1="8" x2="20" y2="14"></line>
+                        <line x1="23" y1="11" x2="17" y2="11"></line>
+                    </svg>
+                    Pilih dari Anggota
+                </button>
+                <button type="button" class="tab-button {{ !$organisasi->anggota_id ? 'active' : '' }}" onclick="switchTab('manual')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16" style="display: inline; vertical-align: middle;">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Input Manual
+                </button>
             </div>
 
+            {{-- Section: Pilih dari Anggota --}}
+            <div id="anggotaSection" class="input-section {{ $organisasi->anggota_id ? 'active' : '' }}">
+                <div class="form-group">
+                    <label for="anggota_id" class="form-label">Pilih Anggota</label>
+                    <select id="anggota_id" name="anggota_id" class="form-select @error('anggota_id') error @enderror" onchange="showAnggotaPreview(this)">
+                        <option value="">-- Pilih Anggota --</option>
+                        @foreach($anggotaList as $anggota)
+                            <option value="{{ $anggota->id }}" 
+                                    data-nama="{{ $anggota->nama_usaha }}"
+                                    data-email="{{ $anggota->email }}"
+                                    data-foto="{{ $anggota->photo_url }}"
+                                    {{ old('anggota_id', $organisasi->anggota_id) == $anggota->id ? 'selected' : '' }}>
+                                {{ $anggota->nama_usaha }} ({{ $anggota->email }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('anggota_id')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                    <div class="form-helper">Pilih anggota yang sudah terdaftar dan disetujui</div>
+
+                    {{-- Preview Card --}}
+                    <div id="anggotaPreviewCard" class="anggota-preview-card {{ $organisasi->anggota_id ? 'show' : '' }}">
+                        <div class="anggota-preview-content">
+                            <img id="previewAnggotaFoto" class="anggota-preview-img" 
+                                 src="{{ $organisasi->anggota ? $organisasi->anggota->photo_url : '' }}" alt="">
+                            <div class="anggota-preview-info">
+                                <h4 id="previewAnggotaNama">{{ $organisasi->anggota ? $organisasi->anggota->nama_usaha : '' }}</h4>
+                                <p id="previewAnggotaEmail">{{ $organisasi->anggota ? $organisasi->anggota->email : '' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Section: Input Manual --}}
+            <div id="manualSection" class="input-section {{ !$organisasi->anggota_id ? 'active' : '' }}">
+                <div class="form-group">
+                    <label for="nama_manual" class="form-label required">Nama Lengkap</label>
+                    <input type="text" id="nama_manual" name="nama" class="form-input @error('nama') error @enderror" 
+                           value="{{ old('nama', $organisasi->nama) }}" placeholder="Masukkan nama lengkap">
+                    @error('nama')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="foto" class="form-label">Foto</label>
+                    
+                    @if($organisasi->foto)
+                        <div class="current-image">
+                            <span class="current-image-label">Foto Saat Ini:</span>
+                            <img src="{{ $organisasi->foto_url }}" alt="{{ $organisasi->nama }}">
+                        </div>
+                    @endif
+
+                    <div class="file-input-wrapper">
+                        <input type="file" id="foto" name="foto" class="file-input" accept="image/*" onchange="previewImage(event)">
+                        <label for="foto" class="file-label">
+                            <div class="file-label-content">
+                                <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Klik untuk upload foto baru</div>
+                                <div style="font-size: 0.75rem; color: #6b7280;">JPG, PNG (Max. 2MB)</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div id="imagePreview" class="image-preview" style="display: none;">
+                        <img id="preview" class="preview-img" src="" alt="Preview">
+                    </div>
+                    @error('foto')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+
+            {{-- Jabatan (Untuk Semua Mode) --}}
             <div class="form-group">
                 <label for="jabatan" class="form-label required">Jabatan</label>
                 <input type="text" id="jabatan" name="jabatan" class="form-input @error('jabatan') error @enderror" 
@@ -213,6 +411,7 @@
                 @enderror
             </div>
 
+            {{-- Kategori --}}
             <div class="form-group">
                 <label for="kategori" class="form-label required">Kategori Jabatan</label>
                 <select id="kategori" name="kategori" class="form-select @error('kategori') error @enderror" onchange="showKategoriInfo(this.value)">
@@ -228,56 +427,25 @@
                 @enderror
                 
                 {{-- Info Box untuk setiap kategori --}}
-                <div id="kategoriInfo" style="display: none; margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-left: 4px solid #0284c7; border-radius: 6px;">
-                    <div style="display: flex; align-items: start; gap: 0.75rem;">
+                <div id="kategoriInfo" class="info-box" style="display: none;">
+                    <div class="info-box-content">
                         <svg style="width: 20px; height: 20px; color: #0284c7; flex-shrink: 0; margin-top: 2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="16" x2="12" y2="12"></line>
                             <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
                         <div>
-                            <div style="font-weight: 600; color: #075985; margin-bottom: 0.25rem;" id="kategoriTitle"></div>
-                            <div style="font-size: 0.875rem; color: #0c4a6e; line-height: 1.5;" id="kategoriDesc"></div>
+                            <div class="info-box-title" id="kategoriTitle"></div>
+                            <div class="info-box-desc" id="kategoriDesc"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{-- Hidden input untuk urutan (auto-generated) --}}
+            {{-- Hidden input untuk urutan --}}
             <input type="hidden" id="urutan" name="urutan" value="{{ old('urutan', $organisasi->urutan) }}">
 
-            <div class="form-group">
-                <label for="foto" class="form-label">Foto</label>
-                
-                @if($organisasi->foto)
-                    <div class="current-image">
-                        <span class="current-image-label">Foto Saat Ini:</span>
-                        <img src="{{ $organisasi->foto_url }}" alt="{{ $organisasi->nama }}">
-                    </div>
-                @endif
-
-                <div class="file-input-wrapper">
-                    <input type="file" id="foto" name="foto" class="file-input" accept="image/*" onchange="previewImage(event)">
-                    <label for="foto" class="file-label">
-                        <div class="file-label-content">
-                            <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Klik untuk upload foto baru</div>
-                            <div style="font-size: 0.75rem; color: #6b7280;">JPG, PNG (Max. 2MB)</div>
-                        </div>
-                    </label>
-                </div>
-                <div id="imagePreview" class="image-preview" style="display: none;">
-                    <img id="preview" class="preview-img" src="" alt="Preview">
-                </div>
-                @error('foto')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
-
+            {{-- Status Aktif --}}
             <div class="form-group">
                 <div class="checkbox-wrapper">
                     <input type="checkbox" id="aktif" name="aktif" class="form-checkbox" value="1" {{ old('aktif', $organisasi->aktif) ? 'checked' : '' }}>
@@ -286,6 +454,7 @@
                 <div class="form-helper">Centang jika anggota ini aktif dalam organisasi</div>
             </div>
 
+            {{-- Action Buttons --}}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
@@ -309,6 +478,56 @@
 
 @push('scripts')
 <script>
+    // Switch between tabs
+    function switchTab(mode) {
+        // Update tab buttons
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.closest('.tab-button').classList.add('active');
+
+        // Update sections
+        document.querySelectorAll('.input-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        if (mode === 'anggota') {
+            document.getElementById('anggotaSection').classList.add('active');
+            // Clear manual input
+            document.getElementById('nama_manual').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+        } else {
+            document.getElementById('manualSection').classList.add('active');
+            // Clear anggota selection (except current)
+            const currentAnggotaId = '{{ $organisasi->anggota_id }}';
+            if (!currentAnggotaId) {
+                document.getElementById('anggota_id').value = '';
+                document.getElementById('anggotaPreviewCard').classList.remove('show');
+            }
+        }
+    }
+
+    // Preview selected anggota
+    function showAnggotaPreview(select) {
+        const previewCard = document.getElementById('anggotaPreviewCard');
+        
+        if (select.value) {
+            const selectedOption = select.options[select.selectedIndex];
+            const nama = selectedOption.getAttribute('data-nama');
+            const email = selectedOption.getAttribute('data-email');
+            const foto = selectedOption.getAttribute('data-foto');
+
+            document.getElementById('previewAnggotaFoto').src = foto;
+            document.getElementById('previewAnggotaNama').textContent = nama;
+            document.getElementById('previewAnggotaEmail').textContent = email;
+
+            previewCard.classList.add('show');
+        } else {
+            previewCard.classList.remove('show');
+        }
+    }
+
+    // Preview uploaded image
     function previewImage(event) {
         const preview = document.getElementById('preview');
         const previewContainer = document.getElementById('imagePreview');
@@ -324,6 +543,7 @@
         }
     }
 
+    // Show kategori info
     function showKategoriInfo(kategori) {
         const infoBox = document.getElementById('kategoriInfo');
         const title = document.getElementById('kategoriTitle');

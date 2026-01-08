@@ -76,11 +76,11 @@ class Anggota extends Authenticatable
     {
         return $this->belongsTo(Admin::class, 'approved_by');
     }
-    // Di App\Models\Anggota.php
-public function admin()
-{
-    return $this->hasOne(Admin::class, 'email', 'email');
-}
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'email', 'email');
+    }
 
     /**
      * Relasi ke UMKM (One to Many)
@@ -114,6 +114,44 @@ public function admin()
     {
         return $this->hasMany(Umkm::class, 'anggota_id')->where('status', 'rejected');
     }
+
+    public function katalogs()
+    {
+        return $this->hasMany(Katalog::class, 'anggota_id');
+    }
+
+    public function approvedKatalogs()
+    {
+        return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'approved');
+    }
+
+    public function pendingKatalogs()
+    {
+        return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'pending');
+    }
+
+    public function hasApprovedKatalog()
+    {
+        return $this->katalogs()->where('status', 'approved')->exists();
+    }
+
+    // ============ TAMBAHKAN INI (RELASI ORGANISASI) ============
+    /**
+     * Relasi ke Organisasi
+     */
+    public function organisasi()
+    {
+        return $this->hasOne(Organisasi::class, 'anggota_id');
+    }
+
+    /**
+     * Check apakah anggota sudah terdaftar di organisasi
+     */
+    public function isInOrganisasi()
+    {
+        return $this->organisasi()->exists();
+    }
+    // ============ AKHIR TAMBAHAN ============
 
     // =====================================================
     // ACCESSORS (URL Attributes)
@@ -245,23 +283,4 @@ public function admin()
 
         return $badges[$this->status] ?? '<span class="badge badge-secondary">Tidak Diketahui</span>';
     }
-    public function katalogs()
-{
-    return $this->hasMany(Katalog::class, 'anggota_id');
-}
-
-public function approvedKatalogs()
-{
-    return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'approved');
-}
-
-public function pendingKatalogs()
-{
-    return $this->hasMany(Katalog::class, 'anggota_id')->where('status', 'pending');
-}
-
-public function hasApprovedKatalog()
-{
-    return $this->katalogs()->where('status', 'approved')->exists();
-}
 }

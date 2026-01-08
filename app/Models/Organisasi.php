@@ -14,6 +14,7 @@ class Organisasi extends Model
     protected $table = 'organisasi';
 
     protected $fillable = [
+        'anggota_id',
         'nama',
         'jabatan',
         'foto',
@@ -26,16 +27,36 @@ class Organisasi extends Model
         'aktif' => 'boolean',
     ];
 
-    // Accessor for photo URL
+    // =====================================================
+    // RELATIONSHIPS
+    // =====================================================
+
+    /**
+     * Relasi ke Anggota
+     */
+    public function anggota()
+    {
+        return $this->belongsTo(Anggota::class, 'anggota_id');
+    }
+
+    // =====================================================
+    // ACCESSORS
+    // =====================================================
+
     public function getFotoUrlAttribute()
     {
+        // Prioritas: foto organisasi > foto anggota > placeholder
         if ($this->foto) {
             return Storage::url($this->foto);
         }
-        return asset('images/photo.jpg'); // default photo
+        
+        if ($this->anggota && $this->anggota->foto_diri) {
+            return Storage::url($this->anggota->foto_diri);
+        }
+        
+        return asset('images/photo.jpg');
     }
 
-    // Accessor for kategori label
     public function getKategoriLabelAttribute()
     {
         $labels = [
@@ -49,21 +70,84 @@ class Organisasi extends Model
         return $labels[$this->kategori] ?? $this->kategori;
     }
 
-    // Scope untuk kategori
+    /**
+     * Get bidang usaha dari anggota
+     */
+    public function getBidangUsahaAttribute()
+    {
+        return $this->anggota ? $this->anggota->bidang_usaha : null;
+    }
+
+    /**
+     * Get deskripsi detail (kegiatan) dari anggota
+     */
+    public function getDetailKegiatanAttribute()
+    {
+        return $this->anggota ? $this->anggota->deskripsi_detail : null;
+    }
+
+    /**
+     * Get profile perusahaan dari anggota
+     */
+    public function getProfilePerusahaanAttribute()
+    {
+        return $this->anggota ? $this->anggota->profile_perusahaan : null;
+    }
+
+    /**
+     * Get profile perusahaan URL dari anggota
+     */
+    public function getProfilePerusahaanUrlAttribute()
+    {
+        return $this->anggota && $this->anggota->profile_perusahaan 
+            ? Storage::url($this->anggota->profile_perusahaan) 
+            : null;
+    }
+
+    // =====================================================
+    // SCOPES
+    // =====================================================
+
     public function scopeKategori($query, $kategori)
     {
         return $query->where('kategori', $kategori);
     }
 
-    // Scope untuk yang aktif
     public function scopeAktif($query)
     {
         return $query->where('aktif', true);
     }
 
-    // Scope untuk ordering
     public function scopeOrdered($query)
     {
         return $query->orderBy('urutan', 'asc')->orderBy('created_at', 'asc');
+    }
+
+    // =====================================================
+    // HELPER METHODS
+    // =====================================================
+
+    /**
+     * Check apakah memiliki bidang usaha
+     */
+    public function hasBidangUsaha()
+    {
+        return $this->anggota && !empty($this->anggota->bidang_usaha);
+    }
+
+    /**
+     * Check apakah memiliki detail kegiatan
+     */
+    public function hasDetailKegiatan()
+    {
+        return $this->anggota && !empty($this->anggota->deskripsi_detail);
+    }
+
+    /**
+     * Check apakah memiliki profile perusahaan
+     */
+    public function hasProfilePerusahaan()
+    {
+        return $this->anggota && !empty($this->anggota->profile_perusahaan);
     }
 }
