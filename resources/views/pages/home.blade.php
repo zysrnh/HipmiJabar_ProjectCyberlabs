@@ -9,13 +9,13 @@
         <h1>HIPMI Jawa Barat</h1>
         <p>Sebagai Jembatan Informasi</p>
         <h3>Hayu, kita maju babarengan!</h3>
-        <div class="hero-buttons">
-            <a href="{{ route('jadi-anggota') }}" class="btn">Jadi Anggota</a>
-            <a href="#" class="fa fa-instagram social-icons"></a>
-            <a href="#" class="fa fa-facebook social-icons"></a>
-            <a href="#" class="fa fa-linkedin social-icons"></a>
-            <a href="#" class="fa fa-youtube social-icons"></a>
-        </div>
+       <div class="hero-buttons">
+    <a href="{{ route('jadi-anggota') }}" class="btn">Jadi Anggota</a>
+    <a href="https://www.instagram.com/hipmijabar/" target="_blank" class="fa fa-instagram social-icons"></a>
+    <a href="https://www.facebook.com/groups/hipmijabar/" target="_blank" class="fa fa-facebook social-icons"></a>
+    <a href="https://www.linkedin.com/company/hipmi-pt-himpunan-pengusaha-muda-perguruan-tinggi/?originalSubdomain=id" target="_blank" class="fa fa-linkedin social-icons"></a>
+    <a href="#" class="fa fa-youtube social-icons"></a>
+</div>
     </div>
     <div class="hero-2">
         <img src="{{ asset('images/hipmi-logo.png') }}" alt="HIPMI Logo">

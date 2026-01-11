@@ -3,10 +3,336 @@
 @section('title', 'Organisasi - HIPMI Jawa Barat')
 
 @section('content')
+
+{{-- INLINE CSS UNTUK MODAL LANDSCAPE --}}
+<style>
+/* Modal Landscape Layout - Inline Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content-landscape {
+    background: white;
+    border-radius: 20px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideUp 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal-close:hover {
+    background: white;
+    transform: rotate(90deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-close svg {
+    width: 20px;
+    height: 20px;
+    stroke: #04293B;
+}
+
+.modal-left {
+    flex: 0 0 380px;
+    display: flex;
+    flex-direction: column;
+    background: #04293B;
+}
+
+.modal-header {
+    background: #04293B;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.modal-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.modal-header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-org-name {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.modal-org-region {
+    color: #FDB515;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-top: 0.25rem;
+}
+
+.modal-photo-container {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #04293B 0%, #04293B 50%, #063a52 50%, #063a52 100%);
+}
+
+.modal-photo-circle {
+    position: relative;
+    z-index: 2;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 6px solid #6DBAED;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-right {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background: white;
+}
+
+.modal-right-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #04293B;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #6DBAED;
+}
+
+.modal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-section {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #6DBAED;
+    transition: all 0.3s;
+}
+
+.detail-section:hover {
+    background: #e9ecef;
+    border-left-color: #04293B;
+    transform: translateX(5px);
+}
+
+.detail-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #04293B;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-title svg {
+    width: 16px;
+    height: 16px;
+    fill: #6DBAED;
+}
+
+.detail-text {
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.detail-text p {
+    margin: 0.25rem 0;
+}
+
+.detail-text strong {
+    color: #04293B;
+    font-weight: 600;
+}
+
+.modal-right::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-right::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.modal-right::-webkit-scrollbar-thumb {
+    background: #6DBAED;
+    border-radius: 10px;
+}
+
+.modal-right::-webkit-scrollbar-thumb:hover {
+    background: #04293B;
+}
+
+@media (max-width: 768px) {
+    .modal-content-landscape {
+        flex-direction: column;
+        max-width: 95%;
+        max-height: 85vh;
+    }
+
+    .modal-left {
+        flex: 0 0 auto;
+    }
+
+    .modal-header {
+        padding: 1rem;
+    }
+
+    .modal-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .modal-org-name {
+        font-size: 1.25rem;
+    }
+
+    .modal-org-region {
+        font-size: 0.75rem;
+    }
+
+    .modal-photo-container {
+        height: 250px;
+    }
+
+    .modal-photo-circle {
+        width: 160px;
+        height: 160px;
+        border-width: 5px;
+    }
+
+    .modal-right {
+        padding: 1.5rem;
+        max-height: 300px;
+    }
+
+    .modal-right-title {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .detail-section {
+        padding: 0.75rem;
+    }
+
+    .detail-title {
+        font-size: 0.75rem;
+    }
+
+    .detail-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content-landscape {
+        margin: 0.5rem;
+    }
+
+    .modal-photo-container {
+        height: 220px;
+    }
+
+    .modal-photo-circle {
+        width: 140px;
+        height: 140px;
+    }
+
+    .modal-right {
+        padding: 1rem;
+    }
+
+    .detail-section {
+        padding: 0.5rem;
+    }
+}
+</style>
+
 <section class="page-banner">
     <h1>Struktur Organisasi</h1>
     <p>Struktur Organisasi BPD HIPMI Jawa Barat</p>
 </section>
+
 <section class="organisasi">
    {{-- Ketua Umum - BESAR --}}
     @php
@@ -143,7 +469,7 @@
     @endforeach
 </section>
 
-{{-- Modal Popup --}}
+{{-- Modal Popup Landscape --}}
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
     <div class="modal-content-landscape" onclick="event.stopPropagation()">
         <button class="modal-close" onclick="closeModal()">
@@ -153,6 +479,7 @@
             </svg>
         </button>
 
+        {{-- Bagian Kiri: Logo + Foto --}}
         <div class="modal-left">
             <div class="modal-header">
                 <div class="modal-header-content">
@@ -171,6 +498,7 @@
             </div>
         </div>
 
+        {{-- Bagian Kanan: Detail Informasi --}}
         <div class="modal-right">
             <h3 class="modal-right-title">Informasi Detail</h3>
             <div id="modalDetails" class="modal-details">
