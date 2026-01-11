@@ -148,86 +148,674 @@
 </section>
 
 <style>
-    /* ================== BUKU INFORMASI HOME SECTION ================== */
+/* ================== BUKU INFORMASI HOME SECTION ================== */
+.buku-informasi-home {
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.buku-informasi-home > h2 {
+    font-size: clamp(22px, 4vw, 30px); /* Responsive font size */
+    color: #04293B;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.buku-informasi-home-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Owl Carousel Override untuk Konsistensi */
+.anggota-carousel {
+    width: 100%;
+}
+
+.anggota-carousel .owl-stage-outer {
+    overflow: hidden;
+    padding: 5px; /* Prevent shadow clipping */
+}
+
+.anggota-carousel .owl-stage {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.anggota-carousel .owl-item {
+    display: flex !important;
+    height: auto !important;
+}
+
+.anggota-carousel a {
+    color: #04293B;
+    text-decoration: none;
+    width: 100%;
+    display: flex;
+    height: 100%;
+}
+
+/* Buku Card Styling - FULLY RESPONSIVE */
+.buku-card {
+    padding: clamp(15px, 3vw, 30px);
+    text-align: center;
+    border: 1px solid #04293B;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 300px;
+}
+
+.buku-card:hover {
+    cursor: pointer;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(4, 41, 59, 0.25);
+}
+
+/* Image dengan Aspect Ratio Fixed */
+.buku-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Pastikan selalu square */
+    object-fit: cover;
+    object-position: center;
+    margin-bottom: clamp(10px, 2vw, 20px);
+    border: #04293B 1px solid;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    flex-shrink: 0;
+}
+
+.buku-card h4 {
+    font-size: clamp(14px, 2vw, 18px);
+    margin-bottom: 8px;
+    color: #04293B;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    min-height: 2.8em; /* Reserve space for 2 lines */
+}
+
+.buku-card p {
+    font-size: clamp(11px, 1.5vw, 14px);
+    color: #666;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.5;
+}
+
+.buku-card .container {
+    padding: 0 10px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* Button */
+.btn-ekatalog-home {
+    display: inline-block;
+    padding: clamp(8px, 1.5vw, 12px) clamp(18px, 3vw, 30px);
+    background: #04293B;
+    border: #04293B 1px solid;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: clamp(12px, 1.5vw, 14px);
+}
+
+.btn-ekatalog-home:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(4, 41, 59, 0.3);
+    background: #063a52;
+}
+
+/* Owl Navigation Buttons Styling - POSISI SAMPING */
+.buku-informasi-home-content {
+    position: relative;
+}
+
+.anggota-carousel .owl-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 10;
+    margin-top: 0;
+}
+
+.anggota-carousel .owl-nav button {
+    background: #04293B !important;
+    color: white !important;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    font-size: 24px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    outline: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    pointer-events: all;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.anggota-carousel .owl-nav button.owl-prev {
+    margin-left: -60px;
+}
+
+.anggota-carousel .owl-nav button.owl-next {
+    margin-right: -60px;
+}
+
+.anggota-carousel .owl-nav button:hover {
+    background: #063a52 !important;
+    transform: scale(1.15) !important;
+    box-shadow: 0 4px 12px rgba(4, 41, 59, 0.3) !important;
+}
+
+.anggota-carousel .owl-nav button.disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+}
+
+/* Owl Dots Styling */
+.anggota-carousel .owl-dots {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.anggota-carousel .owl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(4, 41, 59, 0.3) !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+.anggota-carousel .owl-dot.active {
+    width: 30px;
+    border-radius: 5px;
+    background: #04293B !important;
+}
+
+.anggota-carousel .owl-dot:hover {
+    background: rgba(4, 41, 59, 0.6) !important;
+}
+
+/* ================== RESPONSIVE BREAKPOINTS ================== */
+
+/* Extra Large Desktop (1600px+) */
+@media (min-width: 1600px) {
     .buku-informasi-home {
-        display: flex;
-        flex-direction: column;
-        padding: 100px;
-        background-color: #f9f9f9;
-        text-align: center;
+        padding: 120px 100px;
     }
-
-    .buku-informasi-home>h2 {
-        font-size: 30px;
-        color: #04293B;
-        margin-bottom: 50px;
-        text-align: center;
-    }
-
-    .buku-informasi-home-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .anggota-carousel a {
-        color: #04293B;
-        text-decoration: none;
-    }
-
-    /* Buku Card Styling */
+    
     .buku-card {
-        padding: 30px;
-        text-align: center;
-        border: 1px solid #04293B;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        background: #fff;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+        min-height: 400px;
+    }
+}
+
+/* Large Desktop (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .buku-informasi-home {
+        padding: 100px 80px;
+    }
+    
+    .buku-card {
+        min-height: 360px;
+    }
+}
+
+/* Desktop (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .buku-informasi-home {
+        padding: 80px 60px;
+    }
+    
+    .buku-card {
+        min-height: 340px;
+        padding: 20px;
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .buku-informasi-home {
+        padding: 60px 80px; /* Tambah padding kiri-kanan untuk nav button */
     }
 
-    .buku-card:hover {
-        cursor: pointer;
-        transform: translateY(-5px);
-        box-shadow: 0 4px 12px rgba(4, 41, 59, 0.2);
+    .buku-informasi-home > h2 {
+        margin-bottom: 35px;
+    }
+
+    .buku-card {
+        min-height: 320px;
+        padding: 18px;
+    }
+
+    .anggota-carousel .owl-nav button {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+    }
+
+    .anggota-carousel .owl-nav button.owl-prev {
+        margin-left: -50px;
+    }
+
+    .anggota-carousel .owl-nav button.owl-next {
+        margin-right: -50px;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .buku-informasi-home {
+        padding: 50px 70px; /* Tambah padding untuk nav button */
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 30px;
+    }
+
+    .buku-card {
+        min-height: 300px;
+        padding: 15px;
+    }
+
+    .anggota-carousel .owl-nav button {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+    }
+
+    .anggota-carousel .owl-nav button.owl-prev {
+        margin-left: -45px;
+    }
+
+    .anggota-carousel .owl-nav button.owl-next {
+        margin-right: -45px;
+    }
+}
+
+/* Mobile (376px - 575px) */
+@media (min-width: 376px) and (max-width: 575px) {
+    .buku-informasi-home {
+        padding: 40px 20px;
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 25px;
+    }
+
+    .buku-card {
+        min-height: 280px;
+        padding: 15px;
+    }
+
+    /* SEMBUNYIKAN ARROW NAVIGATION DI MOBILE */
+    .anggota-carousel .owl-nav {
+        display: none !important;
+    }
+
+    .anggota-carousel .owl-dots {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .anggota-carousel .owl-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .anggota-carousel .owl-dot.active {
+        width: 24px;
+    }
+}
+
+/* Small Mobile (320px - 375px) */
+@media (max-width: 375px) {
+    .buku-informasi-home {
+        padding: 30px 15px;
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 20px;
+    }
+
+    .buku-card {
+        min-height: 260px;
+        padding: 12px;
+        border-radius: 10px;
     }
 
     .buku-card img {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-        object-position: center;
+        border-radius: 8px;
+    }
+
+    /* SEMBUNYIKAN ARROW NAVIGATION DI MOBILE */
+    .anggota-carousel .owl-nav {
+        display: none !important;
+    }
+}
+
+/* Smooth transitions untuk semua perubahan */
+.buku-card,
+.buku-card img,
+.buku-card h4,
+.buku-card p,
+.btn-ekatalog-home {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading state untuk gambar */
+.buku-card img:not([src]) {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Fix untuk prevent layout shift */
+.anggota-carousel .owl-stage-outer {
+    will-change: transform;
+}
+
+.anggota-carousel .owl-item {
+    backface-visibility: hidden;
+}
+
+/* Accessibility improvements */
+.anggota-carousel .owl-nav button:focus,
+.anggota-carousel .owl-dot:focus,
+.btn-ekatalog-home:focus {
+    outline: 2px solid #6DBAED;
+    outline-offset: 2px;
+}
+
+.anggota-carousel .owl-nav button {
+    background: #04293B !important;
+    color: white !important;
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 50% !important;
+    font-size: 24px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    outline: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.anggota-carousel .owl-nav button:hover {
+    background: #063a52 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 12px rgba(4, 41, 59, 0.3) !important;
+}
+
+.anggota-carousel .owl-nav button.disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+}
+
+/* Owl Dots Styling */
+.anggota-carousel .owl-dots {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.anggota-carousel .owl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(4, 41, 59, 0.3) !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+.anggota-carousel .owl-dot.active {
+    width: 30px;
+    border-radius: 5px;
+    background: #04293B !important;
+}
+
+.anggota-carousel .owl-dot:hover {
+    background: rgba(4, 41, 59, 0.6) !important;
+}
+
+/* ================== RESPONSIVE BREAKPOINTS ================== */
+
+/* Extra Large Desktop (1600px+) */
+@media (min-width: 1600px) {
+    .buku-informasi-home {
+        padding: 120px 100px;
+    }
+    
+    .buku-card {
+        min-height: 400px;
+    }
+}
+
+/* Large Desktop (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+    .buku-informasi-home {
+        padding: 100px 80px;
+    }
+    
+    .buku-card {
+        min-height: 360px;
+    }
+}
+
+/* Desktop (992px - 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .buku-informasi-home {
+        padding: 80px 60px;
+    }
+    
+    .buku-card {
+        min-height: 340px;
+        padding: 20px;
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .buku-informasi-home {
+        padding: 60px 40px;
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 35px;
+    }
+
+    .buku-card {
+        min-height: 320px;
+        padding: 18px;
+    }
+
+    .anggota-carousel .owl-nav button {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 20px !important;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .buku-informasi-home {
+        padding: 50px 30px;
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 30px;
+    }
+
+    .buku-card {
+        min-height: 300px;
+        padding: 15px;
+    }
+
+    .anggota-carousel .owl-nav {
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .anggota-carousel .owl-nav button {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+    }
+}
+
+/* Mobile (376px - 575px) */
+@media (min-width: 376px) and (max-width: 575px) {
+    .buku-informasi-home {
+        padding: 40px 20px;
+    }
+
+    .buku-informasi-home > h2 {
+        margin-bottom: 25px;
+    }
+
+    .buku-card {
+        min-height: 280px;
+        padding: 15px;
+    }
+
+    .anggota-carousel .owl-nav button {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
+    }
+
+    .anggota-carousel .owl-dots {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .anggota-carousel .owl-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .anggota-carousel .owl-dot.active {
+        width: 24px;
+    }
+}
+
+/* Small Mobile (320px - 375px) */
+@media (max-width: 375px) {
+    .buku-informasi-home {
+        padding: 30px 15px;
+    }
+
+    .buku-informasi-home > h2 {
         margin-bottom: 20px;
-        border: #04293B 1px solid;
+    }
+
+    .buku-card {
+        min-height: 260px;
+        padding: 12px;
         border-radius: 10px;
-        background-color: #f0f0f0;
     }
 
-    .buku-card h4 {
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: #04293B;
-        font-weight: 600;
+    .buku-card img {
+        border-radius: 8px;
     }
 
-    .buku-card p {
-        font-size: 14px;
-        color: #666;
-        margin: 0;
+    .anggota-carousel .owl-nav {
+        margin-top: 15px;
     }
 
-    .buku-card .container {
-        padding: 0 10px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+    .anggota-carousel .owl-nav button {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 14px !important;
     }
+}
 
+/* Smooth transitions untuk semua perubahan */
+.buku-card,
+.buku-card img,
+.buku-card h4,
+.buku-card p,
+.btn-ekatalog-home {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading state untuk gambar */
+.buku-card img:not([src]) {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Fix untuk prevent layout shift */
+.anggota-carousel .owl-stage-outer {
+    will-change: transform;
+}
+
+.anggota-carousel .owl-item {
+    backface-visibility: hidden;
+}
+
+/* Accessibility improvements */
+.anggota-carousel .owl-nav button:focus,
+.anggota-carousel .owl-dot:focus,
+.btn-ekatalog-home:focus {
+    outline: 2px solid #6DBAED;
+    outline-offset: 2px;
+}
     /* Button */
     .btn-ekatalog-home {
         display: inline-block;
@@ -862,43 +1450,188 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const counters = document.querySelectorAll('.counter');
-
-        const animateCounter = (counter) => {
-            const target = parseInt(counter.getAttribute('data-target'));
-            const duration = 2000; // 2 detik
-            const increment = target / (duration / 16); // 60fps
-            let current = 0;
-
-            const updateCounter = () => {
-                current += increment;
-                if (current < target) {
-                    counter.textContent = Math.floor(current);
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.textContent = target;
+    // Initialize Owl Carousel untuk Buku Informasi Anggota
+// Initialize Owl Carousel untuk Buku Informasi Anggota
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = $('.anggota-carousel');
+    
+    if (carousel.length) {
+        carousel.owlCarousel({
+            loop: true,
+            margin: 20,
+            nav: true,
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            smartSpeed: 800,
+            fluidSpeed: 800,
+            navSpeed: 800,
+            dotsSpeed: 800,
+            dragEndSpeed: 800,
+            navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+            responsive: {
+                0: {
+                    items: 1,
+                    margin: 15,
+                    stagePadding: 30,
+                    nav: false, // Sembunyikan nav di mobile
+                    dots: true
+                },
+                376: {
+                    items: 1,
+                    margin: 15,
+                    stagePadding: 40,
+                    nav: false, // Sembunyikan nav di mobile
+                    dots: true
+                },
+                576: {
+                    items: 2,
+                    margin: 15,
+                    stagePadding: 0,
+                    nav: true, // Tampilkan nav di tablet keatas
+                    dots: true
+                },
+                768: {
+                    items: 2,
+                    margin: 20,
+                    stagePadding: 0,
+                    nav: true,
+                    dots: true
+                },
+                992: {
+                    items: 3,
+                    margin: 20,
+                    stagePadding: 0,
+                    nav: true,
+                    dots: true
+                },
+                1200: {
+                    items: 4,
+                    margin: 20,
+                    stagePadding: 0,
+                    nav: true,
+                    dots: true
                 }
-            };
+            },
+            onInitialized: function() {
+                // Add fade-in animation after carousel is ready
+                $('.anggota-carousel').css('opacity', '1');
+            },
+            onResized: function() {
+                // Recalculate heights after resize
+                equalizeCardHeights();
+            }
+        });
 
-            updateCounter();
-        };
+        // Function to equalize card heights
+        function equalizeCardHeights() {
+            const cards = $('.buku-card');
+            let maxHeight = 0;
 
-        // Intersection Observer untuk animasi saat scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    observer.unobserve(entry.target);
+            // Reset heights
+            cards.css('height', 'auto');
+
+            // Find max height
+            cards.each(function() {
+                const height = $(this).outerHeight();
+                if (height > maxHeight) {
+                    maxHeight = height;
                 }
             });
-        }, {
-            threshold: 0.5
+
+            // Set all cards to max height
+            if (maxHeight > 0) {
+                cards.css('height', maxHeight + 'px');
+            }
+        }
+
+        // Initial height equalization
+        setTimeout(equalizeCardHeights, 100);
+
+        // Re-equalize on window resize with debounce
+        let resizeTimer;
+        $(window).on('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                carousel.trigger('refresh.owl.carousel');
+                equalizeCardHeights();
+            }, 250);
         });
 
-        counters.forEach(counter => {
-            observer.observe(counter);
+        // Smooth image loading
+        $('.buku-card img').on('load', function() {
+            $(this).addClass('loaded');
         });
+
+        // Handle image errors
+        $('.buku-card img').on('error', function() {
+            $(this).attr('src', '/images/hipmi-logo.png');
+        });
+
+        // Add keyboard navigation
+        $(document).on('keydown', function(e) {
+            if (e.keyCode === 37) { // Left arrow
+                carousel.trigger('prev.owl.carousel');
+            } else if (e.keyCode === 39) { // Right arrow
+                carousel.trigger('next.owl.carousel');
+            }
+        });
+
+        // Pause autoplay when user interacts
+        carousel.on('dragged.owl.carousel', function() {
+            carousel.trigger('stop.owl.autoplay');
+            setTimeout(function() {
+                carousel.trigger('play.owl.autoplay');
+            }, 5000);
+        });
+
+        // Add touch swipe feedback
+        let startX = 0;
+        carousel.on('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+
+        carousel.on('touchend', function(e) {
+            const endX = e.changedTouches[0].clientX;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > 50) {
+                // Haptic feedback simulation (if available)
+                if (navigator.vibrate) {
+                    navigator.vibrate(10);
+                }
+            }
+        });
+    }
+
+    // Add CSS transition class after page load
+    setTimeout(function() {
+        $('.anggota-carousel').addClass('carousel-ready');
+    }, 100);
+});
+
+// Optional: Lazy loading untuk gambar
+if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    img.setAttribute('src', src);
+                    img.removeAttribute('data-src');
+                }
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '50px'
     });
+
+    document.querySelectorAll('.buku-card img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
 </script>
 @endpush
