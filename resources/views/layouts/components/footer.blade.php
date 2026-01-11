@@ -14,19 +14,18 @@
                     <h3>Sekretariat</h3>
                     <div class="footer-item-child">
                         <i class="fa fa-map-marker footer-social-icons"></i>
-                        <p>Jl. Lombok No.10 Lantai 2, Merdeka, Kec. Sumur Bandung, Kota Bandung, Jawa Barat
-                            40113</p>
+                        <p>Sekretariat Pusat, Jalan Bakti I No. 5, South Jakarta 12160, Indonesia </p>
                     </div>
                 </div>
                 <div>
                     <h3>Kontak</h3>
                     <div class="footer-item-child">
                         <i class="fa fa-phone footer-social-icons"></i>
-                        <p>+12345678</p>
+                        <p>0821-2374-4567</p>
                     </div>
                     <div class="footer-item-child">
                         <i class="fa fa-envelope footer-social-icons"></i>
-                        <p>sekre.hipmijabar@gmail.com</p>
+                        <p>bpchipmi.sekertariat@gmail.com</p>
                     </div>
                 </div>
             </div>
