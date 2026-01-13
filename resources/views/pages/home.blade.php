@@ -1342,7 +1342,7 @@
     <div class="green-accent" style="align-self: center;"></div>
     <h2>E-Katalog Bisnis HIPMI Jabar</h2>
     <div class="e-katalog-content-home">
-        @forelse($katalogs->take(2) as $katalog)
+        @forelse($katalogs as $katalog)
         <a href="{{ route('e-katalog.detail', $katalog->id) }}">
             <div class="katalog-card">
                 <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}">
