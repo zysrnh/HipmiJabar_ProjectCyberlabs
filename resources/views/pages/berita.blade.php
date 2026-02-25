@@ -21,8 +21,37 @@
         overflow: hidden;
     }
 </style>
-@endpush
 
+@endpush
+<style>
+    .search-katalog {
+    padding: 0px 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+}
+
+.search-box input {
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    padding: 10px 40px 10px 15px;
+    border-radius: 7px;
+    border: 1px solid #04293B;
+}
+
+.search-box i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+</style>
 @section('content')
     <section class="page-banner">
         <h1>Berita & Dokumentasi</h1>

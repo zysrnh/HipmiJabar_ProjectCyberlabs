@@ -3,7 +3,7 @@ header {
     width: 100%;
     background-color: #04293B;
     color: white;
-    padding: 15px 100px;
+    padding: 15px 50px;
     position: sticky;
     top: 0;
     z-index: 999;
@@ -45,11 +45,11 @@ nav {
 }
 
 .logo1 {
-    width: 100px;
+    width: 80px;
 }
 
 .logo2 {
-    width: 150px;
+    width: 120px;
 }
 
 .menu-toggle {

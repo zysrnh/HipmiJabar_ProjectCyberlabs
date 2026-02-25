@@ -135,9 +135,6 @@
         </a>
       </div>
 
-      <span class="login-type-badge {{ $badgeClass }}">
-        {{ $isAdmin ? '👤 Admin' : '👥 Anggota' }}
-      </span>
       
       <h1 class="login-title">{{ $loginTitle }}</h1>
 
@@ -217,25 +214,10 @@
               Belum punya akun? <a href="{{ route('jadi-anggota') }}" style="color: #667eea; font-weight: 600;">Daftar Sekarang</a>
             </p>
           @else
-            <a href="{{ route('home') }}" class="forgot-password">Lupa Kata Sandi?</a>
+            
           @endif
         </div>
       </form>
-
-      {{-- Switch Login Type --}}
-      <div class="login-switch">
-        @if($isAdmin)
-          <p style="color: #666; margin: 0;">
-            Bukan admin? 
-            <a href="{{ route('anggota.login') }}">Login sebagai Anggota</a>
-          </p>
-        @else
-          <p style="color: #666; margin: 0;">
-            Anda admin? 
-            <a href="{{ route('admin.login') }}">Login sebagai Admin</a>
-          </p>
-        @endif
-      </div>
     </div>
 
     <div class="login-right">

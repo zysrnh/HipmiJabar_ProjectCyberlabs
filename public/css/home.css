@@ -1,17 +1,23 @@
 /* ================== HERO SECTION ================== */
 
-.hero {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpeg');
+.hero-wrapper {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../images/hero-bg.jpeg');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    color: white;
-    text-align: center;
-    padding: 100px 100px 150px 100px;
+
+    padding: 100px 50px 150px 50px;
     display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.hero {
+    display: flex;
+    flex-direction: row;
+    color: white;
+    width: 100%;
+    max-width: 1400px;
 }
 
 .hero img {
@@ -57,6 +63,13 @@
 }
 
 @media (max-width: 1024px) {
+    .hero-wrapper {
+        padding: 5px 20px 50px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .hero {
         flex-direction: column;
         padding: 100px 20px 50px 20px;
@@ -97,12 +110,19 @@
 /* ================== END HERO SECTION ================== */
 
 /* ================== MAIN INFO SECTION ================== */
-
-.main-info {
+.main-info-wrapper {
     background-color: #04293B;
-    padding: 100px;
+    padding: 100px 50px;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.main-info {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1400px;
     gap: 30px;
     flex-wrap: wrap;
 }
@@ -141,13 +161,15 @@
 }
 
 @media (max-width: 1024px) {
+    .main-info-wrapper {
+        padding: 50px 20px;
+    }
+
     .main-info {
-        background-color: #04293B;
-        padding: 50px;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         gap: 30px;
-        flex-wrap: wrap;
     }
 
     .info-card {
@@ -181,13 +203,21 @@
 /* ================== END INFO SECTION ================== */
 
 /* ================== VISI SECTION ================== */
+.visi-wrapper {
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 50px;
+
+}
 
 .visi {
     display: flex;
-    gap: 50px;
-    padding: 100px;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    background-color: #f9f9f9;
+    gap: 50px;
 }
 
 .visi-content {
@@ -238,9 +268,12 @@
 }
 
 @media (max-width: 1024px) {
+    .visi-wrapper {
+        padding: 50px 20px;
+    }
+
     .visi {
         flex-direction: column;
-        padding: 50px;
         gap: 30px;
     }
 
@@ -297,14 +330,14 @@
 .misi-text h2 {
     font-size: 30px;
     color: #ffffff;
-    margin: 0px 100px;
+    margin: 0px 50px;
     line-height: 1.5;
 }
 
 .misi-text p {
     font-size: 16px;
     color: #ffffff;
-    margin: 0px 100px;
+    margin: 0px 50px;
     line-height: 2;
 }
 
@@ -707,51 +740,114 @@
 
 /* ================== EKATALOG SECTION ================== */
 .ekatalog-home {
+    width: 100%;
+    max-width: 1400px;
     display: flex;
     flex-direction: column;
     padding: 100px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
+    
     text-align: center;
 }
 
-.ekatalog-home>h2 {
-    font-size: 30px;
+.ekatalog-home > h2 {
+    font-size: clamp(22px, 4vw, 30px);
     color: #04293B;
     margin-bottom: 50px;
     text-align: center;
 }
 
 .e-katalog-content-home {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.e-katalog-content-home a {
-    text-decoration: none;
+/* Owl Carousel Override untuk E-Katalog */
+.katalog-carousel {
+    width: 100%;
+}
+
+.katalog-carousel .owl-stage-outer {
+    overflow: hidden;
+    padding: 5px;
+}
+
+.katalog-carousel .owl-stage {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.katalog-carousel .owl-item {
+    display: flex !important;
+    height: auto !important;
+}
+
+.katalog-carousel a {
     color: #04293B;
-}
-
-.btn-ekatalog-home {
-    display: inline-block;
-    padding: 12px 30px;
-    background: #04293B;
-    border: #04293B 1px solid;
-    color: #ffffff;
     text-decoration: none;
-    border-radius: 5px;
-    transition: transform 0.3s;
+    width: 100%;
+    display: flex;
+    height: 100%;
 }
 
-.btn-ekatalog-home:hover {
-    transform: scale(1.05);
-}
-
-.katalog-card-home {
-    padding: 50px;
+/* Katalog Card Styling - FULLY RESPONSIVE */
+.katalog-card {
+    padding: clamp(15px, 3vw, 30px);
     text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: 1px solid #04293B;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 300px;
+}
+
+.katalog-card:hover {
+    cursor: pointer;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(4, 41, 59, 0.25);
+}
+
+/* Image dengan Aspect Ratio Fixed */
+.katalog-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain; /* contain untuk logo agar tidak terpotong */
+    object-position: center;
+    margin-bottom: clamp(10px, 2vw, 20px);
+    border: #04293B 1px solid;
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.katalog-card h4 {
+    font-size: clamp(14px, 2vw, 18px);
+    margin-bottom: 8px;
+    color: #04293B;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    min-height: 2.8em;
+}
+
+.katalog-card p {
+    font-size: clamp(11px, 1.5vw, 14px);
+    color: #666;
+    margin: 0;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
@@ -767,16 +863,144 @@
         font-size: 25px;
     }
 
-    .e-katalog-content-home {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+    .katalog-carousel .owl-nav button.owl-prev {
+        margin-left: -50px;
     }
 
-    .btn-ekatalog-home {
-        padding: 8px 16px;
-        font-size: 12px;
+    .katalog-carousel .owl-nav button.owl-next {
+        margin-right: -50px;
+    }
+}
+
+/* Mobile Large (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .ekatalog-home {
+        padding: 50px 70px;
     }
 
+    .ekatalog-home > h2 {
+        margin-bottom: 30px;
+    }
+
+    .katalog-card {
+        min-height: 300px;
+        padding: 15px;
+    }
+
+    .katalog-carousel .owl-nav button {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+    }
+
+    .katalog-carousel .owl-nav button.owl-prev {
+        margin-left: -45px;
+    }
+
+    .katalog-carousel .owl-nav button.owl-next {
+        margin-right: -45px;
+    }
+}
+
+/* Mobile (376px - 575px) */
+@media (min-width: 376px) and (max-width: 575px) {
+    .ekatalog-home {
+        padding: 40px 20px;
+    }
+
+    .ekatalog-home > h2 {
+        margin-bottom: 25px;
+    }
+
+    .katalog-card {
+        min-height: 280px;
+        padding: 15px;
+    }
+
+    /* SEMBUNYIKAN ARROW NAVIGATION DI MOBILE */
+    .katalog-carousel .owl-nav {
+        display: none !important;
+    }
+
+    .katalog-carousel .owl-dots {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .katalog-carousel .owl-dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .katalog-carousel .owl-dot.active {
+        width: 24px;
+    }
+}
+
+/* Small Mobile (320px - 375px) */
+@media (max-width: 375px) {
+    .ekatalog-home {
+        padding: 30px 15px;
+    }
+
+    .ekatalog-home > h2 {
+        margin-bottom: 20px;
+    }
+
+    .katalog-card {
+        min-height: 260px;
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .katalog-card img {
+        border-radius: 8px;
+    }
+
+    /* SEMBUNYIKAN ARROW NAVIGATION DI MOBILE */
+    .katalog-carousel .owl-nav {
+        display: none !important;
+    }
+}
+
+/* Smooth transitions */
+.katalog-card,
+.katalog-card img,
+.katalog-card h4,
+.katalog-card p {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Loading state untuk gambar */
+.katalog-card img:not([src]) {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Fix untuk prevent layout shift */
+.katalog-carousel .owl-stage-outer {
+    will-change: transform;
+}
+
+.katalog-carousel .owl-item {
+    backface-visibility: hidden;
+}
+
+/* Accessibility improvements */
+.katalog-carousel .owl-nav button:focus,
+.katalog-carousel .owl-dot:focus {
+    outline: 2px solid #6DBAED;
+    outline-offset: 2px;
 }
 
 /* ================== DAFTARKAN BISNIS ANDA SECTION ================== */
@@ -816,11 +1040,20 @@
 /* ================== END DAFTARKAN BISNIS ANDA SECTION ================== */
 
 /* ================== BERITA DOKUMENTASI SECTION ================== */
+.berita-home-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 100px 50px;
+
+}
+
 .berita-home {
     display: flex;
     flex-direction: column;
-    padding: 100px;
-    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 1400px;
     text-align: center;
 }
 
@@ -954,8 +1187,11 @@
 
 
 @media (max-width: 1024px) {
+    .berita-home-wrapper {
+        padding: 50px 20px;
+    }
+    
     .berita-home {
-        padding: 50px;
         justify-content: center;
     }
 
@@ -1093,37 +1329,38 @@
     .buku-card p {
         font-size: 14px;
     }
-        /* Indicator Dots */
-        .kegiatan-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            border: 2px solid #04293B;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
 
-        .kegiatan-indicator.active {
-            background: #04293B;
-            transform: scale(1.2);
-        }
+    /* Indicator Dots */
+    .kegiatan-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid #04293B;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-        .kegiatan-indicator:hover {
-            background: rgba(4, 41, 59, 0.7);
-        }
+    .kegiatan-indicator.active {
+        background: #04293B;
+        transform: scale(1.2);
+    }
 
-        /* Fade Animation */
-        .events-content {
-            transition: opacity 0.5s ease-in-out;
-        }
+    .kegiatan-indicator:hover {
+        background: rgba(4, 41, 59, 0.7);
+    }
 
-        .events-content.fade-out {
-            opacity: 0;
-        }
+    /* Fade Animation */
+    .events-content {
+        transition: opacity 0.5s ease-in-out;
+    }
 
-        .events-content.fade-in {
-            opacity: 1;
-        }
-        
+    .events-content.fade-out {
+        opacity: 0;
+    }
+
+    .events-content.fade-in {
+        opacity: 1;
+    }
+
 }

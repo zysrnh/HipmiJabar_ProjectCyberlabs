@@ -4,7 +4,12 @@
 html {
     scroll-behavior: smooth;
 }
-
+    h1, h2, h3, h4, h5, h6,
+    p, span, a, small, strong, em, label,
+    li, ul, ol,
+    button, input, textarea, select, option {
+        font-family: 'Poppins', sans-serif;
+    }
 .anggota-carousel .owl-nav {
     position: absolute;
     top: 50%;
@@ -198,7 +203,7 @@ body {
 /* ================== GLOBAL CONTAINERS ================== */
 .page-banner {
     color: #04293B;
-    padding: 100px;
+    padding: 100px 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -214,12 +219,12 @@ body {
 }
 
 .page-banner h1 {
-    font-size: 50px;
+    font-size: 30px;
     margin-bottom: 15px;
 }
 
 .page-banner-2 h1 {
-    font-size: 40px;
+    font-size: 30px;
     margin-bottom: 15px;
 }
 
