@@ -45,11 +45,11 @@
                         </label>
                         <select name="bidang" class="filter-select">
                             <option value="">Semua Bidang</option>
-                            @for($i = 1; $i <= 12; $i++)
-                                <option value="bidang_{{ $i }}" {{ request('bidang') == "bidang_$i" ? 'selected' : '' }}>
-                                    Bidang {{ $i }}
+                            @foreach($bidangList as $bidang)
+                                <option value="{{ $bidang }}" {{ request('bidang') == $bidang ? 'selected' : '' }}>
+                                    {{ $bidang }}
                                 </option>
-                            @endfor
+                            @endforeach
                         </select>
                     </div>
 
@@ -68,8 +68,7 @@
                         <select name="tipe" class="filter-select">
                             <option value="">Semua Tipe</option>
                             <option value="anggota" {{ request('tipe') == 'anggota' ? 'selected' : '' }}>Anggota</option>
-                            <option value="pengurus" {{ request('tipe') == 'pengurus' ? 'selected' : '' }}>Pengurus HIPMI
-                            </option>
+                            <option value="pengurus" {{ request('tipe') == 'pengurus' ? 'selected' : '' }}>Pengurus HIPMI</option>
                         </select>
                     </div>
 
@@ -93,7 +92,6 @@
         </div>
 
         <script>
-            // Auto submit saat filter dipilih
             const filterForm = document.querySelector('.filter-form');
             const bidangSelect = filterForm?.querySelector('select[name="bidang"]');
             const tipeSelect = filterForm?.querySelector('select[name="tipe"]');
@@ -143,49 +141,37 @@
         @endforelse
     </div>
 </section>
-    @if ($katalogs->hasPages())
-        <div
-            style="margin-top: 40px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 2rem 100px 4rem;">
 
-            {{-- Previous --}}
-            @if ($katalogs->onFirstPage())
-                <span style="padding: 8px 14px; border-radius: 8px; background: #e5e7eb; color: #9ca3af;">
-                    ‹
-                </span>
+@if ($katalogs->hasPages())
+    <div style="margin-top: 40px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 2rem 100px 4rem;">
+
+        {{-- Previous --}}
+        @if ($katalogs->onFirstPage())
+            <span style="padding: 8px 14px; border-radius: 8px; background: #e5e7eb; color: #9ca3af;">‹</span>
+        @else
+            <a href="{{ $katalogs->previousPageUrl() }}"
+                style="padding: 8px 14px; border-radius: 8px; background: #04293B; color: #FFFF00; text-decoration: none;">‹</a>
+        @endif
+
+        {{-- Page Numbers --}}
+        @for ($i = 1; $i <= $katalogs->lastPage(); $i++)
+            @if ($i == $katalogs->currentPage())
+                <span style="padding: 8px 14px; border-radius: 8px; background: #FFFF00; color: #04293B; font-weight: 600;">{{ $i }}</span>
             @else
-                <a href="{{ $katalogs->previousPageUrl() }}"
-                    style="padding: 8px 14px; border-radius: 8px; background: #04293B; color: #FFFF00; text-decoration: none;">
-                    ‹
-                </a>
+                <a href="{{ $katalogs->url($i) }}"
+                    style="padding: 8px 14px; border-radius: 8px; border: 1px solid #04293B; color: #04293B; text-decoration: none;">{{ $i }}</a>
             @endif
+        @endfor
 
-            {{-- Page Numbers --}}
-            @for ($i = 1; $i <= $katalogs->lastPage(); $i++)
-                @if ($i == $katalogs->currentPage())
-                    <span style="padding: 8px 14px; border-radius: 8px; background: #FFFF00; color: #04293B; font-weight: 600;">
-                        {{ $i }}
-                    </span>
-                @else
-                    <a href="{{ $katalogs->url($i) }}"
-                        style="padding: 8px 14px; border-radius: 8px; border: 1px solid #04293B; color: #04293B; text-decoration: none;">
-                        {{ $i }}
-                    </a>
-                @endif
-            @endfor
+        {{-- Next --}}
+        @if ($katalogs->hasMorePages())
+            <a href="{{ $katalogs->nextPageUrl() }}"
+                style="padding: 8px 14px; border-radius: 8px; background: #04293B; color: #FFFF00; text-decoration: none;">›</a>
+        @else
+            <span style="padding: 8px 14px; border-radius: 8px; background: #e5e7eb; color: #9ca3af;">›</span>
+        @endif
 
-            {{-- Next --}}
-            @if ($katalogs->hasMorePages())
-                <a href="{{ $katalogs->nextPageUrl() }}"
-                    style="padding: 8px 14px; border-radius: 8px; background: #04293B; color: #FFFF00; text-decoration: none;">
-                    ›
-                </a>
-            @else
-                <span style="padding: 8px 14px; border-radius: 8px; background: #e5e7eb; color: #9ca3af;">
-                    ›
-                </span>
-            @endif
-
-        </div>
-    @endif
+    </div>
+@endif
 
 @endsection
