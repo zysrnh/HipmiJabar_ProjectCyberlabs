@@ -17,7 +17,6 @@
         padding: 20px;
     }
 
-    /* Back Button - Sharp & Professional */
     .back-button {
         display: inline-flex;
         align-items: center;
@@ -44,15 +43,14 @@
         box-shadow: 0 4px 12px rgba(100, 116, 139, 0.15);
     }
 
-    .back-button svg {
-        transition: transform 0.2s ease;
-    }
-
     .back-button:hover svg {
         transform: translateX(-4px);
     }
 
-    /* Page Header */
+    .back-button svg {
+        transition: transform 0.2s ease;
+    }
+
     .page-header {
         background: white;
         border-radius: 8px;
@@ -86,7 +84,6 @@
         line-height: 1.6;
     }
 
-    /* Buttons - Sharp & Professional */
     .btn {
         padding: 0.75rem 1.5rem;
         border-radius: 6px;
@@ -106,24 +103,7 @@
         overflow: hidden;
     }
 
-    .btn::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 0;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.2);
-        transition: width 0.3s ease;
-    }
-
-    .btn:hover::before {
-        width: 100%;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-    }
+    .btn:hover { transform: translateY(-2px); }
 
     .btn-primary {
         background: #2563eb;
@@ -161,7 +141,6 @@
         box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
     }
 
-    /* Stats Grid */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -179,34 +158,26 @@
         border: 2px solid #f3f4f6;
         border-left: 5px solid;
         position: relative;
+        overflow: hidden;
     }
 
     .stat-card::before {
         content: '';
         position: absolute;
-        left: 0;
-        top: 0;
-        width: 5px;
-        height: 100%;
+        left: 0; top: 0;
+        width: 5px; height: 100%;
         transition: width 0.3s ease;
         opacity: 0.15;
     }
 
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        border-color: currentColor;
-    }
-
-    .stat-card:hover::before {
-        width: 100%;
-    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .stat-card:hover::before { width: 100%; }
 
     .stat-card .stat-number {
         font-size: 2.75rem;
         font-weight: 800;
         color: #0a2540;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
         line-height: 1;
         letter-spacing: -0.05em;
     }
@@ -219,68 +190,70 @@
         letter-spacing: 0.1em;
     }
 
-    /* Individual stat card colors */
-    .stat-card:nth-child(1) {
-        border-left-color: #3b82f6;
-        color: #3b82f6;
+    .stat-card:nth-child(1) { border-left-color: #3b82f6; color: #3b82f6; }
+    .stat-card:nth-child(1)::before { background: #3b82f6; }
+    .stat-card.pending { border-left-color: #f59e0b; color: #f59e0b; }
+    .stat-card.pending::before { background: #f59e0b; }
+    .stat-card.pending .stat-number { color: #d97706; }
+    .stat-card.approved { border-left-color: #10b981; color: #10b981; }
+    .stat-card.approved::before { background: #10b981; }
+    .stat-card.approved .stat-number { color: #059669; }
+    .stat-card.rejected { border-left-color: #ef4444; color: #ef4444; }
+    .stat-card.rejected::before { background: #ef4444; }
+    .stat-card.rejected .stat-number { color: #dc2626; }
+
+    /* Info box: katalog auto-dibuat */
+    .info-box {
+        background: #eff6ff;
+        border: 2px solid #bfdbfe;
+        border-left: 5px solid #3b82f6;
+        border-radius: 8px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
     }
 
-    .stat-card:nth-child(1)::before {
-        background: #3b82f6;
+    .info-box svg { flex-shrink: 0; margin-top: 2px; stroke: #2563eb; }
+
+    .info-box-content h4 {
+        margin: 0 0 0.375rem;
+        color: #1e40af;
+        font-size: 0.9375rem;
+        font-weight: 700;
     }
 
-    .stat-card.pending {
-        border-left-color: #f59e0b;
-        color: #f59e0b;
+    .info-box-content p {
+        margin: 0;
+        color: #1e3a8a;
+        font-size: 0.875rem;
+        line-height: 1.6;
     }
 
-    .stat-card.pending::before {
-        background: #f59e0b;
+    /* Placeholder warning di description */
+    .description-placeholder {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        padding: 0.375rem 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #f59e0b;
+        margin-bottom: 0.75rem;
     }
 
-    .stat-card.pending .stat-number {
-        color: #d97706;
-    }
+    .katalog-list { display: grid; gap: 1.5rem; }
 
-    .stat-card.approved {
-        border-left-color: #10b981;
-        color: #10b981;
-    }
-
-    .stat-card.approved::before {
-        background: #10b981;
-    }
-
-    .stat-card.approved .stat-number {
-        color: #059669;
-    }
-
-    .stat-card.rejected {
-        border-left-color: #ef4444;
-        color: #ef4444;
-    }
-
-    .stat-card.rejected::before {
-        background: #ef4444;
-    }
-
-    .stat-card.rejected .stat-number {
-        color: #dc2626;
-    }
-
-    /* Katalog List */
-    .katalog-list {
-        display: grid;
-        gap: 1.5rem;
-    }
-
-    /* Katalog Card - Sharp Design */
     .katalog-card {
         background: white;
         border: 2px solid #e5e7eb;
         border-radius: 8px;
         padding: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 1px 3px rgba(0,0,0,.08);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
@@ -289,26 +262,21 @@
     .katalog-card::before {
         content: '';
         position: absolute;
-        left: 0;
-        top: 0;
-        width: 4px;
-        height: 100%;
+        left: 0; top: 0;
+        width: 4px; height: 100%;
         background: linear-gradient(180deg, #3b82f6 0%, #1e40af 100%);
         transform: translateY(-100%);
         transition: transform 0.3s ease;
     }
 
     .katalog-card:hover {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 8px 32px rgba(0,0,0,.12);
         transform: translateY(-4px);
         border-color: #cbd5e1;
     }
 
-    .katalog-card:hover::before {
-        transform: translateY(0);
-    }
+    .katalog-card:hover::before { transform: translateY(0); }
 
-    /* Katalog Content Layout */
     .katalog-content {
         display: grid;
         grid-template-columns: 140px 1fr;
@@ -316,7 +284,6 @@
         align-items: start;
     }
 
-    /* Katalog Logo */
     .katalog-logo {
         width: 140px;
         height: 140px;
@@ -326,19 +293,16 @@
         border-radius: 6px;
         border: 3px solid #e5e7eb;
         flex-shrink: 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
         transition: all 0.3s ease;
     }
 
     .katalog-card:hover .katalog-logo {
         border-color: #cbd5e1;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,.1);
     }
 
-    .katalog-info {
-        flex: 1;
-        min-width: 0;
-    }
+    .katalog-info { flex: 1; min-width: 0; }
 
     .katalog-header {
         display: flex;
@@ -349,7 +313,7 @@
     }
 
     .katalog-title {
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.5rem;
         font-size: 1.375rem;
         font-weight: 700;
         color: #0a2540;
@@ -364,7 +328,6 @@
         font-weight: 600;
     }
 
-    /* Status Badge - Sharp & Elegant */
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -375,50 +338,12 @@
         white-space: nowrap;
         letter-spacing: 0.075em;
         text-transform: uppercase;
-        position: relative;
-        overflow: hidden;
         border-left: 4px solid;
     }
 
-    .status-badge::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 4px;
-        height: 100%;
-        transition: width 0.3s ease;
-    }
-
-    .status-badge.pending {
-        background: #fef3c7;
-        color: #78350f;
-        border-left-color: #f59e0b;
-    }
-
-    .status-badge.pending::before {
-        background: #f59e0b;
-    }
-
-    .status-badge.approved {
-        background: #d1fae5;
-        color: #064e3b;
-        border-left-color: #10b981;
-    }
-
-    .status-badge.approved::before {
-        background: #10b981;
-    }
-
-    .status-badge.rejected {
-        background: #fee2e2;
-        color: #7f1d1d;
-        border-left-color: #ef4444;
-    }
-
-    .status-badge.rejected::before {
-        background: #ef4444;
-    }
+    .status-badge.pending { background: #fef3c7; color: #78350f; border-left-color: #f59e0b; }
+    .status-badge.approved { background: #d1fae5; color: #064e3b; border-left-color: #10b981; }
+    .status-badge.rejected { background: #fee2e2; color: #7f1d1d; border-left-color: #ef4444; }
 
     .katalog-description {
         color: #4b5563;
@@ -427,14 +352,13 @@
         line-height: 1.7;
     }
 
-    /* Rejection Box */
     .rejection-box {
         background: #fee2e2;
         padding: 1.125rem;
         border-radius: 6px;
         margin-bottom: 1.25rem;
         border-left: 5px solid #ef4444;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+        box-shadow: 0 2px 8px rgba(239,68,68,.15);
     }
 
     .rejection-box strong {
@@ -445,14 +369,8 @@
         letter-spacing: 0.05em;
     }
 
-    .rejection-box p {
-        margin: 0.5rem 0 0 0;
-        color: #7f1d1d;
-        font-size: 0.9375rem;
-        line-height: 1.6;
-    }
+    .rejection-box p { margin: 0.5rem 0 0; color: #7f1d1d; font-size: 0.9375rem; line-height: 1.6; }
 
-    /* Actions */
     .katalog-actions {
         display: flex;
         gap: 0.875rem;
@@ -462,7 +380,6 @@
         border-top: 2px solid #f3f4f6;
     }
 
-    /* Alerts */
     .alert {
         padding: 1.125rem 1.5rem;
         border-radius: 6px;
@@ -475,135 +392,42 @@
         border-left: 5px solid;
     }
 
-    .alert-success {
-        background: #d1fae5;
-        color: #065f46;
-        border-left-color: #10b981;
-        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
-    }
+    .alert-success { background: #d1fae5; color: #065f46; border-left-color: #10b981; box-shadow: 0 2px 8px rgba(16,185,129,.15); }
+    .alert-error   { background: #fee2e2; color: #991b1b; border-left-color: #ef4444; box-shadow: 0 2px 8px rgba(239,68,68,.15); }
+    .alert-warning { background: #fef3c7; color: #92400e; border-left-color: #f59e0b; box-shadow: 0 2px 8px rgba(245,158,11,.15); }
 
-    .alert-error {
-        background: #fee2e2;
-        color: #991b1b;
-        border-left-color: #ef4444;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
-    }
-
-    .alert-warning {
-        background: #fef3c7;
-        color: #92400e;
-        border-left-color: #f59e0b;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
-    }
-
-    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 5rem 2rem;
         background: white;
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 3px rgba(0,0,0,.1);
         border: 2px dashed #cbd5e1;
     }
 
-    .empty-state svg {
-        width: 100px;
-        height: 100px;
-        margin: 0 auto 1.5rem;
-        stroke: #cbd5e1;
-        stroke-width: 1.5;
-    }
+    .empty-state svg { width: 100px; height: 100px; margin: 0 auto 1.5rem; stroke: #cbd5e1; stroke-width: 1.5; }
+    .empty-state h3 { margin: 0 0 0.75rem; color: #6b7280; font-size: 1.5rem; font-weight: 700; }
+    .empty-state p { margin: 0 0 2rem; color: #9ca3af; font-size: 1rem; line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto; }
 
-    .empty-state h3 {
-        margin: 0 0 0.75rem 0;
-        color: #6b7280;
-        font-size: 1.5rem;
-        font-weight: 700;
-    }
+    .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2.5rem; }
 
-    .empty-state p {
-        margin: 0 0 2rem 0;
-        color: #9ca3af;
-        font-size: 1rem;
-        line-height: 1.6;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 2.5rem;
-    }
-
-    /* Responsive */
     @media (max-width: 768px) {
-        .katalog-container {
-            padding: 15px;
-            margin: 20px auto;
-        }
-
-        .page-header {
-            padding: 1.5rem;
-        }
-
-        .page-header h1 {
-            font-size: 1.5rem;
-        }
-
-        .page-header-content {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .katalog-content {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-
-        .katalog-logo {
-            width: 100%;
-            max-width: 200px;
-            height: 200px;
-            margin: 0 auto;
-        }
-
-        .katalog-header {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .katalog-actions {
-            width: 100%;
-            flex-direction: column;
-        }
-
-        .btn {
-            width: 100%;
-        }
+        .katalog-container { padding: 15px; margin: 20px auto; }
+        .page-header { padding: 1.5rem; }
+        .page-header h1 { font-size: 1.5rem; }
+        .page-header-content { flex-direction: column; align-items: flex-start; }
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .katalog-content { grid-template-columns: 1fr; text-align: center; }
+        .katalog-logo { width: 100%; max-width: 200px; height: 200px; margin: 0 auto; }
+        .katalog-header { flex-direction: column; align-items: center; text-align: center; }
+        .katalog-actions { width: 100%; flex-direction: column; }
+        .btn { width: 100%; }
     }
 
     @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .stat-card .stat-number {
-            font-size: 2.25rem;
-        }
-
-        .back-button {
-            font-size: 0.75rem;
-            padding: 0.625rem 1rem;
-        }
+        .stats-grid { grid-template-columns: 1fr; }
+        .stat-card .stat-number { font-size: 2.25rem; }
+        .back-button { font-size: 0.75rem; padding: 0.625rem 1rem; }
     }
 </style>
 
@@ -646,8 +470,14 @@
                 <h1>Katalog Perusahaan Saya</h1>
                 <p>Kelola katalog perusahaan yang akan ditampilkan di E-Katalog HIPMI Jawa Barat</p>
             </div>
-            @if(Auth::guard('anggota')->user()->status === 'approved')
-            <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
+            {{--
+                Tombol tambah HANYA muncul jika:
+                1. Anggota sudah approved
+                2. Belum punya katalog sama sekali (karena katalog dibuat otomatis saat daftar,
+                   tombol ini praktis tidak akan pernah muncul — tapi tetap ada sebagai fallback)
+            --}}
+@if(Auth::guard('anggota')->user()->status === 'approved')
+              <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -658,6 +488,24 @@
         </div>
     </div>
 
+    <!-- Info box: katalog otomatis dibuat dari data pendaftaran -->
+    @if($hasKatalog)
+    <div class="info-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+        </svg>
+        <div class="info-box-content">
+            <h4>Katalog dibuat otomatis dari data pendaftaran Anda</h4>
+            <p>
+                Data perusahaan (nama, bidang usaha, alamat, kontak) sudah terisi dari form pendaftaran.
+                Silakan klik <strong>Edit</strong> untuk melengkapi deskripsi, foto tambahan, dan embed Google Maps agar katalog Anda tampil lebih menarik.
+            </p>
+        </div>
+    </div>
+    @endif
+
     <!-- Warning untuk anggota belum terverifikasi -->
     @if(Auth::guard('anggota')->user()->status !== 'approved')
     <div class="alert alert-warning">
@@ -666,7 +514,7 @@
             <line x1="12" y1="9" x2="12" y2="13"></line>
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
-        Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog perusahaan.
+        Akun Anda sedang dalam proses verifikasi. Katalog akan aktif setelah admin menyetujui pendaftaran Anda.
     </div>
     @endif
 
@@ -697,7 +545,7 @@
         <div class="katalog-card">
             <div class="katalog-content">
                 <img src="{{ $katalog->logo_url }}" alt="{{ $katalog->company_name }}" class="katalog-logo">
-                
+
                 <div class="katalog-info">
                     <div class="katalog-header">
                         <div>
@@ -714,6 +562,22 @@
                             @endif
                         </span>
                     </div>
+
+                    {{-- Tampilkan warning jika deskripsi masih placeholder --}}
+                    @php
+                        $isPlaceholder = str_contains($katalog->description, 'Deskripsi perusahaan belum diisi');
+                    @endphp
+
+                    @if($isPlaceholder)
+                    <div class="description-placeholder">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        Deskripsi belum diisi — klik Edit untuk melengkapi
+                    </div>
+                    @endif
 
                     <div class="katalog-description">
                         {{ Str::limit($katalog->description, 200) }}
@@ -743,11 +607,11 @@
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
-                                Edit
+                                Edit & Lengkapi
                             </a>
 
-                            <form action="{{ route('profile-anggota.katalog.destroy', $katalog) }}" method="POST" 
-                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus katalog ini?')" style="display: inline;">
+                            <form action="{{ route('profile-anggota.katalog.destroy', $katalog) }}" method="POST"
+                                  onsubmit="return confirm('Yakin ingin menghapus katalog ini?')" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">
@@ -766,7 +630,6 @@
         @endforeach
     </div>
 
-    <!-- Pagination -->
     @if($katalogs->hasPages())
     <div class="pagination">
         {{ $katalogs->links() }}
@@ -774,7 +637,7 @@
     @endif
 
     @else
-    <!-- Empty State -->
+    <!-- Empty State — seharusnya tidak pernah muncul karena katalog auto-dibuat -->
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -782,16 +645,7 @@
             <line x1="9" y1="15" x2="15" y2="15"/>
         </svg>
         <h3>Belum ada katalog</h3>
-        <p>Tambahkan katalog perusahaan Anda untuk ditampilkan di E-Katalog HIPMI Jawa Barat dan jangkau lebih banyak pelanggan potensial</p>
-        @if(Auth::guard('anggota')->user()->status === 'approved')
-        <a href="{{ route('profile-anggota.katalog.create') }}" class="btn btn-primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Tambah Katalog Pertama
-        </a>
-        @endif
+        <p>Terjadi kesalahan saat membuat katalog otomatis. Silakan hubungi admin.</p>
     </div>
     @endif
 </div>

@@ -152,10 +152,10 @@ class Katalog extends Model
         return !is_null($this->anggota_id);
     }
 
-    public function canBeEdited()
-    {
-        return in_array($this->status, ['pending', 'rejected']);
-    }
+   public function canBeEdited()
+{
+    return true;
+}
 
     public function createdBy()
     {

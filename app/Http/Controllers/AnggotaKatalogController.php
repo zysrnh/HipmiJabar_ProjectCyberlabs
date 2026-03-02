@@ -15,13 +15,16 @@ class AnggotaKatalogController extends Controller
         $katalogs = $anggota->katalogs()->latest()->paginate(10);
 
         $stats = [
-            'total' => $anggota->katalogs()->count(),
-            'pending' => $anggota->pendingKatalogs()->count(),
+            'total'    => $anggota->katalogs()->count(),
+            'pending'  => $anggota->pendingKatalogs()->count(),
             'approved' => $anggota->approvedKatalogs()->count(),
             'rejected' => $anggota->katalogs()->where('status', 'rejected')->count(),
         ];
 
-        return view('anggota.katalog.index', compact('katalogs', 'stats'));
+        // Cek apakah anggota sudah punya katalog (otomatis dibuat saat daftar)
+        $hasKatalog = $anggota->katalogs()->exists();
+
+        return view('anggota.katalog.index', compact('katalogs', 'stats', 'hasKatalog'));
     }
 
     public function create()
@@ -34,13 +37,10 @@ class AnggotaKatalogController extends Controller
                 ->with('error', 'Anda harus terverifikasi terlebih dahulu untuk menambahkan katalog.');
         }
 
+
         return view('anggota.katalog.create');
     }
 
-    /**
-     * Ekstrak URL src dari iframe Google Maps embed
-     * Sama seperti method di AdminKatalogController
-     */
     private function extractGoogleMapsEmbedUrl($input)
     {
         if (empty($input)) {
@@ -49,16 +49,12 @@ class AnggotaKatalogController extends Controller
 
         $input = trim($input);
 
-        // Cek apakah input mengandung iframe
         if (strpos($input, '<iframe') === false && strpos($input, 'iframe') === false) {
             return null;
         }
 
-        // Extract src dari iframe
         if (preg_match('/src=["\']([^"\']+)["\']/', $input, $matches)) {
             $url = $matches[1];
-            
-            // Validasi bahwa ini adalah URL Google Maps embed
             if (strpos($url, 'google.com/maps/embed') !== false) {
                 return $url;
             }
@@ -76,50 +72,53 @@ class AnggotaKatalogController extends Controller
                 ->with('error', 'Anda harus terverifikasi terlebih dahulu.');
         }
 
+        // Guard: sudah punya katalog
+        if ($anggota->katalogs()->exists()) {
+            return redirect()->route('profile-anggota.katalog.index')
+                ->with('error', 'Anda sudah memiliki katalog. Silakan edit katalog yang ada.');
+        }
+
         $validated = $request->validate([
-            'company_name' => 'required|string|max:255',
+            'company_name'   => 'required|string|max:255',
             'business_field' => 'required|string|max:255',
-            'description' => 'required|string',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'map_embed_url' => 'nullable|string',
+            'description'    => 'required|string',
+            'logo'           => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'address'        => 'required|string',
+            'phone'          => 'required|string|max:20',
+            'email'          => 'required|email|max:255',
+            'map_embed_url'  => 'nullable|string',
         ]);
 
         try {
-            // Upload logo
-            $logoPath = $request->file('logo')->store('katalog/logos', 'public');
-
-            // Upload images
+            $logoPath   = $request->file('logo')->store('katalog/logos', 'public');
             $imagePaths = [];
+
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $imagePaths[] = $image->store('katalog/images', 'public');
                 }
             }
 
-            // Ekstrak URL embed dari iframe
             $mapUrl = null;
             if ($request->filled('map_embed_url')) {
                 $mapUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
             }
 
             Katalog::create([
-                'anggota_id' => $anggota->id,
-                'company_name' => $validated['company_name'],
+                'anggota_id'     => $anggota->id,
+                'company_name'   => $validated['company_name'],
                 'business_field' => $validated['business_field'],
-                'description' => $validated['description'],
-                'logo' => $logoPath,
-                'images' => $imagePaths,
-                'address' => $validated['address'],
-                'phone' => $validated['phone'],
-                'email' => $validated['email'],
-                'map_embed_url' => $mapUrl,
-                'status' => 'pending',
-                'submitted_at' => now(),
-                'is_active' => false,
+                'description'    => $validated['description'],
+                'logo'           => $logoPath,
+                'images'         => $imagePaths,
+                'address'        => $validated['address'],
+                'phone'          => $validated['phone'],
+                'email'          => $validated['email'],
+                'map_embed_url'  => $mapUrl,
+                'status'         => 'pending',
+                'submitted_at'   => now(),
+                'is_active'      => false,
             ]);
 
             return redirect()->route('profile-anggota.katalog.index')
@@ -127,10 +126,8 @@ class AnggotaKatalogController extends Controller
 
         } catch (\Exception $e) {
             if (isset($logoPath)) Storage::disk('public')->delete($logoPath);
-            if (isset($imagePaths)) {
-                foreach ($imagePaths as $path) {
-                    Storage::disk('public')->delete($path);
-                }
+            foreach ($imagePaths ?? [] as $path) {
+                Storage::disk('public')->delete($path);
             }
 
             return redirect()->back()
@@ -143,12 +140,10 @@ class AnggotaKatalogController extends Controller
     {
         $anggota = Auth::guard('anggota')->user();
 
-        // Cek ownership
         if ($katalog->anggota_id !== $anggota->id) {
             abort(403, 'Anda tidak memiliki akses ke katalog ini.');
         }
 
-        // Hanya bisa edit kalau pending atau rejected
         if (!$katalog->canBeEdited()) {
             return redirect()->route('profile-anggota.katalog.index')
                 ->with('error', 'Katalog yang sudah disetujui tidak bisa diedit.');
@@ -170,35 +165,37 @@ class AnggotaKatalogController extends Controller
                 ->with('error', 'Katalog yang sudah disetujui tidak bisa diedit.');
         }
 
-        $validated = $request->validate([
-            'company_name' => 'required|string|max:255',
+        $request->validate([
+            'company_name'   => 'required|string|max:255',
             'business_field' => 'required|string|max:255',
-            'description' => 'required|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'map_embed_url' => 'nullable|string',
+            'description'    => 'required|string',
+            'logo'           => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'address'        => 'required|string',
+            'phone'          => 'required|string|max:20',
+            'email'          => 'required|email|max:255',
+            'map_embed_url'  => 'nullable|string',
         ]);
 
         try {
-            $data = $request->except(['logo', 'images']);
+            $data = $request->only([
+                'company_name', 'business_field', 'description',
+                'address', 'phone', 'email',
+            ]);
 
-            // Upload logo baru
+            // Update logo jika ada
             if ($request->hasFile('logo')) {
                 if ($katalog->logo) Storage::disk('public')->delete($katalog->logo);
                 $data['logo'] = $request->file('logo')->store('katalog/logos', 'public');
             }
 
-            // Upload images baru
+            // Update images jika ada
             if ($request->hasFile('images')) {
                 if ($katalog->images) {
                     foreach ($katalog->images as $oldImage) {
                         Storage::disk('public')->delete($oldImage);
                     }
                 }
-                
                 $imagePaths = [];
                 foreach ($request->file('images') as $image) {
                     $imagePaths[] = $image->store('katalog/images', 'public');
@@ -206,24 +203,23 @@ class AnggotaKatalogController extends Controller
                 $data['images'] = $imagePaths;
             }
 
-            // Update map embed URL
+            // Handle map embed URL
             if ($request->filled('map_embed_url')) {
-                $extractedUrl = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
-                $data['map_embed_url'] = $extractedUrl;
+                $data['map_embed_url'] = $this->extractGoogleMapsEmbedUrl($request->map_embed_url);
             } elseif ($request->has('map_embed_url') && empty($request->map_embed_url)) {
-                // Jika field kosong, hapus map
                 $data['map_embed_url'] = null;
             }
 
-            // Reset ke pending kalau diupdate setelah rejected
-            $data['status'] = 'pending';
-            $data['submitted_at'] = now();
-            $data['rejection_reason'] = null;
+           if ($katalog->status === 'rejected') {
+    $data['status']           = 'pending';
+    $data['submitted_at']     = now();
+    $data['rejection_reason'] = null;
+}
 
             $katalog->update($data);
 
             return redirect()->route('profile-anggota.katalog.index')
-                ->with('success', 'Katalog berhasil diperbarui dan akan direview kembali.');
+                ->with('success', 'Katalog berhasil diperbarui dan akan direview kembali oleh admin.');
 
         } catch (\Exception $e) {
             return redirect()->back()
@@ -240,13 +236,11 @@ class AnggotaKatalogController extends Controller
             abort(403);
         }
 
-        // Hanya bisa hapus kalau pending atau rejected
         if (!$katalog->canBeEdited()) {
             return redirect()->route('profile-anggota.katalog.index')
                 ->with('error', 'Katalog yang sudah disetujui tidak bisa dihapus.');
         }
 
-        // Hapus files
         if ($katalog->logo) Storage::disk('public')->delete($katalog->logo);
         if ($katalog->images) {
             foreach ($katalog->images as $image) {

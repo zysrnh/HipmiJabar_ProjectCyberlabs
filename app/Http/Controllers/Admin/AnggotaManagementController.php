@@ -236,39 +236,58 @@ class AnggotaManagementController extends Controller
         return view('admin.anggota.show', compact('anggota'));
     }
 
-    public function approve(Anggota $anggota)
-    {
-        $admin = auth()->guard('admin')->user();
+   public function approve(Anggota $anggota)
+{
+    $admin = auth()->guard('admin')->user();
 
-        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
-            abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
-        }
-
-        // Gunakan method approve() dari Model
-        $anggota->approve($admin->id);
-
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Anggota berhasil disetujui!');
+    if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+        abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
     }
+
+    // Approve anggota
+    $anggota->approve($admin->id);
+
+    // Auto-approve semua katalog pending milik anggota ini
+    $anggota->katalogs()->where('status', 'pending')->update([
+        'status'           => 'approved',
+        'is_active'        => true,
+        'approved_at'      => now(),
+        'approved_by'      => $admin->id,
+        'rejection_reason' => null,
+    ]);
+
+    return redirect()->route('admin.anggota.index')
+        ->with('success', 'Anggota berhasil disetujui dan katalog perusahaan telah aktif!');
+}
 
     public function reject(Request $request, Anggota $anggota)
-    {
-        $admin = auth()->guard('admin')->user();
+{
+    $admin = auth()->guard('admin')->user();
 
-        if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
-            abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
-        }
-
-        $request->validate([
-            'alasan_penolakan' => 'required|string|max:500'
-        ]);
-
-        // Gunakan method reject() dari Model
-        $anggota->reject($request->alasan_penolakan, $admin->id);
-
-        return redirect()->route('admin.anggota.index')
-            ->with('success', 'Anggota berhasil ditolak!');
+    if ($admin->category === 'bpc' && $anggota->domisili !== $admin->domisili) {
+        abort(403, 'Anda tidak memiliki akses untuk verifikasi anggota ini.');
     }
+
+    $request->validate([
+        'alasan_penolakan' => 'required|string|max:500'
+    ]);
+
+    // Reject anggota
+    $anggota->reject($request->alasan_penolakan, $admin->id);
+
+    // Auto-reject semua katalog pending milik anggota ini
+    $anggota->katalogs()->where('status', 'pending')->update([
+        'status'           => 'rejected',
+        'is_active'        => false,
+        'rejection_reason' => 'Pendaftaran anggota tidak disetujui: ' . $request->alasan_penolakan,
+        'approved_by'      => $admin->id,
+        'approved_at'      => null,
+    ]);
+
+    return redirect()->route('admin.anggota.index')
+        ->with('success', 'Anggota berhasil ditolak!');
+}
+
 
     public function destroy(Anggota $anggota)
     {
