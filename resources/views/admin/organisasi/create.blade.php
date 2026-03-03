@@ -413,15 +413,101 @@
                 </div>
             </div>
 
-            {{-- Jabatan (Untuk Semua Mode) --}}
-            <div class="form-group">
-                <label for="jabatan" class="form-label required">Jabatan</label>
-                <input type="text" id="jabatan" name="jabatan" class="form-input @error('jabatan') error @enderror" 
-                       value="{{ old('jabatan') }}" placeholder="Contoh: Ketua Bidang Kewirausahaan">
-                @error('jabatan')
-                    <div class="error-message">{{ $message }}</div>
-                @enderror
-            </div>
+        {{-- Jabatan (Untuk Semua Mode) --}}
+<div class="form-group">
+    <label for="jabatan" class="form-label required">Jabatan</label>
+    <select id="jabatan" name="jabatan" class="form-input @error('jabatan') error @enderror">
+        <option value="" disabled selected>-- Pilih Jabatan --</option>
+
+        <optgroup label="Bidang I - Organisasi, Keanggotaan dan Kaderisasi">
+            <option value="Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi" {{ old('jabatan') == 'Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi' ? 'selected' : '' }}>Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi</option>
+            <option value="Wakil Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi" {{ old('jabatan') == 'Wakil Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi' ? 'selected' : '' }}>Wakil Ketua Bidang I - Organisasi, Keanggotaan dan Kaderisasi</option>
+            <option value="Sekretaris Bidang I - Organisasi, Keanggotaan dan Kaderisasi" {{ old('jabatan') == 'Sekretaris Bidang I - Organisasi, Keanggotaan dan Kaderisasi' ? 'selected' : '' }}>Sekretaris Bidang I - Organisasi, Keanggotaan dan Kaderisasi</option>
+            <option value="Anggota Bidang I - Organisasi, Keanggotaan dan Kaderisasi" {{ old('jabatan') == 'Anggota Bidang I - Organisasi, Keanggotaan dan Kaderisasi' ? 'selected' : '' }}>Anggota Bidang I - Organisasi, Keanggotaan dan Kaderisasi</option>
+        </optgroup>
+
+        <optgroup label="Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan">
+            <option value="Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan" {{ old('jabatan') == 'Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan' ? 'selected' : '' }}>Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan</option>
+            <option value="Wakil Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan" {{ old('jabatan') == 'Wakil Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan' ? 'selected' : '' }}>Wakil Ketua Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan</option>
+            <option value="Sekretaris Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan" {{ old('jabatan') == 'Sekretaris Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan' ? 'selected' : '' }}>Sekretaris Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan</option>
+            <option value="Anggota Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan" {{ old('jabatan') == 'Anggota Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan' ? 'selected' : '' }}>Anggota Bidang II - Keuangan, Perbankan dan Perencanaan Pembangunan</option>
+        </optgroup>
+
+        <optgroup label="Bidang III - ESDM, Lingkungan Hidup dan Kehutanan">
+            <option value="Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan" {{ old('jabatan') == 'Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan' ? 'selected' : '' }}>Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan</option>
+            <option value="Wakil Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan" {{ old('jabatan') == 'Wakil Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan' ? 'selected' : '' }}>Wakil Ketua Bidang III - ESDM, Lingkungan Hidup dan Kehutanan</option>
+            <option value="Sekretaris Bidang III - ESDM, Lingkungan Hidup dan Kehutanan" {{ old('jabatan') == 'Sekretaris Bidang III - ESDM, Lingkungan Hidup dan Kehutanan' ? 'selected' : '' }}>Sekretaris Bidang III - ESDM, Lingkungan Hidup dan Kehutanan</option>
+            <option value="Anggota Bidang III - ESDM, Lingkungan Hidup dan Kehutanan" {{ old('jabatan') == 'Anggota Bidang III - ESDM, Lingkungan Hidup dan Kehutanan' ? 'selected' : '' }}>Anggota Bidang III - ESDM, Lingkungan Hidup dan Kehutanan</option>
+        </optgroup>
+
+        <optgroup label="Bidang IV - Perindustrian dan Perdagangan">
+            <option value="Ketua Bidang IV - Perindustrian dan Perdagangan" {{ old('jabatan') == 'Ketua Bidang IV - Perindustrian dan Perdagangan' ? 'selected' : '' }}>Ketua Bidang IV - Perindustrian dan Perdagangan</option>
+            <option value="Wakil Ketua Bidang IV - Perindustrian dan Perdagangan" {{ old('jabatan') == 'Wakil Ketua Bidang IV - Perindustrian dan Perdagangan' ? 'selected' : '' }}>Wakil Ketua Bidang IV - Perindustrian dan Perdagangan</option>
+            <option value="Sekretaris Bidang IV - Perindustrian dan Perdagangan" {{ old('jabatan') == 'Sekretaris Bidang IV - Perindustrian dan Perdagangan' ? 'selected' : '' }}>Sekretaris Bidang IV - Perindustrian dan Perdagangan</option>
+            <option value="Anggota Bidang IV - Perindustrian dan Perdagangan" {{ old('jabatan') == 'Anggota Bidang IV - Perindustrian dan Perdagangan' ? 'selected' : '' }}>Anggota Bidang IV - Perindustrian dan Perdagangan</option>
+        </optgroup>
+
+        <optgroup label="Bidang V - Sinergitas BUMN dan BUMD">
+            <option value="Ketua Bidang V - Sinergitas BUMN dan BUMD" {{ old('jabatan') == 'Ketua Bidang V - Sinergitas BUMN dan BUMD' ? 'selected' : '' }}>Ketua Bidang V - Sinergitas BUMN dan BUMD</option>
+            <option value="Wakil Ketua Bidang V - Sinergitas BUMN dan BUMD" {{ old('jabatan') == 'Wakil Ketua Bidang V - Sinergitas BUMN dan BUMD' ? 'selected' : '' }}>Wakil Ketua Bidang V - Sinergitas BUMN dan BUMD</option>
+            <option value="Sekretaris Bidang V - Sinergitas BUMN dan BUMD" {{ old('jabatan') == 'Sekretaris Bidang V - Sinergitas BUMN dan BUMD' ? 'selected' : '' }}>Sekretaris Bidang V - Sinergitas BUMN dan BUMD</option>
+            <option value="Anggota Bidang V - Sinergitas BUMN dan BUMD" {{ old('jabatan') == 'Anggota Bidang V - Sinergitas BUMN dan BUMD' ? 'selected' : '' }}>Anggota Bidang V - Sinergitas BUMN dan BUMD</option>
+        </optgroup>
+
+        <optgroup label="Bidang VI - Maritim, Kelautan dan Perikanan">
+            <option value="Ketua Bidang VI - Maritim, Kelautan dan Perikanan" {{ old('jabatan') == 'Ketua Bidang VI - Maritim, Kelautan dan Perikanan' ? 'selected' : '' }}>Ketua Bidang VI - Maritim, Kelautan dan Perikanan</option>
+            <option value="Wakil Ketua Bidang VI - Maritim, Kelautan dan Perikanan" {{ old('jabatan') == 'Wakil Ketua Bidang VI - Maritim, Kelautan dan Perikanan' ? 'selected' : '' }}>Wakil Ketua Bidang VI - Maritim, Kelautan dan Perikanan</option>
+            <option value="Sekretaris Bidang VI - Maritim, Kelautan dan Perikanan" {{ old('jabatan') == 'Sekretaris Bidang VI - Maritim, Kelautan dan Perikanan' ? 'selected' : '' }}>Sekretaris Bidang VI - Maritim, Kelautan dan Perikanan</option>
+            <option value="Anggota Bidang VI - Maritim, Kelautan dan Perikanan" {{ old('jabatan') == 'Anggota Bidang VI - Maritim, Kelautan dan Perikanan' ? 'selected' : '' }}>Anggota Bidang VI - Maritim, Kelautan dan Perikanan</option>
+        </optgroup>
+
+        <optgroup label="Bidang VII - Pertanian, Perkebunan dan Peternakan">
+            <option value="Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan" {{ old('jabatan') == 'Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan' ? 'selected' : '' }}>Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan</option>
+            <option value="Wakil Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan" {{ old('jabatan') == 'Wakil Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan' ? 'selected' : '' }}>Wakil Ketua Bidang VII - Pertanian, Perkebunan dan Peternakan</option>
+            <option value="Sekretaris Bidang VII - Pertanian, Perkebunan dan Peternakan" {{ old('jabatan') == 'Sekretaris Bidang VII - Pertanian, Perkebunan dan Peternakan' ? 'selected' : '' }}>Sekretaris Bidang VII - Pertanian, Perkebunan dan Peternakan</option>
+            <option value="Anggota Bidang VII - Pertanian, Perkebunan dan Peternakan" {{ old('jabatan') == 'Anggota Bidang VII - Pertanian, Perkebunan dan Peternakan' ? 'selected' : '' }}>Anggota Bidang VII - Pertanian, Perkebunan dan Peternakan</option>
+        </optgroup>
+
+        <optgroup label="Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom">
+            <option value="Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom" {{ old('jabatan') == 'Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom' ? 'selected' : '' }}>Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom</option>
+            <option value="Wakil Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom" {{ old('jabatan') == 'Wakil Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom' ? 'selected' : '' }}>Wakil Ketua Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom</option>
+            <option value="Sekretaris Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom" {{ old('jabatan') == 'Sekretaris Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom' ? 'selected' : '' }}>Sekretaris Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom</option>
+            <option value="Anggota Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom" {{ old('jabatan') == 'Anggota Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom' ? 'selected' : '' }}>Anggota Bidang VIII - Pariwisata, Ekonomi Kreatif dan Infokom</option>
+        </optgroup>
+
+        <optgroup label="Bidang IX - UMKM, Koperasi dan Kewirausahaan">
+            <option value="Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan" {{ old('jabatan') == 'Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan' ? 'selected' : '' }}>Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan</option>
+            <option value="Wakil Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan" {{ old('jabatan') == 'Wakil Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan' ? 'selected' : '' }}>Wakil Ketua Bidang IX - UMKM, Koperasi dan Kewirausahaan</option>
+            <option value="Sekretaris Bidang IX - UMKM, Koperasi dan Kewirausahaan" {{ old('jabatan') == 'Sekretaris Bidang IX - UMKM, Koperasi dan Kewirausahaan' ? 'selected' : '' }}>Sekretaris Bidang IX - UMKM, Koperasi dan Kewirausahaan</option>
+            <option value="Anggota Bidang IX - UMKM, Koperasi dan Kewirausahaan" {{ old('jabatan') == 'Anggota Bidang IX - UMKM, Koperasi dan Kewirausahaan' ? 'selected' : '' }}>Anggota Bidang IX - UMKM, Koperasi dan Kewirausahaan</option>
+        </optgroup>
+
+        <optgroup label="Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan">
+            <option value="Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan" {{ old('jabatan') == 'Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan' ? 'selected' : '' }}>Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan</option>
+            <option value="Wakil Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan" {{ old('jabatan') == 'Wakil Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan' ? 'selected' : '' }}>Wakil Ketua Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan</option>
+            <option value="Sekretaris Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan" {{ old('jabatan') == 'Sekretaris Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan' ? 'selected' : '' }}>Sekretaris Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan</option>
+            <option value="Anggota Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan" {{ old('jabatan') == 'Anggota Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan' ? 'selected' : '' }}>Anggota Bidang X - Infrastruktur Tata Ruang, Properti dan Perhubungan</option>
+        </optgroup>
+
+        <optgroup label="Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga">
+            <option value="Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga" {{ old('jabatan') == 'Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga' ? 'selected' : '' }}>Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga</option>
+            <option value="Wakil Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga" {{ old('jabatan') == 'Wakil Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga' ? 'selected' : '' }}>Wakil Ketua Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga</option>
+            <option value="Sekretaris Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga" {{ old('jabatan') == 'Sekretaris Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga' ? 'selected' : '' }}>Sekretaris Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga</option>
+            <option value="Anggota Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga" {{ old('jabatan') == 'Anggota Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga' ? 'selected' : '' }}>Anggota Bidang XI - Pendidikan, Riset, Inovasi, Ketenagakerjaan, Kesehatan, Pemuda dan Olahraga</option>
+        </optgroup>
+
+        <optgroup label="Bidang XII - Investasi dan Hubungan Internasional">
+            <option value="Ketua Bidang XII - Investasi dan Hubungan Internasional" {{ old('jabatan') == 'Ketua Bidang XII - Investasi dan Hubungan Internasional' ? 'selected' : '' }}>Ketua Bidang XII - Investasi dan Hubungan Internasional</option>
+            <option value="Wakil Ketua Bidang XII - Investasi dan Hubungan Internasional" {{ old('jabatan') == 'Wakil Ketua Bidang XII - Investasi dan Hubungan Internasional' ? 'selected' : '' }}>Wakil Ketua Bidang XII - Investasi dan Hubungan Internasional</option>
+            <option value="Sekretaris Bidang XII - Investasi dan Hubungan Internasional" {{ old('jabatan') == 'Sekretaris Bidang XII - Investasi dan Hubungan Internasional' ? 'selected' : '' }}>Sekretaris Bidang XII - Investasi dan Hubungan Internasional</option>
+            <option value="Anggota Bidang XII - Investasi dan Hubungan Internasional" {{ old('jabatan') == 'Anggota Bidang XII - Investasi dan Hubungan Internasional' ? 'selected' : '' }}>Anggota Bidang XII - Investasi dan Hubungan Internasional</option>
+        </optgroup>
+
+    </select>
+    @error('jabatan')
+        <div class="error-message">{{ $message }}</div>
+    @enderror
+</div>
 
             {{-- Kategori --}}
             <div class="form-group">
