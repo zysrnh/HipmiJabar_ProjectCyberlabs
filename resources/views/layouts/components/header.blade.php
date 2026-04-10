@@ -45,7 +45,7 @@
                                 <a href="{{ route('profile-anggota') }}" class="btn-transparent">Profile Anggota</a>
                             @else
                                 {{-- Jika belum login (Guest) --}}
-                                <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
+                                <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Daftar</a>
                                 <a href="{{ route('anggota.login') }}" class="btn">Login</a>
                             @endauth
                         @endauth
@@ -62,7 +62,7 @@
                             <a href="{{ route('profile-anggota') }}" class="btn-transparent">Profile Anggota</a>
                         @else
                             {{-- Jika belum login (Guest) --}}
-                            <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Jadi Anggota</a>
+                            <a href="{{ route('jadi-anggota') }}" class="btn-transparent">Daftar</a>
                             <a href="{{ route('anggota.login') }}" class="btn">Login</a>
                         @endauth
                     @endauth

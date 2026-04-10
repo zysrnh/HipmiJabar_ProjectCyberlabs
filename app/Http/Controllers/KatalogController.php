@@ -46,7 +46,7 @@ class KatalogController extends Controller
             ->orderBy('business_field')
             ->pluck('business_field');
 
-        $katalogs = $query->latest()->paginate(12)->withQueryString();
+        $katalogs = $query->latest()->paginate(20)->withQueryString();
 
         return view('pages.ekatalog', compact('katalogs', 'bidangList'));
     }

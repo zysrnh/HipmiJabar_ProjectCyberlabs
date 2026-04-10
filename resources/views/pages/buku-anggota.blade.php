@@ -1,53 +1,34 @@
 @extends ('layouts.app')
 
-@section('title', 'Buku Informasi Anggota - HIPMI Jawa Barat')
-
-<style>
-    .search-katalog {
-        padding: 0px 100px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .search-box {
-        position: relative;
-        width: 100%;
-    }
-
-    .search-box input {
-        width: 100%;
-        font-family: 'Poppins', sans-serif;
-        font-size: 15px;
-        padding: 10px 40px 10px 15px;
-        border-radius: 7px;
-        border: 1px solid #04293B;
-    }
-
-    .search-box i {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-</style>
-
+@section('title', 'Buku Informasi Pengurus - HIPMI Jawa Barat')
+<link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 @section('content')
-    <section class="page-banner">
-        <h1>Buku Informasi Anggota</h1>
+    <section class="page-banners">
+                <div class="page-banner">
+        <h1>Buku Informasi Pengurus</h1>
         <p>Berisi informasi mengenai anggota kami</p>
+        </div>
     </section>
 
-    <section class="search-katalog">
+<section class="search-bars">
+    <div class="search-bar">
         <form action="{{ route('buku-anggota') }}" method="GET" class="search-box">
-            <input type="text" name="search" placeholder="Cari Anggota..." value="{{ request('search') }}">
-            <button type="submit" style="background: none; border: none; cursor: pointer;">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Cari Anggota..." 
+                value="{{ request('search') }}"
+            >
+            <button type="submit" class="search-btn">
                 <i class="fas fa-search"></i>
             </button>
         </form>
-    </section>
-
-    <section class="buku-informasi-anggota">
+    </div>
+</section>
+<section class="bukus-informasi-anggota">
+    <div class="buku-informasi-anggota">
         <div class="buku-informasi-anggota-content">
             @forelse($anggotas as $anggota)
                 <a href="{{ route('detail-buku', $anggota->id) }}">
@@ -120,8 +101,8 @@
                 </ul>
             </div>
         @endif
-    </section>
-
+    </div>
+</section>
     <style>
         /* Pagination Styling */
         .pagination-wrapper {
@@ -215,7 +196,7 @@
 
         .buku-card img {
             width: 100%;
-            height: 280px;
+            height: 200px;
             object-fit: cover;
             object-position: center;
             background-color: #f0f0f0;
