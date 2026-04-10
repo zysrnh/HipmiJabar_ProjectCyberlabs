@@ -140,7 +140,7 @@ class AnggotaKatalogController extends Controller
     {
         $anggota = Auth::guard('anggota')->user();
 
-        if ($katalog->anggota_id !== $anggota->id) {
+        if ((int) $katalog->anggota_id !== (int) $anggota->id) {
             abort(403, 'Anda tidak memiliki akses ke katalog ini.');
         }
 
@@ -156,8 +156,8 @@ class AnggotaKatalogController extends Controller
     {
         $anggota = Auth::guard('anggota')->user();
 
-        if ($katalog->anggota_id !== $anggota->id) {
-            abort(403);
+        if ((int) $katalog->anggota_id !== (int) $anggota->id) {
+            abort(403, 'Anda tidak memiliki akses ke katalog ini.');
         }
 
         if (!$katalog->canBeEdited()) {
@@ -232,8 +232,8 @@ class AnggotaKatalogController extends Controller
     {
         $anggota = Auth::guard('anggota')->user();
 
-        if ($katalog->anggota_id !== $anggota->id) {
-            abort(403);
+        if ((int) $katalog->anggota_id !== (int) $anggota->id) {
+            abort(403, 'Anda tidak memiliki akses ke katalog ini.');
         }
 
         if (!$katalog->canBeEdited()) {
